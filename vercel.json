@@ -3,5 +3,13 @@
     "app/api/**/*": {
       "maxDuration": 60
     }
+  },
+  "env": {
+    "GAODE_API_KEY": "2a68803c2535ea2283d75f62c608ea3c",
+    "GAODE_WEB_KEY": "2a68803c2535ea2283d75f62c608ea3c",
+    "BAIDU_MAP_AK": "r0yjccsPuD5haOPpt1cvNiaSyH3UboZ9",
+    "GOOGLE_MAPS_API_KEY": "AIzaSyCEdLYeF-tdHu3x51sisC_RXUn3uoxP5y4",
+    "NEXTAUTH_SECRET": "254360c004643c6065007f390d76cb04269274f11474834a0abe4adaa2f35f34",
+    "NEXTAUTH_URL": "https://clientseeker.vercel.app"
   }
 }
