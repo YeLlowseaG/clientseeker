@@ -184,96 +184,109 @@ export class GoogleMapService {
       url.searchParams.set('pagetoken', params.pagetoken);
     }
 
-    // 添加10秒超时和网络错误处理
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
-
+    // 检测环境：本地开发使用代理，生产环境直接访问
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL;
+    
     try {
-      const proxyUrl = process.env.HTTPS_PROXY || process.env.https_proxy || 'http://127.0.0.1:1087';
-      console.log(`使用代理: ${proxyUrl}`);
+      let data: GoogleResponse;
       
-      // 使用原生的https模块通过代理
-      const https = await import('https');
-      const http = await import('http');
-      const { URL } = await import('url');
-      
-      const proxy = new URL(proxyUrl);
-      const target = new URL(url.toString());
-      
-      const data = await new Promise<GoogleResponse>((resolve, reject) => {
-        const options = {
-          host: proxy.hostname,
-          port: proxy.port,
-          method: 'CONNECT',
-          path: `${target.hostname}:${target.port || 443}`,
+      if (isProduction) {
+        // 生产环境：直接使用fetch访问
+        console.log('生产环境：直接访问Google Maps API');
+        const response = await fetch(url.toString(), {
+          method: 'GET',
           headers: {
-            'User-Agent': 'Mozilla/5.0 (compatible; Business-Search-App/1.0)'
-          }
-        };
-        
-        const req = http.request(options);
-        req.on('connect', (res, socket) => {
-          if (res.statusCode === 200) {
-            const requestOptions = {
-              host: target.hostname,
-              port: (target.port || 443).toString(),
-              path: target.pathname + target.search,
-              method: 'GET',
-              socket: socket,
-              agent: false,
-              headers: {
-                'User-Agent': 'Mozilla/5.0 (compatible; Business-Search-App/1.0)',
-                'Accept': 'application/json'
-              }
-            } as any;
-            
-            const httpsReq = https.request(requestOptions, (httpsRes) => {
-              let data = '';
-              httpsRes.on('data', chunk => data += chunk);
-              httpsRes.on('end', () => {
-                try {
-                  const jsonData = JSON.parse(data);
-                  resolve(jsonData);
-                } catch (e) {
-                  reject(new Error('Failed to parse JSON response'));
-                }
-              });
-            });
-            
-            httpsReq.on('error', reject);
-            httpsReq.end();
-          } else {
-            reject(new Error(`Proxy connection failed: ${res.statusCode}`));
-          }
+            'User-Agent': 'Mozilla/5.0 (compatible; Business-Search-App/1.0)',
+            'Accept': 'application/json'
+          },
+          signal: AbortSignal.timeout(10000)
         });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        data = await response.json();
+      } else {
+        // 本地开发环境：使用代理
+        const proxyUrl = process.env.HTTPS_PROXY || process.env.https_proxy || 'http://127.0.0.1:1087';
+        console.log(`本地环境：使用代理 ${proxyUrl}`);
         
-        req.on('error', reject);
-        req.end();
+        const https = await import('https');
+        const http = await import('http');
+        const { URL } = await import('url');
         
-        // 超时处理
-        setTimeout(() => {
-          req.destroy();
-          reject(new Error('代理连接超时'));
-        }, 10000);
-      });
+        const proxy = new URL(proxyUrl);
+        const target = new URL(url.toString());
+        
+        data = await new Promise<GoogleResponse>((resolve, reject) => {
+          const options = {
+            host: proxy.hostname,
+            port: proxy.port,
+            method: 'CONNECT',
+            path: `${target.hostname}:${target.port || 443}`,
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (compatible; Business-Search-App/1.0)'
+            }
+          };
+          
+          const req = http.request(options);
+          req.on('connect', (res, socket) => {
+            if (res.statusCode === 200) {
+              const requestOptions = {
+                host: target.hostname,
+                port: (target.port || 443).toString(),
+                path: target.pathname + target.search,
+                method: 'GET',
+                socket: socket,
+                agent: false,
+                headers: {
+                  'User-Agent': 'Mozilla/5.0 (compatible; Business-Search-App/1.0)',
+                  'Accept': 'application/json'
+                }
+              } as any;
+              
+              const httpsReq = https.request(requestOptions, (httpsRes) => {
+                let data = '';
+                httpsRes.on('data', chunk => data += chunk);
+                httpsRes.on('end', () => {
+                  try {
+                    const jsonData = JSON.parse(data);
+                    resolve(jsonData);
+                  } catch (e) {
+                    reject(new Error('Failed to parse JSON response'));
+                  }
+                });
+              });
+              
+              httpsReq.on('error', reject);
+              httpsReq.end();
+            } else {
+              reject(new Error(`Proxy connection failed: ${res.statusCode}`));
+            }
+          });
+          
+          req.on('error', reject);
+          req.end();
+          
+          setTimeout(() => {
+            req.destroy();
+            reject(new Error('代理连接超时'));
+          }, 10000);
+        });
+      }
       
-      clearTimeout(timeoutId);
-      
-      // data 已经是解析后的JSON对象
       if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
         throw new Error(`Google Places API error: ${data.error_message || data.status}`);
       }
 
       return data;
     } catch (error) {
-      clearTimeout(timeoutId);
-      
-      // 检查是否是网络连接错误
       if (error instanceof Error) {
-        if (error.name === 'AbortError') {
+        if (error.name === 'AbortError' || error.name === 'TimeoutError') {
           throw new Error('Google Maps API 请求超时，可能是网络连接问题');
         }
-        if (error.message.includes('Connect Timeout') || error.message.includes('fetch failed')) {
+        if (error.message.includes('fetch failed') || error.message.includes('ECONNREFUSED')) {
           throw new Error('无法连接到Google Maps API，可能是网络环境限制');
         }
       }
@@ -288,71 +301,94 @@ export class GoogleMapService {
     url.searchParams.set('place_id', placeId);
     url.searchParams.set('fields', 'name,formatted_address,formatted_phone_number,rating,types,geometry');
 
+    // 检测环境：本地开发使用代理，生产环境直接访问
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL;
+
     try {
-      // 使用相同的代理逻辑
-      const proxyUrl = process.env.HTTPS_PROXY || process.env.https_proxy || 'http://127.0.0.1:1087';
-      const https = await import('https');
-      const http = await import('http');
-      const { URL } = await import('url');
+      let data: any;
       
-      const proxy = new URL(proxyUrl);
-      const target = new URL(url.toString());
-      
-      const data = await new Promise<any>((resolve, reject) => {
-        const options = {
-          host: proxy.hostname,
-          port: proxy.port,
-          method: 'CONNECT',
-          path: `${target.hostname}:${target.port || 443}`,
+      if (isProduction) {
+        // 生产环境：直接使用fetch访问
+        const response = await fetch(url.toString(), {
+          method: 'GET',
           headers: {
-            'User-Agent': 'Mozilla/5.0 (compatible; Business-Search-App/1.0)'
-          }
-        };
-        
-        const req = http.request(options);
-        req.on('connect', (res, socket) => {
-          if (res.statusCode === 200) {
-            const requestOptions = {
-              host: target.hostname,
-              port: (target.port || 443).toString(),
-              path: target.pathname + target.search,
-              method: 'GET',
-              socket: socket,
-              agent: false,
-              headers: {
-                'User-Agent': 'Mozilla/5.0 (compatible; Business-Search-App/1.0)',
-                'Accept': 'application/json'
-              }
-            } as any;
-            
-            const httpsReq = https.request(requestOptions, (httpsRes) => {
-              let data = '';
-              httpsRes.on('data', chunk => data += chunk);
-              httpsRes.on('end', () => {
-                try {
-                  const jsonData = JSON.parse(data);
-                  resolve(jsonData);
-                } catch (e) {
-                  reject(new Error('Failed to parse JSON response'));
-                }
-              });
-            });
-            
-            httpsReq.on('error', reject);
-            httpsReq.end();
-          } else {
-            reject(new Error(`Proxy connection failed: ${res.statusCode}`));
-          }
+            'User-Agent': 'Mozilla/5.0 (compatible; Business-Search-App/1.0)',
+            'Accept': 'application/json'
+          },
+          signal: AbortSignal.timeout(8000)
         });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        data = await response.json();
+      } else {
+        // 本地开发环境：使用代理
+        const proxyUrl = process.env.HTTPS_PROXY || process.env.https_proxy || 'http://127.0.0.1:1087';
+        const https = await import('https');
+        const http = await import('http');
+        const { URL } = await import('url');
         
-        req.on('error', reject);
-        req.end();
+        const proxy = new URL(proxyUrl);
+        const target = new URL(url.toString());
         
-        setTimeout(() => {
-          req.destroy();
-          reject(new Error('代理连接超时'));
-        }, 8000);
-      });
+        data = await new Promise<any>((resolve, reject) => {
+          const options = {
+            host: proxy.hostname,
+            port: proxy.port,
+            method: 'CONNECT',
+            path: `${target.hostname}:${target.port || 443}`,
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (compatible; Business-Search-App/1.0)'
+            }
+          };
+          
+          const req = http.request(options);
+          req.on('connect', (res, socket) => {
+            if (res.statusCode === 200) {
+              const requestOptions = {
+                host: target.hostname,
+                port: (target.port || 443).toString(),
+                path: target.pathname + target.search,
+                method: 'GET',
+                socket: socket,
+                agent: false,
+                headers: {
+                  'User-Agent': 'Mozilla/5.0 (compatible; Business-Search-App/1.0)',
+                  'Accept': 'application/json'
+                }
+              } as any;
+              
+              const httpsReq = https.request(requestOptions, (httpsRes) => {
+                let data = '';
+                httpsRes.on('data', chunk => data += chunk);
+                httpsRes.on('end', () => {
+                  try {
+                    const jsonData = JSON.parse(data);
+                    resolve(jsonData);
+                  } catch (e) {
+                    reject(new Error('Failed to parse JSON response'));
+                  }
+                });
+              });
+              
+              httpsReq.on('error', reject);
+              httpsReq.end();
+            } else {
+              reject(new Error(`Proxy connection failed: ${res.statusCode}`));
+            }
+          });
+          
+          req.on('error', reject);
+          req.end();
+          
+          setTimeout(() => {
+            req.destroy();
+            reject(new Error('代理连接超时'));
+          }, 8000);
+        });
+      }
 
       if (data.status !== 'OK') {
         throw new Error(`Google Place Details API error: ${data.error_message || data.status}`);
