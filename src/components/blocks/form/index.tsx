@@ -23,7 +23,6 @@ import Icon from "@/components/icon";
 import { Input } from "@/components/ui/input";
 import { Loader } from "lucide-react";
 import MarkdownEditor from "@/components/blocks/mdeditor";
-import Editor from "@/components/blocks/editor";
 
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
@@ -194,7 +193,10 @@ export default function ({
                       />
                     ) : item.type === "editor" ||
                       item.type === "richtext_editor" ? (
-                      <Editor value={field.value} onChange={field.onChange} />
+                      <MarkdownEditor
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
                     ) : (
                       <Input
                         {...field}
