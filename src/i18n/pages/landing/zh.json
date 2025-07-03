@@ -35,9 +35,9 @@
     "show_locale": true
   },
   "hero": {
-    "title": "几秒钟获取海量潜在用户，助力业务倍速增长",
-    "highlight_text": "几秒钟获取",
-    "description": "ClientSeeker 是专业的客户开发工具。<br/>帮助销售团队和企业快速找到目标客户联系信息。",
+    "title": "几秒钟获取全球潜在客户，助力业务倍速增长",
+    "highlight_text": "全球潜在客户",
+    "description": "ClientSeeker 是专业的全球客户开发工具。<br/>支持中国大陆及全球各地商家联系信息查询。",
     "announcement": {
       "label": "2025",
       "title": "🎯 精准获客",
@@ -107,7 +107,7 @@
     "name": "introduce",
     "title": "什么是 ClientSeeker",
     "label": "介绍",
-    "description": "ClientSeeker 是专业的客户开发工具，帮助销售团队快速找到目标客户联系信息。",
+    "description": "ClientSeeker 是专业的全球客户开发工具，支持中国大陆及全球各地商家联系信息查询。",
     "image": {
       "src": "/imgs/features/1.png"
     },
@@ -133,7 +133,7 @@
     "name": "benefit",
     "title": "为什么选择 ClientSeeker",
     "label": "优势",
-    "description": "专业的客户获取解决方案 - 从精准搜索到联系方式导出。",
+    "description": "专业的全球客户获取解决方案 - 从精准搜索到联系方式导出。",
     "items": [
       {
         "title": "完整框架",
@@ -322,32 +322,32 @@
   "faq": {
     "name": "faq",
     "label": "常见问题",
-    "title": "关于 ShipAny 的常见问题",
-    "description": "还有其他问题？通过 Discord 或电子邮件联系我们。",
+    "title": "关于 ClientSeeker 的常见问题",
+    "description": "还有其他问题？通过邮件联系我们。",
     "items": [
       {
-        "title": "ShipAny 究竟是什么，它是如何工作的？",
-        "description": "ShipAny 是一个专门为构建 AI SaaS 创业项目设计的综合性 NextJS 模板。它提供即用型模板、基础设施设置和部署工具，帮助您在几小时内而不是几天内启动 AI 业务。"
+        "title": "ClientSeeker 支持哪些地区的商家搜索？",
+        "description": "ClientSeeker 支持全球商家搜索：中国大陆精确到省市区三级，覆盖34个省市自治区；全球其他地区通过Google Maps覆盖主要城市和地区。"
       },
       {
-        "title": "使用 ShipAny 需要高级技术技能吗？",
-        "description": "虽然基本的编程知识会有帮助，但 ShipAny 设计得非常开发者友好。我们的模板和文档使您即使不是 AI 或云基础设施专家也能轻松入门。"
+        "title": "数据导出有什么限制吗？",
+        "description": "来自高德地图和百度地图的中国大陆商家数据支持CSV格式导出，包含完整联系信息；来自Google Maps的全球商家数据暂时不支持导出，但可以在线查看和使用。"
       },
       {
-        "title": "我可以用 ShipAny 构建什么类型的 AI SaaS？",
-        "description": "ShipAny 支持广泛的 AI 应用，从内容生成到数据分析工具。我们的模板涵盖流行用例，如 AI 聊天机器人、内容生成器、图像处理应用等。"
+        "title": "如何保证数据的准确性？",
+        "description": "我们采用多数据源交叉验证，智能去重确保信息唯一性；优先展示有电话号码的高质量商家信息；定期更新数据库，确保信息时效性。"
       },
       {
-        "title": "使用 ShipAny 通常需要多长时间才能启动？",
-        "description": "使用 ShipAny，您可以在几小时内完成工作原型，并在几小时内完成生产就绪的应用。我们的一键部署和预配置基础设施显著缩短了传统的数月开发周期。"
+        "title": "搜索结果包含哪些信息？",
+        "description": "搜索结果包含企业名称、电话号码、详细地址、用户评分、营业时间、行业分类等核心联系信息，为您的客户开发提供全面的数据支持。"
       },
       {
-        "title": "ShipAny 的基础设施包括什么？",
-        "description": "ShipAny 提供完整的基础设施栈，包括身份验证、数据库设置、API 集成、支付处理和可扩展的云部署。一切都按照行业最佳实践预先配置。"
+        "title": "支持哪些搜索方式？",
+        "description": "支持关键词搜索、行业分类搜索、地理位置搜索等多种方式。采用智能匹配算法，支持模糊搜索和搜索建议，提升搜索效率。"
       },
       {
-        "title": "我可以自定义模板以匹配我的品牌吗？",
-        "description": "当然可以！所有 ShipAny 模板都完全可定制。您可以修改设计、功能和功能性以匹配您的品牌标识和特定业务需求，同时保持强大的底层基础设施。"
+        "title": "ClientSeeker 适合哪些用户？",
+        "description": "适合销售团队、市场开发人员、创业者、中小企业等需要快速获取目标客户联系信息的用户群体，帮助提升客户开发效率。"
       }
     ]
   },
@@ -374,7 +374,7 @@
     "name": "footer",
     "brand": {
       "title": "ClientSeeker",
-      "description": "ClientSeeker 是专业的客户开发工具。帮助销售团队和企业快速找到目标客户联系信息。",
+      "description": "ClientSeeker 是专业的全球客户开发工具。支持中国大陆及全球各地商家联系信息查询。",
       "logo": {
         "src": "/logo.png",
         "alt": "ClientSeeker"

@@ -79,7 +79,7 @@ export default function FeaturesPage() {
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-muted-foreground mb-4">
-                  支持全国34个省市自治区，精确到区县级别的地理范围搜索
+                  支持全球商家搜索，国内精确到区县级别，海外覆盖主要城市和地区
                 </p>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-center gap-2">
@@ -111,7 +111,7 @@ export default function FeaturesPage() {
                     <Badge variant="outline">Excel兼容</Badge>
                   </div>
                   <div className="flex items-center justify-center gap-2">
-                    <Badge variant="outline">批量下载</Badge>
+                    <Badge variant="outline">国内数据</Badge>
                     <Badge variant="outline">中文编码</Badge>
                   </div>
                 </div>
@@ -127,7 +127,7 @@ export default function FeaturesPage() {
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-muted-foreground mb-4">
-                  整合高德地图、百度地图、Google Maps等权威数据源
+                  整合高德地图、百度地图、Google Maps等权威数据源，支持全球商家查询
                 </p>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-center gap-2">
@@ -136,7 +136,7 @@ export default function FeaturesPage() {
                   </div>
                   <div className="flex items-center justify-center gap-2">
                     <Badge variant="outline">Google Maps</Badge>
-                    <Badge variant="outline">智能去重</Badge>
+                    <Badge variant="outline">全球覆盖</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -331,6 +331,103 @@ export default function FeaturesPage() {
               <div className="text-3xl font-bold text-orange-600 mb-2">24/7</div>
               <div className="text-muted-foreground">全天候服务</div>
             </div>
+          </div>
+        </div>
+
+        {/* FAQ区域 */}
+        <div className="mb-20">
+          <h2 className="text-3xl font-bold text-center mb-12">常见问题解答</h2>
+          <div className="max-w-4xl mx-auto space-y-6">
+            <Card className="border shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-3">
+                  <Globe className="h-6 w-6 text-blue-600" />
+                  支持哪些地区的商家搜索？
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground leading-relaxed">
+                  ClientSeeker支持全球商家搜索：
+                </p>
+                <ul className="mt-3 space-y-2 text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                    <span><strong>中国大陆：</strong>精确到省市区三级，覆盖34个省市自治区</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
+                    <span><strong>全球其他地区：</strong>通过Google Maps覆盖主要城市和地区</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="border shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-3">
+                  <Download className="h-6 w-6 text-orange-600" />
+                  数据导出有什么限制吗？
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground leading-relaxed mb-3">
+                  数据导出功能根据数据源有不同的支持情况：
+                </p>
+                <div className="space-y-3">
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-100 text-green-700 border-green-300">
+                        支持导出
+                      </Badge>
+                      <span className="font-medium text-green-800">中国大陆数据</span>
+                    </div>
+                    <p className="text-sm text-green-700">
+                      来自高德地图和百度地图的商家数据支持CSV格式导出，包含完整的联系信息
+                    </p>
+                  </div>
+                  
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-amber-100 text-amber-700 border-amber-300">
+                        暂不支持
+                      </Badge>
+                      <span className="font-medium text-amber-800">Google Maps数据</span>
+                    </div>
+                    <p className="text-sm text-amber-700">
+                      来自Google Maps的全球商家数据暂时不支持导出，但可以在线查看和使用
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-3">
+                  <Shield className="h-6 w-6 text-purple-600" />
+                  数据准确性如何保证？
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground leading-relaxed">
+                  我们采用多重措施确保数据质量：
+                </p>
+                <ul className="mt-3 space-y-2 text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
+                    <span>多数据源交叉验证，智能去重确保信息唯一性</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
+                    <span>优先展示有电话号码的高质量商家信息</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
+                    <span>定期更新数据库，确保信息时效性</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
