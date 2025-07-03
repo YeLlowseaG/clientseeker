@@ -1,70 +1,62 @@
 {
-  "template": "shipany-template-one",
+  "template": "clientseeker",
   "theme": "light",
   "header": {
     "brand": {
-      "title": "ShipAny",
+      "title": "ClientSeeker",
       "logo": {
         "src": "/logo.png",
-        "alt": "ShipAny"
+        "alt": "ClientSeeker"
       },
       "url": "/"
     },
     "nav": {
       "items": [
         {
-          "title": "功能特点",
-          "url": "/#feature",
+          "title": "功能介绍",
+          "url": "/features",
           "icon": "RiSparkling2Line"
         },
         {
-          "title": "定价",
+          "title": "定价方案",
           "url": "/pricing",
           "icon": "RiMoneyDollarCircleLine"
         },
         {
-          "title": "案例展示",
+          "title": "使用案例",
           "url": "/showcase",
-          "icon": "RiApps2Line"
+          "icon": "RiPresentationLine"
         }
       ]
     },
-    "buttons": [
-      {
-        "title": "获取 ShipAny",
-        "url": "https://shipany.ai",
-        "target": "_blank",
-        "variant": "link",
-        "icon": "RiArrowRightUpLine"
-      }
-    ],
+    "buttons": [],
     "show_sign": true,
     "show_theme": true,
     "show_locale": true
   },
   "hero": {
-    "title": "几小时内快速构建 AI 创业项目，而不是几天",
-    "highlight_text": "快速构建",
-    "description": "ShipAny 是一个用于构建 AI SaaS 创业项目的 NextJS 模板。<br/>通过丰富的模板和组件快速启动。",
+    "title": "几秒钟获取海量潜在用户，助力业务倍速增长",
+    "highlight_text": "几秒钟获取",
+    "description": "ClientSeeker 是专业的客户开发工具。<br/>帮助销售团队和企业快速找到目标客户联系信息。",
     "announcement": {
       "label": "2025",
-      "title": "🎉 新年快乐",
+      "title": "🎯 精准获客",
       "url": "/#pricing"
     },
-    "tip": "🎁 2025年前五折优惠",
+    "tip": "🚀 专业客户开发工具",
     "buttons": [
       {
-        "title": "立即开始",
+        "title": "开始寻找客户",
         "icon": "RiFlashlightFill",
-        "url": "/#pricing",
+        "url": "/search",
         "target": "_self",
         "variant": "default"
       },
       {
-        "title": "加入 Discord",
-        "icon": "RiDiscordFill",
-        "url": "https://discord.gg/HQNnrzjZQS",
-        "target": "_blank",
+        "title": "查看定价",
+        "icon": "RiMoneyDollarCircleLine",
+        "url": "/pricing",
+        "target": "_self",
         "variant": "outline"
       }
     ],
@@ -72,7 +64,7 @@
     "show_badge": false
   },
   "branding": {
-    "title": "ShipAny 建立在巨人的肩膀上",
+    "title": "ClientSeeker 基于现代技术栈构建",
     "items": [
       {
         "title": "Next.js",
@@ -113,9 +105,9 @@
   },
   "introduce": {
     "name": "introduce",
-    "title": "什么是 ShipAny",
+    "title": "什么是 ClientSeeker",
     "label": "介绍",
-    "description": "ShipAny 是一个用于构建 AI SaaS 创业项目的 NextJS 模板，内置多种模板和组件。",
+    "description": "ClientSeeker 是专业的客户开发工具，帮助销售团队快速找到目标客户联系信息。",
     "image": {
       "src": "/imgs/features/1.png"
     },
@@ -139,9 +131,9 @@
   },
   "benefit": {
     "name": "benefit",
-    "title": "为什么选择 ShipAny",
+    "title": "为什么选择 ClientSeeker",
     "label": "优势",
-    "description": "获取启动 AI 创业所需的一切 - 从即用型模板到技术支持。",
+    "description": "专业的客户获取解决方案 - 从精准搜索到联系方式导出。",
     "items": [
       {
         "title": "完整框架",
@@ -381,54 +373,34 @@
   "footer": {
     "name": "footer",
     "brand": {
-      "title": "ShipAny",
-      "description": "ShipAny 是一个用于构建 AI SaaS 创业项目的 NextJS 模板。通过丰富的模板和组件快速启动。",
+      "title": "ClientSeeker",
+      "description": "ClientSeeker 是专业的客户开发工具。帮助销售团队和企业快速找到目标客户联系信息。",
       "logo": {
         "src": "/logo.png",
-        "alt": "ShipAny"
+        "alt": "ClientSeeker"
       },
       "url": "/"
     },
-    "copyright": "© 2025 • ShipAny 保留所有权利。",
+    "copyright": "© 2025 • ClientSeeker 版权所有。",
     "nav": {
       "items": [
         {
           "title": "关于",
           "children": [
             {
-              "title": "功能特点",
-              "url": "/#feature",
+              "title": "功能介绍",
+              "url": "/#features",
               "target": "_self"
             },
             {
-              "title": "案例展示",
-              "url": "/#showcase",
+              "title": "使用案例",
+              "url": "/showcase",
               "target": "_self"
             },
             {
               "title": "定价",
               "url": "/#pricing",
               "target": "_self"
-            }
-          ]
-        },
-        {
-          "title": "资源",
-          "children": [
-            {
-              "title": "文档",
-              "url": "https://docs.shipany.ai",
-              "target": "_blank"
-            },
-            {
-              "title": "组件",
-              "url": "https://shipany.ai/components",
-              "target": "_blank"
-            },
-            {
-              "title": "模板",
-              "url": "https://shipany.ai/templates",
-              "target": "_blank"
             }
           ]
         },
@@ -457,27 +429,9 @@
     "social": {
       "items": [
         {
-          "title": "X",
-          "icon": "RiTwitterXFill",
-          "url": "https://x.com/shipanyai",
-          "target": "_blank"
-        },
-        {
-          "title": "Github",
-          "icon": "RiGithubFill",
-          "url": "https://github.com/shipanyai",
-          "target": "_blank"
-        },
-        {
-          "title": "Discord",
-          "icon": "RiDiscordFill",
-          "url": "https://discord.gg/HQNnrzjZQS",
-          "target": "_blank"
-        },
-        {
           "title": "邮箱",
           "icon": "RiMailLine",
-          "url": "mailto:support@shipany.ai",
+          "url": "mailto:support@clientseeker.com",
           "target": "_self"
         }
       ]

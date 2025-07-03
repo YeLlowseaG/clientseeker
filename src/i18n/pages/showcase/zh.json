@@ -1,88 +1,88 @@
 {
   "showcase": {
     "name": "showcase",
-    "title": "使用 ShipAny 构建的 AI SaaS 创业项目",
-    "description": "易于使用，快速发布。",
+    "title": "ClientSeeker 使用案例",
+    "description": "看看不同行业的销售团队如何使用 ClientSeeker 提升客户开发效率。",
     "items": [
       {
-        "title": "ThinkAny",
-        "description": "AI 搜索引擎",
-        "url": "https://thinkany.ai",
-        "target": "_blank",
+        "title": "餐饮供应商",
+        "description": "食材供应公司使用 ClientSeeker 快速找到新开餐厅，3个月内新增200家客户",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/7.png"
+          "src": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "HeyBeauty",
-        "description": "AI 虚拟试妆",
-        "url": "https://heybeauty.ai",
-        "target": "_blank",
+        "title": "美容设备商",
+        "description": "美容设备厂商通过 ClientSeeker 精准定位美容院，销售业绩提升150%",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/5.png"
+          "src": "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "AI Wallpaper",
-        "description": "AI 壁纸生成器",
-        "url": "https://aiwallpaper.shop",
-        "target": "_blank",
+        "title": "汽车配件商",
+        "description": "汽车零配件公司利用 ClientSeeker 开发汽修店客户，签约率提升80%",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/1.png"
+          "src": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "AI Cover",
-        "description": "AI 封面生成器",
-        "url": "https://aicover.design",
-        "target": "_blank",
+        "title": "医疗器械商",
+        "description": "医疗设备供应商通过 ClientSeeker 精准联系诊所，月销售额增长120%",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/2.png"
+          "src": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "GPTs Works",
-        "description": "GPTs 目录",
-        "url": "https://gpts.works",
-        "target": "_blank",
+        "title": "教育培训机构",
+        "description": "在线教育公司使用 ClientSeeker 开发线下培训机构合作伙伴，拓展50个城市",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/3.png"
+          "src": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "Melodisco",
-        "description": "AI 音乐播放器",
-        "url": "https://melodis.co",
-        "target": "_blank",
+        "title": "装修建材商",
+        "description": "建材供应商通过 ClientSeeker 联系装修公司，订单量增长200%",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/4.png"
+          "src": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "Pagen",
-        "description": "AI 落地页生成器",
-        "url": "https://pagen.so",
-        "target": "_blank",
+        "title": "金融服务商",
+        "description": "小微金融公司利用 ClientSeeker 精准获客，放贷效率提升3倍",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/6.png"
+          "src": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "SoraFM",
-        "description": "AI 视频生成器",
-        "url": "https://sorafm.trys.ai",
-        "target": "_blank",
+        "title": "物流服务商",
+        "description": "同城配送公司通过 ClientSeeker 开发餐饮客户，日订单量突破1000单",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/8.png"
+          "src": "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "PodLM",
-        "description": "AI 播客生成器",
-        "url": "https://podlm.ai",
-        "target": "_blank",
+        "title": "清洁服务商",
+        "description": "商业清洁公司使用 ClientSeeker 联系办公楼宇，合同签约率提升60%",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/9.png"
+          "src": "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=400&h=300&fit=crop"
         }
       }
     ]

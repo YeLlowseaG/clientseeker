@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "title": "几小时内构建任何 AI SaaS 创业项目 | ShipAny",
-    "description": "ShipAny 是一个用于构建 AI SaaS 创业项目的 NextJS 模板，提供各种模板和组件，帮助您快速启动。",
-    "keywords": "ShipAny, AI SaaS 模板, NextJS 模板"
+    "title": "ClientSeeker - 智能客户开发工具 | 快速获取潜在客户联系方式",
+    "description": "ClientSeeker 是一个专业的客户开发工具，帮助销售人员和企业快速找到目标客户联系方式，提升业务增长效率。",
+    "keywords": "ClientSeeker, 找客户, 客户开发, 潜在客户, 联系方式, 销售工具"
   },
   "user": {
     "sign_in": "登录",
@@ -34,7 +34,7 @@
   },
   "my_orders": {
     "title": "我的订单",
-    "description": "在 ShipAny 上购买的订单。",
+    "description": "您的客户开发服务订单。",
     "no_orders": "未找到订单",
     "tip": "",
     "activate_order": "激活订单",

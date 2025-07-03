@@ -1,12 +1,12 @@
 {
-  "template": "shipany-template-one",
+  "template": "clientseeker",
   "theme": "light",
   "header": {
     "brand": {
-      "title": "ShipAny",
+      "title": "ClientSeeker",
       "logo": {
         "src": "/logo.png",
-        "alt": "ShipAny"
+        "alt": "ClientSeeker"
       },
       "url": "/"
     },
@@ -14,7 +14,7 @@
       "items": [
         {
           "title": "Features",
-          "url": "/#feature",
+          "url": "/features",
           "icon": "RiSparkling2Line"
         },
         {
@@ -23,48 +23,40 @@
           "icon": "RiMoneyDollarCircleLine"
         },
         {
-          "title": "Showcase",
+          "title": "Use Cases",
           "url": "/showcase",
-          "icon": "RiApps2Line"
+          "icon": "RiPresentationLine"
         }
       ]
     },
-    "buttons": [
-      {
-        "title": "Get ShipAny",
-        "url": "https://shipany.ai",
-        "target": "_blank",
-        "variant": "link",
-        "icon": "RiArrowRightUpLine"
-      }
-    ],
+    "buttons": [],
     "show_sign": true,
     "show_theme": true,
     "show_locale": true
   },
   "hero": {
-    "title": "Ship Any AI Startups in hours, not days",
-    "highlight_text": "Ship Any",
-    "description": "ShipAny is a NextJS boilerplate for building AI SaaS startups.<br/>Ship Fast with a variety of templates and components.",
+    "title": "Get Massive Leads in Seconds, Accelerate Business Growth",
+    "highlight_text": "Get Massive Leads",
+    "description": "ClientSeeker is a professional customer development tool.<br/>Help sales teams and businesses quickly find target customer contact information.",
     "announcement": {
       "label": "2025",
-      "title": "🎉 Happy New Year",
+      "title": "🎯 Smart Lead Gen",
       "url": "/#pricing"
     },
-    "tip": "🎁 50% off before 2025",
+    "tip": "🚀 Professional Customer Development",
     "buttons": [
       {
-        "title": "Get Started",
+        "title": "Find Clients Now",
         "icon": "RiFlashlightFill",
-        "url": "/#pricing",
+        "url": "/search",
         "target": "_self",
         "variant": "default"
       },
       {
-        "title": "Join Discord",
-        "icon": "RiDiscordFill",
-        "url": "https://discord.gg/HQNnrzjZQS",
-        "target": "_blank",
+        "title": "View Pricing",
+        "icon": "RiMoneyDollarCircleLine",
+        "url": "/pricing",
+        "target": "_self",
         "variant": "outline"
       }
     ],
@@ -381,15 +373,15 @@
   "footer": {
     "name": "footer",
     "brand": {
-      "title": "ShipAny",
-      "description": "ShipAny is a NextJS boilerplate for building AI SaaS startups. Ship Fast with a variety of templates and components.",
+      "title": "ClientSeeker",
+      "description": "ClientSeeker is a professional customer development tool. Help sales teams and businesses quickly find target customer contact information.",
       "logo": {
         "src": "/logo.png",
-        "alt": "ShipAny"
+        "alt": "ClientSeeker"
       },
       "url": "/"
     },
-    "copyright": "© 2025 • ShipAny All rights reserved.",
+    "copyright": "© 2025 • ClientSeeker All rights reserved.",
     "nav": {
       "items": [
         {
@@ -397,38 +389,18 @@
           "children": [
             {
               "title": "Features",
-              "url": "/#feature",
+              "url": "/#features",
               "target": "_self"
             },
             {
-              "title": "Showcases",
-              "url": "/#showcase",
+              "title": "Use Cases",
+              "url": "/showcase",
               "target": "_self"
             },
             {
               "title": "Pricing",
               "url": "/#pricing",
               "target": "_self"
-            }
-          ]
-        },
-        {
-          "title": "Resources",
-          "children": [
-            {
-              "title": "Documents",
-              "url": "https://docs.shipany.ai",
-              "target": "_blank"
-            },
-            {
-              "title": "Components",
-              "url": "https://shipany.ai/components",
-              "target": "_blank"
-            },
-            {
-              "title": "Templates",
-              "url": "https://shipany.ai/templates",
-              "target": "_blank"
             }
           ]
         },
@@ -457,27 +429,9 @@
     "social": {
       "items": [
         {
-          "title": "X",
-          "icon": "RiTwitterXFill",
-          "url": "https://x.com/shipanyai",
-          "target": "_blank"
-        },
-        {
-          "title": "Github",
-          "icon": "RiGithubFill",
-          "url": "https://github.com/shipanyai",
-          "target": "_blank"
-        },
-        {
-          "title": "Discord",
-          "icon": "RiDiscordFill",
-          "url": "https://discord.gg/HQNnrzjZQS",
-          "target": "_blank"
-        },
-        {
           "title": "Email",
           "icon": "RiMailLine",
-          "url": "mailto:support@shipany.ai",
+          "url": "mailto:support@clientseeker.com",
           "target": "_self"
         }
       ]

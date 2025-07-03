@@ -1,88 +1,88 @@
 {
   "showcase": {
     "name": "showcase",
-    "title": "AI SaaS Startups built with ShipAny",
-    "description": "Easy to use and fast to ship.",
+    "title": "ClientSeeker Use Cases",
+    "description": "See how sales teams across different industries use ClientSeeker to boost customer acquisition efficiency.",
     "items": [
       {
-        "title": "ThinkAny",
-        "description": "AI Search Engine",
-        "url": "https://thinkany.ai",
-        "target": "_blank",
+        "title": "Food Supplier",
+        "description": "Food supply company used ClientSeeker to quickly find new restaurants, adding 200 clients in 3 months",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/7.png"
+          "src": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "HeyBeauty",
-        "description": "AI Virtual Try On",
-        "url": "https://heybeauty.ai",
-        "target": "_blank",
+        "title": "Beauty Equipment Vendor",
+        "description": "Beauty equipment manufacturer precisely targeted salons with ClientSeeker, boosting sales by 150%",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/5.png"
+          "src": "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "AI Wallpaper",
-        "description": "AI Wallpaper Generator",
-        "url": "https://aiwallpaper.shop",
-        "target": "_blank",
+        "title": "Auto Parts Dealer",
+        "description": "Auto parts company used ClientSeeker to develop auto repair shop clients, increasing signing rate by 80%",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/1.png"
+          "src": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "AI Cover",
-        "description": "AI Cover Generator",
-        "url": "https://aicover.design",
-        "target": "_blank",
+        "title": "Medical Equipment Supplier",
+        "description": "Medical device supplier precisely contacted clinics through ClientSeeker, growing monthly sales by 120%",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/2.png"
+          "src": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "GPTs Works",
-        "description": "GPTs Directory",
-        "url": "https://gpts.works",
-        "target": "_blank",
+        "title": "Education Provider",
+        "description": "Online education company used ClientSeeker to develop offline training partners, expanding to 50 cities",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/3.png"
+          "src": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "Melodisco",
-        "description": "AI Music Player",
-        "url": "https://melodis.co",
-        "target": "_blank",
+        "title": "Construction Material Supplier",
+        "description": "Building material supplier contacted renovation companies via ClientSeeker, increasing orders by 200%",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/4.png"
+          "src": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "Pagen",
-        "description": "AI Landing Page Generator",
-        "url": "https://pagen.so",
-        "target": "_blank",
+        "title": "Financial Services",
+        "description": "Micro-finance company used ClientSeeker for precise customer acquisition, tripling lending efficiency",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/6.png"
+          "src": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "SoraFM",
-        "description": "AI Video Generator",
-        "url": "https://sorafm.trys.ai",
-        "target": "_blank",
+        "title": "Logistics Provider",
+        "description": "Same-city delivery company developed restaurant clients through ClientSeeker, exceeding 1000 daily orders",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/8.png"
+          "src": "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?w=400&h=300&fit=crop"
         }
       },
       {
-        "title": "PodLM",
-        "description": "AI Podcast Generator",
-        "url": "https://podlm.ai",
-        "target": "_blank",
+        "title": "Cleaning Services",
+        "description": "Commercial cleaning company used ClientSeeker to contact office buildings, increasing contract rate by 60%",
+        "url": "#",
+        "target": "_self",
         "image": {
-          "src": "/imgs/showcases/9.png"
+          "src": "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=400&h=300&fit=crop"
         }
       }
     ]
