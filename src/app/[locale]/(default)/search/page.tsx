@@ -230,9 +230,9 @@ export default function SearchPage() {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* 页面标题区域 - 固定高度 */}
         <div className="text-center mb-8 h-[200px] flex flex-col justify-center">
-          <h1 className="text-4xl font-bold mb-4">ClientSeeker - 找客户助手</h1>
+          <h1 className="text-4xl font-bold mb-4">ClientSeeker - 全球找客户助手</h1>
           <p className="text-lg text-muted-foreground mb-6">
-            快速查找潜在客户联系方式，助力业务增长
+            快速查找全球潜在客户联系方式，支持中国大陆及海外市场
           </p>
           
           {location && (
@@ -327,8 +327,8 @@ export default function SearchPage() {
                   loading={loading}
                 />
                 
-                {/* 导出按钮 - 仅国内数据显示 */}
-                {location?.isChina && (
+                {/* 导出按钮 - 仅国内数据支持导出 */}
+                {location?.isChina ? (
                   <Button
                     variant="outline"
                     onClick={handleExport}
@@ -340,6 +340,11 @@ export default function SearchPage() {
                     </svg>
                     导出全部 ({totalCount}条)
                   </Button>
+                ) : (
+                  <div className="text-sm text-amber-600 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">
+                    <span className="font-medium">💡 导出提示：</span>
+                    <span className="ml-1">Google Maps数据暂不支持导出，仅支持在线查看</span>
+                  </div>
                 )}
               </div>
               
@@ -347,7 +352,7 @@ export default function SearchPage() {
                 <p className="text-sm text-muted-foreground">
                   {location && (
                     <span>
-                      数据来源: {location.isChina ? '高德地图、百度地图（智能合并去重，优先显示有电话的商户）' : 'Google Maps'}
+                      数据来源: {location.isChina ? '高德地图、百度地图（智能合并去重，优先显示有电话的商户）' : 'Google Maps（全球商家数据，暂不支持导出）'}
                     </span>
                   )}
                 </p>
@@ -485,15 +490,15 @@ export default function SearchPage() {
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold mb-4">什么是ClientSeeker？</h2>
                 <p className="text-lg text-muted-foreground">
-                  ClientSeeker是一款专业的客户开发工具，帮助销售团队和企业快速找到目标客户联系信息
+                  ClientSeeker是一款专业的全球客户开发工具，支持中国大陆及海外市场商家联系信息查询
                 </p>
               </div>
               
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 mb-8">
                 <p className="text-lg leading-relaxed">
-                  ClientSeeker基于多源数据整合技术，为销售团队、市场人员和企业主提供精准的客户联系信息获取服务。
-                  通过整合高德地图、百度地图、Google Maps等权威数据源，我们能够帮助您快速定位目标行业的潜在客户，
-                  获取准确的企业联系方式，显著提升销售效率和业务拓展成功率。
+                  ClientSeeker基于多源数据整合技术，为销售团队、市场人员和企业主提供精准的全球客户联系信息获取服务。
+                  通过整合高德地图、百度地图、Google Maps等权威数据源，我们能够帮助您快速定位全球目标行业的潜在客户，
+                  获取准确的企业联系方式，显著提升国内外业务拓展成功率。
                 </p>
               </div>
             </div>
@@ -538,7 +543,7 @@ export default function SearchPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-lg mb-2">覆盖范围广泛</h3>
-                      <p className="text-muted-foreground">支持全国34个省市自治区，精确到区县级别的地理定位</p>
+                      <p className="text-muted-foreground">支持全球商家搜索，中国大陆精确到区县级别，海外覆盖主要城市和地区</p>
                     </div>
                   </div>
                 </div>
@@ -552,7 +557,7 @@ export default function SearchPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-lg mb-2">操作简单高效</h3>
-                      <p className="text-muted-foreground">输入关键词即可搜索，支持一键导出CSV格式数据</p>
+                      <p className="text-muted-foreground">输入关键词即可搜索，国内数据支持一键导出CSV格式</p>
                     </div>
                   </div>
                   
@@ -629,7 +634,7 @@ export default function SearchPage() {
                   </div>
                   <h3 className="text-xl font-semibold mb-2">精准搜索</h3>
                   <p className="text-muted-foreground">
-                    支持行业关键词搜索，覆盖全国34个省市自治区，精确定位目标客户群体
+                    支持行业关键词搜索，覆盖全球主要城市和地区，精确定位目标客户群体
                   </p>
                 </div>
 
@@ -649,7 +654,7 @@ export default function SearchPage() {
                   </div>
                   <h3 className="text-xl font-semibold mb-2">多源数据整合</h3>
                   <p className="text-muted-foreground">
-                    整合高德地图、百度地图、Google Maps等多个数据源，确保信息全面准确
+                    整合高德地图、百度地图、Google Maps等多个数据源，支持全球商家信息查询
                   </p>
                 </div>
                 
@@ -661,7 +666,7 @@ export default function SearchPage() {
                   </div>
                   <h3 className="text-xl font-semibold mb-2">数据导出</h3>
                   <p className="text-muted-foreground">
-                    一键导出CSV格式客户数据，支持Excel打开，便于后续分析和管理
+                    国内数据支持一键导出CSV格式，Google Maps数据可在线查看使用
                   </p>
                 </div>
                 
