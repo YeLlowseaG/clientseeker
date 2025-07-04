@@ -21,10 +21,16 @@ const AppContext = createContext({} as ContextValue);
 export const useAppContext = () => useContext(AppContext);
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
+  console.log("Google One Tap config:", {
+    enabled: process.env.NEXT_PUBLIC_AUTH_GOOGLE_ONE_TAP_ENABLED,
+    clientId: process.env.NEXT_PUBLIC_AUTH_GOOGLE_ID
+  });
+  
   if (
     process.env.NEXT_PUBLIC_AUTH_GOOGLE_ONE_TAP_ENABLED === "true" &&
     process.env.NEXT_PUBLIC_AUTH_GOOGLE_ID
   ) {
+    console.log("Initializing Google One Tap...");
     useOneTapLogin();
   }
 
