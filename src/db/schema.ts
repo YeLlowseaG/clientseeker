@@ -10,6 +10,14 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
+import {
+  sqliteTable,
+  text as sqliteText,
+  integer as sqliteInteger,
+  primaryKey,
+  uniqueIndex as sqliteUniqueIndex,
+} from "drizzle-orm/sqlite-core";
+
 // Users table
 export const users = pgTable(
   "users",
@@ -127,4 +135,21 @@ export const feedbacks = pgTable("feedbacks", {
   user_uuid: varchar({ length: 255 }),
   content: text(),
   rating: integer(),
+});
+
+// User subscriptions table
+export const subscriptions = pgTable("subscriptions", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  user_uuid: varchar({ length: 255 }).notNull(),
+  product_id: varchar({ length: 255 }).notNull(),
+  product_name: varchar({ length: 255 }).notNull(),
+  status: varchar({ length: 50 }).notNull().default("active"),
+  credits_total: integer().notNull().default(0),
+  credits_used: integer().notNull().default(0),
+  credits_remaining: integer().notNull().default(0),
+  period_start: timestamp({ withTimezone: true }),
+  period_end: timestamp({ withTimezone: true }),
+  stripe_subscription_id: varchar({ length: 255 }),
+  created_at: timestamp({ withTimezone: true }),
+  updated_at: timestamp({ withTimezone: true }),
 });

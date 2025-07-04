@@ -188,6 +188,22 @@ export async function POST(req: Request) {
       };
     }
 
+    // Add additional metadata for ClientSeeker products
+    options.metadata = {
+      ...options.metadata,
+      product_id: product_id,
+    };
+
+    if (is_subscription) {
+      options.subscription_data = {
+        ...options.subscription_data,
+        metadata: {
+          ...options.subscription_data?.metadata,
+          product_id: product_id,
+        },
+      };
+    }
+
     const order_detail = JSON.stringify(options);
 
     const session = await stripe.checkout.sessions.create(options);

@@ -1,21 +1,32 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, MapPin, Phone, Star, Building2 } from 'lucide-react';
+import { Search, MapPin, Phone, Star, Building2, AlertTriangle, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import RegionSelector from '@/components/region-selector';
 import Pagination from '@/components/pagination';
 import { BusinessInfo } from '@/lib/maps';
 import { SelectedRegion } from '@/lib/regions/types';
+import { useAppContext } from '@/contexts/app';
 
 interface LocationInfo {
   ip: string;
   country: string;
   city: string;
   isChina: boolean;
+}
+
+interface QuotaInfo {
+  remaining: number;
+  total: number;
+  used: number;
+  productId: string;
 }
 
 interface SearchResult {
@@ -27,9 +38,15 @@ interface SearchResult {
   sources: string[];
   success: boolean;
   networkWarning?: string;
+  quota?: QuotaInfo;
+  error?: string;
+  message?: string;
 }
 
 export default function SearchPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const { setShowSignModal } = useAppContext();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<BusinessInfo[]>([]);
   const [allResults, setAllResults] = useState<BusinessInfo[]>([]); // 缓存所有结果
@@ -38,6 +55,7 @@ export default function SearchPage() {
   const [selectedRegion, setSelectedRegion] = useState<SelectedRegion>({});
   const [error, setError] = useState('');
   const [networkWarning, setNetworkWarning] = useState('');
+  const [quotaInfo, setQuotaInfo] = useState<QuotaInfo | null>(null);
   
   // 分页状态
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,7 +65,23 @@ export default function SearchPage() {
 
   useEffect(() => {
     fetchLocation();
-  }, []);
+    
+    if (status === 'authenticated') {
+      fetchQuotaInfo();
+    }
+  }, [status]);
+
+  const fetchQuotaInfo = async () => {
+    try {
+      const response = await fetch('/api/user/quota');
+      if (response.ok) {
+        const data = await response.json();
+        setQuotaInfo(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch quota info:', error);
+    }
+  };
 
   const fetchLocation = async () => {
     try {
@@ -122,8 +156,21 @@ export default function SearchPage() {
         
         setLocation(data.location);
         setNetworkWarning(data.networkWarning || '');
+        
+        // 更新配额信息
+        if (data.quota) {
+          setQuotaInfo(data.quota);
+        }
       } else {
-        setError('搜索失败，请重试');
+        if (response.status === 403) {
+          // 配额不足
+          setError(data.message || '搜索配额已用完，请升级套餐或等待配额重置');
+        } else if (response.status === 401) {
+          // 未认证
+          setError('请先登录后再进行搜索');
+        } else {
+          setError(data.message || '搜索失败，请重试');
+        }
       }
     } catch (error) {
       console.error('Search error:', error);
@@ -135,6 +182,13 @@ export default function SearchPage() {
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // 检查用户登录状态，未登录显示登录弹窗
+    if (status === 'unauthenticated') {
+      setShowSignModal(true);
+      return;
+    }
+    
     setCurrentPage(1); // 重置到第一页
     setAllResults([]); // 清空缓存，强制重新搜索
     await performSearch(1, true);
@@ -225,6 +279,20 @@ export default function SearchPage() {
     }
   };
 
+  // 加载状态或未登录时的处理
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">加载中...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // 移除未登录用户的阻拦，允许所有用户访问搜索页面
+
   return (
     <div className="bg-gray-50">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -245,6 +313,34 @@ export default function SearchPage() {
             </div>
           )}
         </div>
+
+      {/* 配额信息显示 */}
+      {quotaInfo && (
+        <div className="max-w-4xl mx-auto mb-6">
+          <Card>
+            <CardContent className="flex items-center justify-between p-4">
+              <div className="flex items-center gap-4">
+                <CreditCard className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm font-medium">搜索配额</p>
+                  <p className="text-xs text-muted-foreground">
+                    剩余 {quotaInfo.remaining} 次 / 总计 {quotaInfo.total} 次
+                  </p>
+                </div>
+              </div>
+              {quotaInfo.remaining <= 3 && quotaInfo.productId === 'free' && (
+                <Button
+                  size="sm"
+                  onClick={() => router.push('/#pricing')}
+                  className="bg-orange-500 hover:bg-orange-600"
+                >
+                  升级套餐
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       <form onSubmit={handleSearch} className="mb-8 space-y-6">
         {/* 搜索输入和按钮 */}
@@ -272,9 +368,15 @@ export default function SearchPage() {
               className="h-12"
             />
           </div>
-          <Button type="submit" disabled={loading} className="h-12 px-8">
+          <Button 
+            type="submit" 
+            disabled={loading || Boolean(quotaInfo && quotaInfo.remaining <= 0)} 
+            className="h-12 px-8"
+          >
             <Search className="h-4 w-4 mr-2" />
-            {loading ? '搜索中...' : '搜索'}
+            {loading ? '搜索中...' : 
+             status === 'unauthenticated' ? '登录后搜索' :
+             quotaInfo && quotaInfo.remaining <= 0 ? '配额不足' : '搜索'}
           </Button>
         </div>
 
@@ -300,7 +402,25 @@ export default function SearchPage() {
       </form>
 
       {error && (
-        <div className="text-center text-red-600 mb-6">{error}</div>
+        <div className="max-w-4xl mx-auto mb-6">
+          <Alert>
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              {error}
+              {error.includes('配额') && (
+                <div className="mt-2">
+                  <Button
+                    size="sm"
+                    onClick={() => router.push('/#pricing')}
+                    className="bg-blue-500 hover:bg-blue-600"
+                  >
+                    查看套餐
+                  </Button>
+                </div>
+              )}
+            </AlertDescription>
+          </Alert>
+        </div>
       )}
 
       {networkWarning && (

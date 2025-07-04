@@ -25,8 +25,12 @@ export default function SignUser({ user }: { user: User }) {
       title: user.nickname,
     },
     {
-      title: t("user.user_center"),
-      url: "/my-orders",
+      title: t("user.dashboard") || "用户中心",
+      url: "/dashboard",
+    },
+    {
+      title: t("user.search") || "开始搜索",
+      url: "/search",
     },
     {
       title: t("user.admin_system"),

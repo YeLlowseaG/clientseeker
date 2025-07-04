@@ -1,12 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MapServiceManager, SearchParams, BusinessInfo } from '@/lib/maps';
 import { getLocationFromIP, getClientIP } from '@/lib/geo';
+import { auth } from '@/auth';
+import { SubscriptionService } from '@/services/subscription';
 
 // 全局缓存，避免重复API调用
 const searchCache = new Map<string, BusinessInfo[]>();
 
 export async function POST(request: NextRequest) {
   try {
+    // 检查用户身份验证
+    const session = await auth();
+    if (!session?.user?.uuid) {
+      return NextResponse.json({
+        error: 'Authentication required',
+        success: false
+      }, { status: 401 });
+    }
+
+    const userUuid = session.user.uuid;
+
+    // 检查用户搜索配额
+    const quotaCheck = await SubscriptionService.checkUserQuota(userUuid);
+    if (!quotaCheck.hasQuota) {
+      return NextResponse.json({
+        error: 'Search quota exceeded',
+        message: quotaCheck.message,
+        quota: {
+          remaining: quotaCheck.remaining,
+          total: quotaCheck.total,
+          used: quotaCheck.used,
+          productId: quotaCheck.productId
+        },
+        success: false
+      }, { status: 403 });
+    }
+
     const body = await request.json();
     const { query, city, latitude, longitude, radius, category, limit, page, pageSize, userRegionType }: SearchParams & { userRegionType?: 'china' | 'international' } = body;
 
@@ -121,6 +150,20 @@ export async function POST(request: NextRequest) {
 
     console.log('搜索结果:', `第${currentPage}页/${totalPages}页, 当前${paginatedResults.length}条, 总计${totalCount}条`);
 
+    // 只有首次搜索（page=1）时才扣减配额
+    if (currentPage === 1) {
+      const deductSuccess = await SubscriptionService.deductUserQuota(userUuid, 1);
+      if (!deductSuccess) {
+        return NextResponse.json({
+          error: 'Failed to deduct quota',
+          success: false
+        }, { status: 500 });
+      }
+    }
+
+    // 获取更新后的配额信息
+    const updatedQuota = await SubscriptionService.checkUserQuota(userUuid);
+
     // 检查是否有网络连接问题的警告
     let networkWarning = null;
     if (!isChina && paginatedResults.length === 0) {
@@ -141,6 +184,12 @@ export async function POST(request: NextRequest) {
       },
       sources: isChina ? ['gaode', 'baidu', 'dianping'] : ['google'],
       networkWarning,
+      quota: {
+        remaining: updatedQuota.remaining,
+        total: updatedQuota.total,
+        used: updatedQuota.used,
+        productId: updatedQuota.productId
+      },
       success: true
     });
   } catch (error) {

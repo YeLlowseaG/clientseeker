@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/icon";
 import { Label } from "@/components/ui/label";
-import { loadStripe } from "@stripe/stripe-js";
 import { toast } from "sonner";
 import { useAppContext } from "@/contexts/app";
 
@@ -31,6 +30,12 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
         return;
       }
 
+      // Skip payment for free tier
+      if (item.product_id === 'free') {
+        toast.success('Free tier activated! You can now start searching.');
+        return;
+      }
+
       const params = {
         product_id: item.product_id,
         product_name: item.product_name,
@@ -44,7 +49,8 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
       setIsLoading(true);
       setProductId(item.product_id);
 
-      const response = await fetch("/api/checkout", {
+      // Use PayPal checkout instead of Stripe
+      const response = await fetch("/api/paypal/checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,36 +61,27 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
       if (response.status === 401) {
         setIsLoading(false);
         setProductId(null);
-
         setShowSignModal(true);
         return;
       }
 
-      const { code, message, data } = await response.json();
-      if (code !== 0) {
-        toast.error(message);
+      const result = await response.json();
+      
+      if (!result.success) {
+        toast.error(result.error || 'Payment initialization failed');
         return;
       }
 
-      const { public_key, session_id } = data;
-
-      const stripe = await loadStripe(public_key);
-      if (!stripe) {
-        toast.error("checkout failed");
-        return;
+      // Redirect to PayPal for approval
+      if (result.approval_url) {
+        window.location.href = result.approval_url;
+      } else {
+        toast.error('Payment URL not found');
       }
 
-      const result = await stripe.redirectToCheckout({
-        sessionId: session_id,
-      });
-
-      if (result.error) {
-        toast.error(result.error.message);
-      }
     } catch (e) {
-      console.log("checkout failed: ", e);
-
-      toast.error("checkout failed");
+      console.log("PayPal checkout failed: ", e);
+      toast.error("Payment initialization failed");
     } finally {
       setIsLoading(false);
       setProductId(null);
