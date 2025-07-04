@@ -44,9 +44,13 @@ interface SearchResult {
 }
 
 export default function SearchPage() {
+  console.log("🔍 [SearchPage] Component rendering");
   const { data: session, status } = useSession();
+  console.log("🔍 [SearchPage] useSession:", !!session, status);
   const router = useRouter();
-  const { setShowSignModal } = useAppContext();
+  const appContext = useAppContext();
+  console.log("🔍 [SearchPage] useAppContext:", !!appContext, !!appContext?.setShowSignModal);
+  const { setShowSignModal } = appContext;
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<BusinessInfo[]>([]);
   const [allResults, setAllResults] = useState<BusinessInfo[]>([]); // 缓存所有结果
