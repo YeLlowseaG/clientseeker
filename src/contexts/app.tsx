@@ -21,6 +21,7 @@ const AppContext = createContext({} as ContextValue);
 export const useAppContext = () => useContext(AppContext);
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
+  console.log("🔍 [AppContext] Provider initialized");
   console.log("Google One Tap config:", {
     enabled: process.env.NEXT_PUBLIC_AUTH_GOOGLE_ONE_TAP_ENABLED,
     clientId: process.env.NEXT_PUBLIC_AUTH_GOOGLE_ID
@@ -35,6 +36,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const { data: session } = useSession();
+  console.log("🔍 [AppContext] useSession result:", !!session, session);
 
   const [theme, setTheme] = useState<string>(() => {
     return process.env.NEXT_PUBLIC_DEFAULT_THEME || "";
