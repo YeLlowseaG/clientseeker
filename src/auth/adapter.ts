@@ -66,10 +66,12 @@ export function DrizzleAdapter(): Adapter {
       const account = await db()
         .select()
         .from(accounts)
-        .where(and(
-          eq(accounts.providerAccountId, providerAccountId),
-          eq(accounts.provider, provider)
-        ))
+        .where(
+          and(
+            eq(accounts.providerAccountId, providerAccountId),
+            eq(accounts.provider, provider)
+          )
+        )
         .limit(1);
 
       if (!account[0]) return null;
@@ -121,27 +123,29 @@ export function DrizzleAdapter(): Adapter {
 
     async linkAccount(account) {
       await db().insert(accounts).values({
-        userId: account.userId,
-        type: account.type,
-        provider: account.provider,
-        providerAccountId: account.providerAccountId,
-        refresh_token: account.refresh_token,
-        access_token: account.access_token,
-        expires_at: account.expires_at,
-        token_type: account.token_type,
-        scope: account.scope,
-        id_token: account.id_token,
-        session_state: account.session_state,
+        userId: String(account.userId),
+        type: String(account.type),
+        provider: String(account.provider),
+        providerAccountId: String(account.providerAccountId),
+        refresh_token: account.refresh_token ? String(account.refresh_token) : null,
+        access_token: account.access_token ? String(account.access_token) : null,
+        expires_at: account.expires_at ? parseInt(String(account.expires_at)) : null,
+        token_type: account.token_type ? String(account.token_type) : null,
+        scope: account.scope ? String(account.scope) : null,
+        id_token: account.id_token ? String(account.id_token) : null,
+        session_state: account.session_state ? String(account.session_state) : null,
       });
     },
 
     async unlinkAccount({ providerAccountId, provider }) {
       await db()
         .delete(accounts)
-        .where(and(
-          eq(accounts.providerAccountId, providerAccountId),
-          eq(accounts.provider, provider)
-        ));
+        .where(
+          and(
+            eq(accounts.providerAccountId, providerAccountId),
+            eq(accounts.provider, provider)
+          )
+        );
     },
 
     async createSession({ sessionToken, userId, expires }) {
@@ -233,20 +237,24 @@ export function DrizzleAdapter(): Adapter {
       const verificationToken = await db()
         .select()
         .from(verificationTokens)
-        .where(and(
-          eq(verificationTokens.identifier, identifier),
-          eq(verificationTokens.token, token)
-        ))
+        .where(
+          and(
+            eq(verificationTokens.identifier, identifier),
+            eq(verificationTokens.token, token)
+          )
+        )
         .limit(1);
 
       if (!verificationToken[0]) return null;
 
       await db()
         .delete(verificationTokens)
-        .where(and(
-          eq(verificationTokens.identifier, identifier),
-          eq(verificationTokens.token, token)
-        ));
+        .where(
+          and(
+            eq(verificationTokens.identifier, identifier),
+            eq(verificationTokens.token, token)
+          )
+        );
 
       return {
         identifier: verificationToken[0].identifier,
