@@ -153,3 +153,34 @@ export const subscriptions = pgTable("subscriptions", {
   created_at: timestamp({ withTimezone: true }),
   updated_at: timestamp({ withTimezone: true }),
 });
+
+// NextAuth required tables
+export const accounts = pgTable("accounts", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  userId: varchar({ length: 255 }).notNull(),
+  type: varchar({ length: 255 }).notNull(),
+  provider: varchar({ length: 255 }).notNull(),
+  providerAccountId: varchar({ length: 255 }).notNull(),
+  refresh_token: text(),
+  access_token: text(),
+  expires_at: integer(),
+  token_type: varchar({ length: 255 }),
+  scope: varchar({ length: 255 }),
+  id_token: text(),
+  session_state: varchar({ length: 255 }),
+});
+
+export const sessions = pgTable("sessions", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  sessionToken: varchar({ length: 255 }).notNull().unique(),
+  userId: varchar({ length: 255 }).notNull(),
+  expires: timestamp({ withTimezone: true }).notNull(),
+});
+
+export const verificationTokens = pgTable("verificationToken", {
+  identifier: varchar({ length: 255 }).notNull(),
+  token: varchar({ length: 255 }).notNull(),
+  expires: timestamp({ withTimezone: true }).notNull(),
+}, (table) => [
+  unique().on(table.identifier, table.token),
+]);

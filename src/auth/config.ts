@@ -9,6 +9,7 @@ import { getIsoTimestr } from "@/lib/time";
 import { getUuid } from "@/lib/hash";
 import { saveUser } from "@/services/user";
 import { handleSignInUser } from "./handler";
+import { DrizzleAdapter } from "./adapter";
 
 let providers: Provider[] = [];
 
@@ -116,6 +117,7 @@ export const providerMap = providers
   .filter((provider) => provider.id !== "google-one-tap");
 
 export const authOptions: NextAuthConfig = {
+  adapter: DrizzleAdapter(),
   providers,
   pages: {
     signIn: "/auth/signin",
