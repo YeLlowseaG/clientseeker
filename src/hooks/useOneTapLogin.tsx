@@ -71,6 +71,48 @@ export default function () {
       redirect: false,
     });
     console.log("signIn ok", res);
+    
+    if (res?.ok) {
+      // 登录成功，显示成功消息
+      console.log("Google One Tap - Login successful!");
+      
+      // 创建成功提示
+      const successMessage = document.createElement('div');
+      successMessage.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #10b981;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        animation: slideIn 0.3s ease-out;
+      `;
+      successMessage.innerHTML = '✅ 登录成功！';
+      
+      // 添加动画样式
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes slideIn {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(successMessage);
+      
+      // 3秒后自动移除提示
+      setTimeout(() => {
+        if (successMessage.parentNode) {
+          successMessage.parentNode.removeChild(successMessage);
+        }
+      }, 3000);
+    }
   };
 
   useEffect(() => {

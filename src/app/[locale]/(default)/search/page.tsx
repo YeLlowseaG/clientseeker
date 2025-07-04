@@ -184,7 +184,8 @@ export default function SearchPage() {
     e.preventDefault();
     
     // 检查用户登录状态，未登录显示登录弹窗
-    if (status === 'unauthenticated') {
+    // 改进：loading状态时不阻止搜索，以防止登录状态更新延迟
+    if (status === 'unauthenticated' || (!session && status !== 'loading')) {
       setShowSignModal(true);
       return;
     }
@@ -375,7 +376,7 @@ export default function SearchPage() {
           >
             <Search className="h-4 w-4 mr-2" />
             {loading ? '搜索中...' : 
-             status === 'unauthenticated' ? '登录后搜索' :
+             (status === 'unauthenticated' || (!session && status !== 'loading')) ? '登录后搜索' :
              quotaInfo && quotaInfo.remaining <= 0 ? '配额不足' : '搜索'}
           </Button>
         </div>
