@@ -106,12 +106,10 @@ export default function () {
       
       document.body.appendChild(successMessage);
       
-      // 3秒后自动移除提示
+      // 1.5秒后刷新页面以确保状态同步
       setTimeout(() => {
-        if (successMessage.parentNode) {
-          successMessage.parentNode.removeChild(successMessage);
-        }
-      }, 3000);
+        window.location.reload();
+      }, 1500);
     }
   };
 

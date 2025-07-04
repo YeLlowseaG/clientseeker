@@ -123,6 +123,9 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (session && session.user) {
       fetchUserInfo();
+    } else {
+      // 清除用户状态当没有 session 时
+      setUser(null);
     }
   }, [session]);
 
