@@ -39,23 +39,24 @@ export default function () {
   useEffect(() => {
     console.log("Google One Tap - useEffect triggered, status:", status, "session:", session);
 
-    if (status === "unauthenticated") {
-      console.log("Google One Tap - User not authenticated, starting One Tap...");
+    // 修复：只要没有 session 就显示 One Tap，不管 status 是什么
+    if (!session) {
+      console.log("Google One Tap - No session found, starting One Tap...");
       oneTapLogin();
 
       const intervalId = setInterval(() => {
         console.log("Google One Tap - Retry attempt...");
         oneTapLogin();
-      }, 5000); // 增加到5秒重试一次
+      }, 5000);
 
       return () => {
         console.log("Google One Tap - Clearing interval");
         clearInterval(intervalId);
       };
     } else {
-      console.log("Google One Tap - User already authenticated, skipping");
+      console.log("Google One Tap - Session exists, skipping. Session:", session);
     }
-  }, [status]);
+  }, [status, session]); // 同时监听 session 变化
 
   return <></>;
 }
