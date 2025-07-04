@@ -125,6 +125,7 @@ export const authOptions: NextAuthConfig = {
   pages: {
     signIn: "/auth/signin",
   },
+  debug: process.env.NODE_ENV === "development",
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       const isAllowedToSignIn = true;
@@ -138,11 +139,12 @@ export const authOptions: NextAuthConfig = {
       }
     },
     async redirect({ url, baseUrl }) {
+      console.log("Redirect callback:", { url, baseUrl });
       // Allows relative callback URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       // Allows callback URLs on the same origin
       else if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
+      return `${baseUrl}/zh/search`;
     },
     async session({ session, token, user }) {
       if (token && token.user && token.user) {
@@ -153,23 +155,19 @@ export const authOptions: NextAuthConfig = {
     async jwt({ token, user, account }) {
       // Persist the OAuth access_token and or the user id to the token right after signin
       try {
-        if (!user || !account) {
-          return token;
+        if (user && account) {
+          // First time login
+          const userInfo = await handleSignInUser(user, account);
+          if (userInfo) {
+            token.user = {
+              uuid: userInfo.uuid,
+              email: userInfo.email,
+              nickname: userInfo.nickname,
+              avatar_url: userInfo.avatar_url,
+              created_at: userInfo.created_at,
+            };
+          }
         }
-
-        const userInfo = await handleSignInUser(user, account);
-        if (!userInfo) {
-          throw new Error("save user failed");
-        }
-
-        token.user = {
-          uuid: userInfo.uuid,
-          email: userInfo.email,
-          nickname: userInfo.nickname,
-          avatar_url: userInfo.avatar_url,
-          created_at: userInfo.created_at,
-        };
-
         return token;
       } catch (e) {
         console.error("jwt callback error:", e);
