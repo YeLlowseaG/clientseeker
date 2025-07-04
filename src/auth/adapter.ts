@@ -1,7 +1,7 @@
 import { Adapter } from "next-auth/adapters";
 import { db } from "@/db";
 import { accounts, sessions, users, verificationTokens } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 export function DrizzleAdapter(): Adapter {
   return {
@@ -66,8 +66,10 @@ export function DrizzleAdapter(): Adapter {
       const account = await db()
         .select()
         .from(accounts)
-        .where(eq(accounts.providerAccountId, providerAccountId))
-        .where(eq(accounts.provider, provider))
+        .where(and(
+          eq(accounts.providerAccountId, providerAccountId),
+          eq(accounts.provider, provider)
+        ))
         .limit(1);
 
       if (!account[0]) return null;
@@ -136,8 +138,10 @@ export function DrizzleAdapter(): Adapter {
     async unlinkAccount({ providerAccountId, provider }) {
       await db()
         .delete(accounts)
-        .where(eq(accounts.providerAccountId, providerAccountId))
-        .where(eq(accounts.provider, provider));
+        .where(and(
+          eq(accounts.providerAccountId, providerAccountId),
+          eq(accounts.provider, provider)
+        ));
     },
 
     async createSession({ sessionToken, userId, expires }) {
@@ -229,16 +233,20 @@ export function DrizzleAdapter(): Adapter {
       const verificationToken = await db()
         .select()
         .from(verificationTokens)
-        .where(eq(verificationTokens.identifier, identifier))
-        .where(eq(verificationTokens.token, token))
+        .where(and(
+          eq(verificationTokens.identifier, identifier),
+          eq(verificationTokens.token, token)
+        ))
         .limit(1);
 
       if (!verificationToken[0]) return null;
 
       await db()
         .delete(verificationTokens)
-        .where(eq(verificationTokens.identifier, identifier))
-        .where(eq(verificationTokens.token, token));
+        .where(and(
+          eq(verificationTokens.identifier, identifier),
+          eq(verificationTokens.token, token)
+        ));
 
       return {
         identifier: verificationToken[0].identifier,
