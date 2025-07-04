@@ -1,7 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 export default function () {
@@ -114,6 +114,8 @@ export default function () {
     }
   };
 
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     console.log("Google One Tap - Component mounted, starting One Tap immediately");
     
@@ -121,28 +123,30 @@ export default function () {
     oneTapLogin();
 
     // 设置重试机制，以防第一次失败
-    const intervalId = setInterval(() => {
-      // 只有在确实已认证的情况下才停止重试
-      if (status === 'authenticated' && session) {
-        console.log("Google One Tap - User fully authenticated, stopping retries");
-        clearInterval(intervalId);
-        return;
-      }
-      
-      console.log("Google One Tap - Retry attempt (status:", status, ", session:", !!session, ")");
+    const id = setInterval(() => {
+      console.log("Google One Tap - Retry attempt...");
       oneTapLogin();
     }, 5000);
+    
+    setIntervalId(id);
 
     return () => {
-      console.log("Google One Tap - Cleaning up interval");
-      clearInterval(intervalId);
+      console.log("Google One Tap - Cleaning up interval on unmount");
+      if (id) clearInterval(id);
     };
   }, []); // 空依赖数组，只在组件挂载时执行一次
 
-  // 监听认证状态变化，用于日志记录
+  // 监听认证状态变化，当认证成功时停止重试
   useEffect(() => {
     console.log("Google One Tap - Auth state changed, status:", status, "session:", !!session);
-  }, [status, session]);
+    
+    // 当用户完全认证后，停止重试
+    if (status === 'authenticated' && session && intervalId) {
+      console.log("Google One Tap - User fully authenticated, stopping retries");
+      clearInterval(intervalId);
+      setIntervalId(null);
+    }
+  }, [status, session, intervalId]);
 
   return <></>;
 }
