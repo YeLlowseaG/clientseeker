@@ -158,6 +158,9 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
         setShowFeedback,
       }}
     >
+      <div style={{position: 'fixed', top: 0, left: 0, background: 'blue', color: 'white', padding: '4px', zIndex: 9999}}>
+        🔍 AppContext: Session={!!session}, User={!!user}
+      </div>
       {children}
     </AppContext.Provider>
   );

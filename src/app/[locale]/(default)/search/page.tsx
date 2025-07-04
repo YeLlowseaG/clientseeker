@@ -303,6 +303,7 @@ export default function SearchPage() {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* 页面标题区域 - 固定高度 */}
         <div className="text-center mb-8 h-[200px] flex flex-col justify-center">
+          <div className="bg-red-500 text-white p-2 mb-2">🔍 SearchPage DEBUG: Session={!!session}, Status={status}, AppContext={!!appContext}</div>
           <h1 className="text-4xl font-bold mb-4">ClientSeeker - 全球找客户助手</h1>
           <p className="text-lg text-muted-foreground mb-6">
             快速查找全球潜在客户联系方式，支持中国大陆及海外市场
