@@ -90,7 +90,15 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
         {t("sign_modal.email_sign_in")}
       </Button> */}
 
-      {process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true" && (
+      {process.env.NEXT_PUBLIC_AUTH_GOOGLE_ONE_TAP_ENABLED === "true" ? (
+        <div className="w-full p-4 border border-dashed border-gray-300 rounded-lg text-center">
+          <SiGoogle className="w-6 h-6 mx-auto mb-2 text-gray-500" />
+          <p className="text-sm text-gray-600 mb-2">Google 登录</p>
+          <p className="text-xs text-gray-500">
+            请等待 Google One Tap 登录弹窗出现，或刷新页面重试
+          </p>
+        </div>
+      ) : process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true" && (
         <Button
           variant="outline"
           className="w-full flex items-center gap-2"

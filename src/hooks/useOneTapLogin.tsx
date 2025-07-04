@@ -106,19 +106,20 @@ export default function () {
       
       document.body.appendChild(successMessage);
       
-      // 1.5秒后刷新页面以确保状态同步
+      // 2秒后刷新页面以确保状态同步
       setTimeout(() => {
+        console.log("Google One Tap - Reloading page to sync state...");
         window.location.reload();
-      }, 1500);
+      }, 2000);
     }
   };
 
   useEffect(() => {
     console.log("Google One Tap - useEffect triggered, status:", status, "session:", session);
 
-    // 修复：只要没有 session 就显示 One Tap，不管 status 是什么
-    if (!session) {
-      console.log("Google One Tap - No session found, starting One Tap...");
+    // 修复：只有在明确未认证时才显示 One Tap
+    if (status === 'unauthenticated') {
+      console.log("Google One Tap - User not authenticated, starting One Tap...");
       oneTapLogin();
 
       const intervalId = setInterval(() => {
@@ -130,10 +131,12 @@ export default function () {
         console.log("Google One Tap - Clearing interval");
         clearInterval(intervalId);
       };
+    } else if (status === 'authenticated') {
+      console.log("Google One Tap - User authenticated, stopping One Tap. Session:", session);
     } else {
-      console.log("Google One Tap - Session exists, skipping. Session:", session);
+      console.log("Google One Tap - Status loading, waiting...");
     }
-  }, [status, session]); // 同时监听 session 变化
+  }, [status]); // 只监听 status 变化
 
   return <></>;
 }
