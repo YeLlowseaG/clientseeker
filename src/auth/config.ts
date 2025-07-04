@@ -147,13 +147,26 @@ export const authOptions: NextAuthConfig = {
       return `${baseUrl}/zh/search`;
     },
     async session({ session, token, user }) {
-      console.log("Session callback - token:", !!token, "token.user:", !!token?.user);
+      console.log("🔍 [NextAuth] Session callback - token:", !!token, "token.user:", !!token?.user);
+      console.log("🔍 [NextAuth] Session callback - full token:", token);
+      
       if (token && token.user) {
         session.user = token.user;
-        console.log("Session callback - user set:", !!session.user);
+        console.log("🔍 [NextAuth] Session callback - user set:", session.user);
       } else {
-        console.log("Session callback - no user data available");
+        console.log("🔍 [NextAuth] Session callback - no user data available");
+        // 如果 token 存在但没有 user 数据，创建基本用户信息
+        if (token && token.email) {
+          session.user = {
+            email: token.email,
+            name: token.name,
+            image: token.picture
+          };
+          console.log("🔍 [NextAuth] Session callback - created basic user from token");
+        }
       }
+      
+      console.log("🔍 [NextAuth] Session callback - final session:", session);
       return session;
     },
     async jwt({ token, user, account }) {
