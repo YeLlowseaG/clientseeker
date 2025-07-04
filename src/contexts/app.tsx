@@ -145,6 +145,30 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [session]);
 
+  // 强制检查：即使没有 session，如果已认证就尝试获取用户信息
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/session');
+        const sessionData = await response.json();
+        console.log("🔍 [AppContext] Manual session check:", sessionData);
+        
+        if (sessionData && sessionData.user && !user) {
+          console.log("🔍 [AppContext] Found session data manually, fetching user info");
+          fetchUserInfo();
+        }
+      } catch (error) {
+        console.log("🔍 [AppContext] Manual session check failed:", error);
+      }
+    };
+
+    // 如果 status 是 authenticated 但没有 session 或 user，尝试手动获取
+    if (!session && !user) {
+      console.log("🔍 [AppContext] No session/user, manually checking auth status");
+      checkAuth();
+    }
+  }, [session, user]);
+
   return (
     <AppContext.Provider
       value={{
