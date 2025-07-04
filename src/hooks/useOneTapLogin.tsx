@@ -115,26 +115,34 @@ export default function () {
   };
 
   useEffect(() => {
-    console.log("Google One Tap - useEffect triggered, status:", status, "session:", session);
+    console.log("Google One Tap - Component mounted, starting One Tap immediately");
+    
+    // 组件挂载后立即启动 One Tap，不等待任何状态
+    oneTapLogin();
 
-    // 修复：在未认证或加载状态下启动 One Tap，但已认证时停止
-    if (status !== 'authenticated') {
-      console.log("Google One Tap - Starting One Tap (status:", status, ")");
-      oneTapLogin();
-
-      const intervalId = setInterval(() => {
-        console.log("Google One Tap - Retry attempt...");
-        oneTapLogin();
-      }, 5000);
-
-      return () => {
-        console.log("Google One Tap - Clearing interval");
+    // 设置重试机制，以防第一次失败
+    const intervalId = setInterval(() => {
+      // 只有在确实已认证的情况下才停止重试
+      if (status === 'authenticated' && session) {
+        console.log("Google One Tap - User fully authenticated, stopping retries");
         clearInterval(intervalId);
-      };
-    } else {
-      console.log("Google One Tap - User authenticated, stopping One Tap. Session:", session);
-    }
-  }, [status]); // 只监听 status 变化
+        return;
+      }
+      
+      console.log("Google One Tap - Retry attempt (status:", status, ", session:", !!session, ")");
+      oneTapLogin();
+    }, 5000);
+
+    return () => {
+      console.log("Google One Tap - Cleaning up interval");
+      clearInterval(intervalId);
+    };
+  }, []); // 空依赖数组，只在组件挂载时执行一次
+
+  // 监听认证状态变化，用于日志记录
+  useEffect(() => {
+    console.log("Google One Tap - Auth state changed, status:", status, "session:", !!session);
+  }, [status, session]);
 
   return <></>;
 }
