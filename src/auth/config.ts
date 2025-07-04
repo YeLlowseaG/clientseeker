@@ -77,19 +77,19 @@ if (
   );
 }
 
-// Google Auth
-if (
-  process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true" &&
-  process.env.AUTH_GOOGLE_ID &&
-  process.env.AUTH_GOOGLE_SECRET
-) {
-  providers.push(
-    GoogleProvider({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET,
-    })
-  );
-}
+// Google Auth - temporarily disabled to test One Tap only
+// if (
+//   process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true" &&
+//   process.env.AUTH_GOOGLE_ID &&
+//   process.env.AUTH_GOOGLE_SECRET
+// ) {
+//   providers.push(
+//     GoogleProvider({
+//       clientId: process.env.AUTH_GOOGLE_ID,
+//       clientSecret: process.env.AUTH_GOOGLE_SECRET,
+//     })
+//   );
+// }
 
 // Github Auth
 if (
