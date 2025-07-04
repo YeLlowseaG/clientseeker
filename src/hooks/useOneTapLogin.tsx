@@ -1,6 +1,5 @@
 "use client";
 
-import googleOneTap from "google-one-tap";
 import { signIn } from "next-auth/react";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -9,22 +8,60 @@ export default function () {
   const { data: session, status } = useSession();
 
   const oneTapLogin = async function () {
-    const options = {
-      client_id: process.env.NEXT_PUBLIC_AUTH_GOOGLE_ID,
-      auto_select: false,
-      cancel_on_tap_outside: false,
-      context: "signin",
-    };
+    const clientId = process.env.NEXT_PUBLIC_AUTH_GOOGLE_ID;
+    
+    console.log("Google One Tap - trying to initialize with clientId:", clientId);
 
-    console.log("Google One Tap - trying to initialize with options:", options);
+    // 动态加载 Google Identity Services
+    if (typeof window !== "undefined" && clientId) {
+      try {
+        // 检查是否已经加载了 Google Identity Services
+        if (!(window as any).google) {
+          console.log("Loading Google Identity Services script...");
+          const script = document.createElement("script");
+          script.src = "https://accounts.google.com/gsi/client";
+          script.onload = () => {
+            console.log("Google Identity Services loaded, initializing One Tap...");
+            initializeOneTap(clientId);
+          };
+          script.onerror = (error) => {
+            console.error("Failed to load Google Identity Services:", error);
+          };
+          document.head.appendChild(script);
+        } else {
+          console.log("Google Identity Services already loaded, initializing...");
+          initializeOneTap(clientId);
+        }
+      } catch (error) {
+        console.error("Google One Tap - initialization error:", error);
+      }
+    }
+  };
 
+  const initializeOneTap = (clientId: string) => {
     try {
-      googleOneTap(options, (response: any) => {
-        console.log("Google One Tap - login success:", response);
-        handleLogin(response.credential);
-      });
+      const google = (window as any).google;
+      if (google && google.accounts && google.accounts.id) {
+        console.log("Initializing Google One Tap with clientId:", clientId);
+        
+        google.accounts.id.initialize({
+          client_id: clientId,
+          callback: (response: any) => {
+            console.log("Google One Tap - login success:", response);
+            handleLogin(response.credential);
+          },
+          auto_select: false,
+          cancel_on_tap_outside: false,
+        });
+
+        google.accounts.id.prompt((notification: any) => {
+          console.log("Google One Tap prompt result:", notification);
+        });
+      } else {
+        console.error("Google Identity Services not properly loaded");
+      }
     } catch (error) {
-      console.error("Google One Tap - initialization error:", error);
+      console.error("Error initializing Google One Tap:", error);
     }
   };
 
