@@ -117,8 +117,11 @@ export const providerMap = providers
   .filter((provider) => provider.id !== "google-one-tap");
 
 export const authOptions: NextAuthConfig = {
-  adapter: DrizzleAdapter(),
+  // adapter: DrizzleAdapter(),
   providers,
+  session: {
+    strategy: "jwt",
+  },
   pages: {
     signIn: "/auth/signin",
   },
