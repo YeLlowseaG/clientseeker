@@ -125,7 +125,8 @@ export const authOptions: NextAuthConfig = {
   pages: {
     signIn: "/auth/signin",
   },
-  debug: process.env.NODE_ENV === "development",
+  debug: true, // 强制开启调试
+  trustHost: true, // 修复 NextAuth v5 beta 的主机信任问题
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       const isAllowedToSignIn = true;
