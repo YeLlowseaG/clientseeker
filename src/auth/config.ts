@@ -147,8 +147,12 @@ export const authOptions: NextAuthConfig = {
       return `${baseUrl}/zh/search`;
     },
     async session({ session, token, user }) {
-      if (token && token.user && token.user) {
+      console.log("Session callback - token:", !!token, "token.user:", !!token?.user);
+      if (token && token.user) {
         session.user = token.user;
+        console.log("Session callback - user set:", !!session.user);
+      } else {
+        console.log("Session callback - no user data available");
       }
       return session;
     },

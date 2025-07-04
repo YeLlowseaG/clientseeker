@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 
 export default function () {
   const { data: session, status } = useSession();
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   const oneTapLogin = async function () {
     const clientId = process.env.NEXT_PUBLIC_AUTH_GOOGLE_ID;
@@ -66,15 +67,36 @@ export default function () {
   };
 
   const handleLogin = async function (credentials: string) {
+    console.log("🔍 [OneTap] Starting signIn process");
     const res = await signIn("google-one-tap", {
       credential: credentials,
       redirect: false,
     });
-    console.log("signIn ok", res);
+    console.log("🔍 [OneTap] signIn result:", res);
     
     if (res?.ok) {
       // 登录成功，显示成功消息
       console.log("Google One Tap - Login successful!");
+      
+      // 立即停止 One Tap 重试
+      if (intervalId) {
+        console.log("Google One Tap - Stopping retries immediately");
+        clearInterval(intervalId);
+        setIntervalId(null);
+      }
+      
+      // 强制刷新用户状态
+      setTimeout(async () => {
+        try {
+          const response = await fetch('/api/get-user-info', { method: 'POST' });
+          if (response.ok) {
+            console.log("Google One Tap - Manually refreshing user state");
+            window.location.reload();
+          }
+        } catch (error) {
+          console.error("Google One Tap - Failed to refresh user state:", error);
+        }
+      }, 1000);
       
       // 创建成功提示
       const successMessage = document.createElement('div');
@@ -92,7 +114,7 @@ export default function () {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         animation: slideIn 0.3s ease-out;
       `;
-      successMessage.innerHTML = '✅ 登录成功！';
+      successMessage.innerHTML = '✅ 登录成功！正在同步状态...';
       
       // 添加动画样式
       const style = document.createElement('style');
@@ -106,15 +128,14 @@ export default function () {
       
       document.body.appendChild(successMessage);
       
-      // 2秒后刷新页面以确保状态同步
+      // 3秒后移除提示
       setTimeout(() => {
-        console.log("Google One Tap - Reloading page to sync state...");
-        window.location.reload();
-      }, 2000);
+        if (successMessage.parentNode) {
+          successMessage.parentNode.removeChild(successMessage);
+        }
+      }, 3000);
     }
   };
-
-  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     console.log("Google One Tap - Component mounted, starting One Tap immediately");

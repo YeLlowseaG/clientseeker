@@ -46,25 +46,30 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [showFeedback, setShowFeedback] = useState<boolean>(false);
 
   const fetchUserInfo = async function () {
+    console.log("🔍 [AppContext] fetchUserInfo called");
     try {
+      console.log("🔍 [AppContext] Making request to /api/get-user-info");
       const resp = await fetch("/api/get-user-info", {
         method: "POST",
       });
 
+      console.log("🔍 [AppContext] Response status:", resp.status, "ok:", resp.ok);
       if (!resp.ok) {
         throw new Error("fetch user info failed with status: " + resp.status);
       }
 
       const { code, message, data } = await resp.json();
+      console.log("🔍 [AppContext] Response data:", { code, message, userData: !!data });
       if (code !== 0) {
         throw new Error(message);
       }
 
+      console.log("🔍 [AppContext] Setting user data:", data?.email, data?.nickname);
       setUser(data);
 
       updateInvite(data);
     } catch (e) {
-      console.log("fetch user info failed");
+      console.error("🔍 [AppContext] fetch user info failed:", e);
     }
   };
 
@@ -121,10 +126,18 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    if (session && session.user) {
-      fetchUserInfo();
+    console.log("🔍 [AppContext] useEffect triggered - session:", !!session, "session.user:", !!session?.user, "current user:", !!user);
+    
+    if (session) {
+      if (session.user) {
+        console.log("🔍 [AppContext] Session has user data, fetching user info");
+        fetchUserInfo();
+      } else {
+        console.log("🔍 [AppContext] Session exists but no user data, trying to fetch anyway");
+        fetchUserInfo();
+      }
     } else {
-      // 清除用户状态当没有 session 时
+      console.log("🔍 [AppContext] No session, clearing user state");
       setUser(null);
     }
   }, [session]);
