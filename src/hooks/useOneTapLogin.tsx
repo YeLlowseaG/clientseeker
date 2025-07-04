@@ -117,9 +117,9 @@ export default function () {
   useEffect(() => {
     console.log("Google One Tap - useEffect triggered, status:", status, "session:", session);
 
-    // 修复：只有在明确未认证时才显示 One Tap
-    if (status === 'unauthenticated') {
-      console.log("Google One Tap - User not authenticated, starting One Tap...");
+    // 修复：在未认证或加载状态下启动 One Tap，但已认证时停止
+    if (status !== 'authenticated') {
+      console.log("Google One Tap - Starting One Tap (status:", status, ")");
       oneTapLogin();
 
       const intervalId = setInterval(() => {
@@ -131,10 +131,8 @@ export default function () {
         console.log("Google One Tap - Clearing interval");
         clearInterval(intervalId);
       };
-    } else if (status === 'authenticated') {
-      console.log("Google One Tap - User authenticated, stopping One Tap. Session:", session);
     } else {
-      console.log("Google One Tap - Status loading, waiting...");
+      console.log("Google One Tap - User authenticated, stopping One Tap. Session:", session);
     }
   }, [status]); // 只监听 status 变化
 
