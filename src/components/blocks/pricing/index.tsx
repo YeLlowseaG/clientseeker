@@ -17,17 +17,23 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
     return null;
   }
 
-  const { user, setShowSignModal } = useAppContext();
+  const { user, setShowSignModal, isUserLoading } = useAppContext();
 
   const [group, setGroup] = useState(pricing.groups?.[0]?.name);
   const [isLoading, setIsLoading] = useState(false);
   const [productId, setProductId] = useState<string | null>(null);
 
-  console.log("🔍 [Pricing] User state:", !!user, user?.email);
+  console.log("🔍 [Pricing] User state:", !!user, user?.email, "Loading:", isUserLoading);
 
   const handleCheckout = async (item: PricingItem, cn_pay: boolean = false) => {
     try {
-      console.log("🔍 [Pricing] handleCheckout - user state:", !!user, user?.email);
+      console.log("🔍 [Pricing] handleCheckout - user state:", !!user, user?.email, "Loading:", isUserLoading);
+      
+      // 如果用户状态还在加载中，不执行操作
+      if (isUserLoading) {
+        console.log("🔍 [Pricing] User still loading, waiting...");
+        return;
+      }
       
       if (!user) {
         console.log("🔍 [Pricing] No user found, showing login modal");

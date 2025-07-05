@@ -27,6 +27,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
   const [showSignModal, setShowSignModal] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isUserLoading, setIsUserLoading] = useState<boolean>(true);
 
   const [showFeedback, setShowFeedback] = useState<boolean>(false);
 
@@ -210,12 +211,18 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
         const userInfo = JSON.parse(savedUser);
         console.log("🔍 [AppContext] Restored user:", userInfo.email);
         setUser(userInfo);
+        
+        // 恢复后立即获取最新的用户信息
+        fetchUserInfo(userInfo.email);
+        setIsUserLoading(false);
       } catch (error) {
         console.error("Failed to parse saved user info:", error);
         localStorage.removeItem('user_info');
+        setIsUserLoading(false);
       }
     } else {
       console.log("🔍 [AppContext] No saved user found in localStorage");
+      setIsUserLoading(false);
     }
   }, []);
 
@@ -240,6 +247,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
         promptGoogleOneTap,
         showFeedback,
         setShowFeedback,
+        isUserLoading,
       }}
     >
       {children}

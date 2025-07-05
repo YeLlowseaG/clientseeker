@@ -12,5 +12,6 @@ export interface ContextValue {
   promptGoogleOneTap: () => void;
   showFeedback: boolean;
   setShowFeedback: (show: boolean) => void;
+  isUserLoading: boolean;
   [propName: string]: any;
 }
