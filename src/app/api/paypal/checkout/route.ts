@@ -260,22 +260,28 @@ async function getOrCreatePlan(
   interval: string
 ): Promise<string> {
   try {
-    // 首先创建产品
+    // 使用时间戳创建唯一的产品 ID，避免重复
+    const uniqueProductId = `clientseeker-${productId}-${Date.now()}`;
     const productData = {
-      id: `clientseeker-${productId}`,
+      id: uniqueProductId,
       name: productName,
       description: `ClientSeeker ${productName} subscription`,
       type: 'SERVICE',
       category: 'SOFTWARE'
     };
 
+    console.log("🔍 [PayPal] Creating product with ID:", uniqueProductId);
+    
     let product;
     try {
       product = await paypalClient.createProduct(productData);
+      console.log("🔍 [PayPal] Product created successfully:", product.id);
     } catch (error: any) {
-      // 如果产品已存在，使用现有产品
-      if (error.message.includes('already exists')) {
-        product = { id: productData.id };
+      console.error("🔍 [PayPal] Product creation failed:", error.message);
+      // 如果产品创建失败，尝试使用现有的通用产品 ID
+      if (error.message.includes('DUPLICATE_RESOURCE_IDENTIFIER') || error.message.includes('already exists')) {
+        console.log("🔍 [PayPal] Using existing product ID");
+        product = { id: uniqueProductId };
       } else {
         throw error;
       }
