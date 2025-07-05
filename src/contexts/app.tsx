@@ -37,6 +37,9 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     try {
       console.log("Google One Tap successful:", googleUser);
       
+      // 立即关闭登录模态框
+      setShowSignModal(false);
+      
       // 立即显示"登录状态更新中"的提示
       const updateMessage = document.createElement('div');
       updateMessage.id = 'login-status-update';
@@ -130,9 +133,6 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       if (existingUpdateMessage && existingUpdateMessage.parentNode) {
         existingUpdateMessage.parentNode.removeChild(existingUpdateMessage);
       }
-      
-      // 关闭登录模态框
-      setShowSignModal(false);
       
       // 显示成功提示
       const successMessage = document.createElement('div');
