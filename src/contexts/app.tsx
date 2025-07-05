@@ -126,9 +126,9 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       await fetchUserInfo(googleUser.email);
       
       // 移除"登录状态更新中"提示
-      const updateMessage = document.getElementById('login-status-update');
-      if (updateMessage && updateMessage.parentNode) {
-        updateMessage.parentNode.removeChild(updateMessage);
+      const existingUpdateMessage = document.getElementById('login-status-update');
+      if (existingUpdateMessage && existingUpdateMessage.parentNode) {
+        existingUpdateMessage.parentNode.removeChild(existingUpdateMessage);
       }
       
       // 关闭登录模态框
@@ -165,9 +165,9 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       console.error("Google login processing failed:", error);
       
       // 移除"登录状态更新中"提示
-      const updateMessage = document.getElementById('login-status-update');
-      if (updateMessage && updateMessage.parentNode) {
-        updateMessage.parentNode.removeChild(updateMessage);
+      const existingUpdateMessage = document.getElementById('login-status-update');
+      if (existingUpdateMessage && existingUpdateMessage.parentNode) {
+        existingUpdateMessage.parentNode.removeChild(existingUpdateMessage);
       }
       
       // 显示错误提示

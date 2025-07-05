@@ -29,13 +29,22 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
   useEffect(() => {
     const checkUserState = () => {
       const savedUser = localStorage.getItem('user_info');
+      console.log("🔍 [Pricing] localStorage check:", {
+        hasLocalStorageUser: !!savedUser,
+        hasAppContextUser: !!user,
+        userEmail: user?.email || 'none',
+        isUserLoading,
+        localStorageContent: savedUser ? JSON.parse(savedUser) : null
+      });
+      
       if (savedUser && !user) {
-        console.log("🔍 [Pricing] Found user in localStorage but not in AppContext, this indicates sync issue");
+        console.log("🔍 [Pricing] SYNC ISSUE: Found user in localStorage but not in AppContext");
+        console.log("🔍 [Pricing] localStorage user:", JSON.parse(savedUser));
       }
     };
     
     checkUserState();
-  }, [user]);
+  }, [user, isUserLoading]);
 
   // 从 localStorage 和数据库验证用户状态
   const verifyUserFromStorage = async () => {
@@ -76,23 +85,48 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
 
   const handleCheckout = async (item: PricingItem, cn_pay: boolean = false) => {
     try {
-      console.log("🔍 [Pricing] handleCheckout - user state:", !!user, user?.email, "Loading:", isUserLoading);
+      console.log("🔍 [Pricing] ========== CHECKOUT STARTED ==========");
+      console.log("🔍 [Pricing] handleCheckout called with:", {
+        productId: item.product_id,
+        productName: item.product_name,
+        cnPay: cn_pay
+      });
+      console.log("🔍 [Pricing] Current state:", {
+        hasAppContextUser: !!user,
+        userEmail: user?.email || 'none',
+        isUserLoading,
+        userObject: user
+      });
+      
+      // 立即检查 localStorage
+      const savedUser = localStorage.getItem('user_info');
+      console.log("🔍 [Pricing] localStorage immediate check:", {
+        hasLocalStorageUser: !!savedUser,
+        localStorageContent: savedUser ? JSON.parse(savedUser) : null
+      });
       
       // 如果用户状态还在加载中，不执行操作
       if (isUserLoading) {
-        console.log("🔍 [Pricing] User still loading, waiting...");
+        console.log("🔍 [Pricing] User still loading, aborting checkout");
         return;
       }
       
       // 直接从数据库验证用户登录状态
+      console.log("🔍 [Pricing] Starting user verification from storage/database...");
       const currentUser = await verifyUserFromStorage();
+      console.log("🔍 [Pricing] User verification result:", {
+        success: !!currentUser,
+        userEmail: currentUser?.email || 'none',
+        userObject: currentUser
+      });
+      
       if (!currentUser) {
-        console.log("🔍 [Pricing] No authenticated user found, showing login modal");
+        console.log("🔍 [Pricing] ❌ NO AUTHENTICATED USER FOUND - SHOWING LOGIN MODAL");
         setShowSignModal(true);
         return;
       }
       
-      console.log("🔍 [Pricing] User verified from database:", currentUser.email);
+      console.log("🔍 [Pricing] ✅ User verified from database:", currentUser.email);
 
       // Skip payment for free tier
       if (item.product_id === 'free') {
