@@ -17,7 +17,7 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
     return null;
   }
 
-  const { user, setShowSignModal, isUserLoading } = useAppContext();
+  const { user, setUser, setShowSignModal, isUserLoading } = useAppContext();
 
   const [group, setGroup] = useState(pricing.groups?.[0]?.name);
   const [isLoading, setIsLoading] = useState(false);
