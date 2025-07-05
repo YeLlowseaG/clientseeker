@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import RegionSelector from '@/components/region-selector';
 import Pagination from '@/components/pagination';
@@ -44,13 +43,8 @@ interface SearchResult {
 }
 
 export default function SearchPage() {
-  console.log("🔍 [SearchPage] Component rendering");
-  const { data: session, status } = useSession();
-  console.log("🔍 [SearchPage] useSession:", !!session, status);
   const router = useRouter();
-  const appContext = useAppContext();
-  console.log("🔍 [SearchPage] useAppContext:", !!appContext, !!appContext?.setShowSignModal);
-  const { setShowSignModal } = appContext;
+  const { user, setShowSignModal } = useAppContext();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<BusinessInfo[]>([]);
   const [allResults, setAllResults] = useState<BusinessInfo[]>([]); // 缓存所有结果
@@ -70,10 +64,10 @@ export default function SearchPage() {
   useEffect(() => {
     fetchLocation();
     
-    if (status === 'authenticated') {
+    if (user) {
       fetchQuotaInfo();
     }
-  }, [status]);
+  }, [user]);
 
   const fetchQuotaInfo = async () => {
     try {
@@ -188,8 +182,7 @@ export default function SearchPage() {
     e.preventDefault();
     
     // 检查用户登录状态，未登录显示登录弹窗
-    // 改进：loading状态时不阻止搜索，以防止登录状态更新延迟
-    if (status === 'unauthenticated' || (!session && status !== 'loading')) {
+    if (!user) {
       setShowSignModal(true);
       return;
     }
@@ -284,17 +277,6 @@ export default function SearchPage() {
     }
   };
 
-  // 加载状态或未登录时的处理
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载中...</p>
-        </div>
-      </div>
-    );
-  }
 
   // 移除未登录用户的阻拦，允许所有用户访问搜索页面
 
@@ -303,7 +285,6 @@ export default function SearchPage() {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* 页面标题区域 - 固定高度 */}
         <div className="text-center mb-8 h-[200px] flex flex-col justify-center">
-          <div className="bg-red-500 text-white p-2 mb-2">🔍 SearchPage DEBUG: Session={!!session}, Status={status}, AppContext={!!appContext}</div>
           <h1 className="text-4xl font-bold mb-4">ClientSeeker - 全球找客户助手</h1>
           <p className="text-lg text-muted-foreground mb-6">
             快速查找全球潜在客户联系方式，支持中国大陆及海外市场
@@ -381,7 +362,7 @@ export default function SearchPage() {
           >
             <Search className="h-4 w-4 mr-2" />
             {loading ? '搜索中...' : 
-             (status === 'unauthenticated' || (!session && status !== 'loading')) ? '登录后搜索' :
+             !user ? '登录后搜索' :
              quotaInfo && quotaInfo.remaining <= 0 ? '配额不足' : '搜索'}
           </Button>
         </div>
