@@ -124,6 +124,13 @@ export default function SearchPage() {
         cityParam = selectedRegion.province.name;
       }
 
+      console.log("🔍 [Search] Starting search with params:", {
+        query: query.trim(),
+        city: cityParam,
+        userEmail: user?.email,
+        hasUser: !!user
+      });
+
       const response = await fetch('/api/search', {
         method: 'POST',
         headers: {

@@ -121,13 +121,64 @@ export function useGoogleOneTap({ onSuccess, onError, autoPrompt = true }: UseGo
       });
     } else {
       console.log("Google instance not initialized, initializing first");
-      loadGoogleScript();
-      // 延迟触发，等待初始化完成
-      setTimeout(() => {
-        if (googleInstance.current) {
-          promptGoogleOneTap();
-        }
-      }, 1000);
+      // 直接初始化并立即尝试弹出
+      const clientId = process.env.NEXT_PUBLIC_AUTH_GOOGLE_ID;
+      if (!clientId) {
+        console.error("Google Client ID not found");
+        return;
+      }
+
+      if ((window as any).google?.accounts?.id) {
+        // 脚本已加载，直接初始化
+        const google = (window as any).google;
+        google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleCredentialResponse,
+          auto_select: false,
+          cancel_on_tap_outside: true,
+        });
+        googleInstance.current = google;
+        initialized.current = true;
+        
+        // 立即弹出
+        google.accounts.id.prompt((notification: any) => {
+          console.log("Immediate Google One Tap notification:", notification);
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            console.log("One Tap not displayed or skipped");
+            onError?.(new Error("Google One Tap not available"));
+          }
+        });
+      } else {
+        // 脚本未加载，加载后立即弹出
+        const script = document.createElement("script");
+        script.src = "https://accounts.google.com/gsi/client";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          const google = (window as any).google;
+          if (google?.accounts?.id) {
+            google.accounts.id.initialize({
+              client_id: clientId,
+              callback: handleCredentialResponse,
+              auto_select: false,
+              cancel_on_tap_outside: true,
+            });
+            googleInstance.current = google;
+            initialized.current = true;
+            
+            // 立即弹出
+            google.accounts.id.prompt((notification: any) => {
+              console.log("After load Google One Tap notification:", notification);
+              if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                console.log("One Tap not displayed or skipped");
+                onError?.(new Error("Google One Tap not available"));
+              }
+            });
+          }
+        };
+        script.onerror = () => onError?.(new Error("Failed to load Google Identity Services"));
+        document.head.appendChild(script);
+      }
     }
   };
 
