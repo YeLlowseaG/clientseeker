@@ -7,22 +7,57 @@ import { eq } from 'drizzle-orm';
 import { getSnowId } from '@/lib/hash';
 import { getPricingPage } from '@/services/page';
 import { PricingItem } from '@/types/blocks/pricing';
+import { findUserByEmail } from '@/services/user';
 
 export async function POST(request: NextRequest) {
   try {
-    // 检查用户身份验证
+    console.log("🔍 [PayPal] PayPal checkout API called");
+    
+    const body = await request.json();
+    const { user_email } = body;
+    
+    console.log("🔍 [PayPal] Request body user_email:", user_email);
+    
+    let userUuid: string;
+    let userEmail: string;
+    let userName: string = 'User';
+    
+    // 首先尝试 NextAuth 会话验证
     const session = await auth();
-    if (!session?.user?.uuid) {
+    console.log("🔍 [PayPal] NextAuth session:", !!session, session?.user?.email);
+    
+    if (session?.user?.uuid) {
+      // NextAuth 会话存在，使用会话信息
+      userUuid = session.user.uuid;
+      userEmail = session.user.email!;
+      userName = session.user.name || 'User';
+      console.log("🔍 [PayPal] Using NextAuth session for user:", userEmail);
+    } else if (user_email) {
+      // 没有 NextAuth 会话但有用户邮箱，验证用户是否存在于数据库
+      console.log("🔍 [PayPal] No NextAuth session, validating user from database:", user_email);
+      
+      const existingUser = await findUserByEmail(user_email);
+      if (!existingUser) {
+        console.log("🔍 [PayPal] User not found in database:", user_email);
+        return NextResponse.json({
+          error: 'User not found',
+          success: false
+        }, { status: 401 });
+      }
+      
+      userUuid = existingUser.uuid;
+      userEmail = existingUser.email;
+      userName = existingUser.nickname || 'User';
+      console.log("🔍 [PayPal] User validated from database:", userEmail, "UUID:", userUuid);
+    } else {
+      // 没有任何认证信息
+      console.log("🔍 [PayPal] No authentication found");
       return NextResponse.json({
         error: 'Authentication required',
         success: false
       }, { status: 401 });
     }
 
-    const userUuid = session.user.uuid;
-    const userEmail = session.user.email!;
-
-    const body = await request.json();
     const {
       credits,
       currency,
@@ -96,8 +131,8 @@ export async function POST(request: NextRequest) {
         plan_id: await getOrCreatePlan(paypalClient, product_id, product_name, amount, currency, interval),
         subscriber: {
           name: {
-            given_name: session.user.name?.split(' ')[0] || 'User',
-            surname: session.user.name?.split(' ').slice(1).join(' ') || 'Name'
+            given_name: userName.split(' ')[0] || 'User',
+            surname: userName.split(' ').slice(1).join(' ') || 'Name'
           },
           email_address: userEmail
         },
