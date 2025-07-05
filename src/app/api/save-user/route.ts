@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     console.log("🔍 [Save User API] Request body:", body);
     
-    const { uuid, email, nickname, avatar_url } = body;
+    const { uuid, email, nickname, avatar_url, created_at } = body;
 
     if (!email || !uuid) {
       console.error("🔍 [Save User API] Missing required fields:", { email: !!email, uuid: !!uuid });
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
       email,
       nickname: nickname || email.split('@')[0],
       avatar_url: avatar_url || '',
-      created_at: new Date().toISOString(),
+      created_at: created_at || new Date().toISOString(),
     };
 
     console.log("🔍 [Save User API] User object to save:", user);
