@@ -13,5 +13,6 @@ export interface ContextValue {
   showFeedback: boolean;
   setShowFeedback: (show: boolean) => void;
   isUserLoading: boolean;
+  isGoogleLoading: boolean;
   [propName: string]: any;
 }

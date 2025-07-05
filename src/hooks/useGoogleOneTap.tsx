@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface GoogleUser {
   sub: string;
@@ -14,12 +14,20 @@ interface UseGoogleOneTapProps {
   onSuccess: (user: GoogleUser) => void;
   onError?: (error: any) => void;
   autoPrompt?: boolean; // 是否自动弹出
+  onLoadingChange?: (loading: boolean) => void; // 加载状态回调
 }
 
-export function useGoogleOneTap({ onSuccess, onError, autoPrompt = true }: UseGoogleOneTapProps) {
+export function useGoogleOneTap({ onSuccess, onError, autoPrompt = true, onLoadingChange }: UseGoogleOneTapProps) {
   const initialized = useRef(false);
   const isLoggedIn = useRef(false);
   const googleInstance = useRef<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // 更新加载状态并通知父组件
+  const updateLoadingState = (loading: boolean) => {
+    setIsLoading(loading);
+    onLoadingChange?.(loading);
+  };
 
   const verifyToken = async (credential: string): Promise<GoogleUser | null> => {
     try {
@@ -51,6 +59,9 @@ export function useGoogleOneTap({ onSuccess, onError, autoPrompt = true }: UseGo
       console.log("User already logged in, ignoring One Tap");
       return;
     }
+
+    // 清除加载状态，因为用户看到了Google弹框
+    updateLoadingState(false);
 
     const user = await verifyToken(response.credential);
     if (user) {
@@ -110,26 +121,39 @@ export function useGoogleOneTap({ onSuccess, onError, autoPrompt = true }: UseGo
       return;
     }
 
-    if (googleInstance.current) {
-      console.log("Manually triggering Google One Tap");
-      googleInstance.current.accounts.id.prompt((notification: any) => {
-        console.log("Manual Google One Tap notification:", notification);
+    // 立即设置加载状态，让用户看到反馈
+    console.log("🔍 [Google One Tap] Starting Google login process...");
+    updateLoadingState(true);
+
+    const promptWithInstance = (googleInstance: any) => {
+      googleInstance.accounts.id.prompt((notification: any) => {
+        console.log("Google One Tap notification:", notification);
         if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
           console.log("One Tap not displayed or skipped");
-          onError?.(new Error("Google One Tap not available"));
+          updateLoadingState(false);
+          onError?.(new Error("Google One Tap 未能显示，请稍后重试"));
         }
+        // 注意：如果弹框成功显示，loading状态会在用户操作后的handleCredentialResponse中清除
       });
+    };
+
+    if (googleInstance.current) {
+      console.log("🔍 [Google One Tap] Using existing Google instance");
+      // Google已经初始化，直接弹出
+      promptWithInstance(googleInstance.current);
     } else {
-      console.log("Google instance not initialized, initializing first");
-      // 直接初始化并立即尝试弹出
+      console.log("🔍 [Google One Tap] Initializing Google instance...");
       const clientId = process.env.NEXT_PUBLIC_AUTH_GOOGLE_ID;
       if (!clientId) {
         console.error("Google Client ID not found");
+        updateLoadingState(false);
+        onError?.(new Error("Google 配置错误"));
         return;
       }
 
       if ((window as any).google?.accounts?.id) {
-        // 脚本已加载，直接初始化
+        // Google脚本已加载，直接初始化
+        console.log("🔍 [Google One Tap] Google script already loaded, initializing...");
         const google = (window as any).google;
         google.accounts.id.initialize({
           client_id: clientId,
@@ -140,21 +164,16 @@ export function useGoogleOneTap({ onSuccess, onError, autoPrompt = true }: UseGo
         googleInstance.current = google;
         initialized.current = true;
         
-        // 立即弹出
-        google.accounts.id.prompt((notification: any) => {
-          console.log("Immediate Google One Tap notification:", notification);
-          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            console.log("One Tap not displayed or skipped");
-            onError?.(new Error("Google One Tap not available"));
-          }
-        });
+        promptWithInstance(google);
       } else {
-        // 脚本未加载，加载后立即弹出
+        // 需要加载Google脚本
+        console.log("🔍 [Google One Tap] Loading Google script...");
         const script = document.createElement("script");
         script.src = "https://accounts.google.com/gsi/client";
         script.async = true;
         script.defer = true;
         script.onload = () => {
+          console.log("🔍 [Google One Tap] Script loaded, initializing...");
           const google = (window as any).google;
           if (google?.accounts?.id) {
             google.accounts.id.initialize({
@@ -166,17 +185,18 @@ export function useGoogleOneTap({ onSuccess, onError, autoPrompt = true }: UseGo
             googleInstance.current = google;
             initialized.current = true;
             
-            // 立即弹出
-            google.accounts.id.prompt((notification: any) => {
-              console.log("After load Google One Tap notification:", notification);
-              if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                console.log("One Tap not displayed or skipped");
-                onError?.(new Error("Google One Tap not available"));
-              }
-            });
+            promptWithInstance(google);
+          } else {
+            console.error("Google accounts not available after script load");
+            updateLoadingState(false);
+            onError?.(new Error("Google 服务初始化失败"));
           }
         };
-        script.onerror = () => onError?.(new Error("Failed to load Google Identity Services"));
+        script.onerror = () => {
+          console.error("Failed to load Google script");
+          updateLoadingState(false);
+          onError?.(new Error("Google 服务加载失败，请检查网络连接"));
+        };
         document.head.appendChild(script);
       }
     }
@@ -220,5 +240,5 @@ export function useGoogleOneTap({ onSuccess, onError, autoPrompt = true }: UseGo
     }, 1000);
   };
 
-  return { logout, promptGoogleOneTap };
+  return { logout, promptGoogleOneTap, isLoading };
 }

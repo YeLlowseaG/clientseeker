@@ -28,6 +28,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [showSignModal, setShowSignModal] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [isUserLoading, setIsUserLoading] = useState<boolean>(true);
+  const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
 
   const [showFeedback, setShowFeedback] = useState<boolean>(false);
 
@@ -79,6 +80,9 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       // 获取完整的用户信息（包括credits等）
       fetchUserInfo(googleUser.email);
       
+      // 关闭登录模态框
+      setShowSignModal(false);
+      
       // 显示成功提示
       const successMessage = document.createElement('div');
       successMessage.style.cssText = `
@@ -113,10 +117,11 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // 初始化 Google One Tap (禁用自动弹出)
-  const { logout: googleLogout, promptGoogleOneTap } = useGoogleOneTap({
+  const { logout: googleLogout, promptGoogleOneTap, isLoading: googleLoading } = useGoogleOneTap({
     onSuccess: handleGoogleSuccess,
     onError: handleGoogleError,
     autoPrompt: false, // 禁用自动弹出
+    onLoadingChange: setIsGoogleLoading, // 传入加载状态回调
   });
 
   const fetchUserInfo = async function (userEmail?: string) {
@@ -248,6 +253,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
         showFeedback,
         setShowFeedback,
         isUserLoading,
+        isGoogleLoading,
       }}
     >
       {children}

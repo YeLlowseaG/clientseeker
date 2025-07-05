@@ -74,11 +74,11 @@ export default function SignModal() {
 
 function ProfileForm({ className }: React.ComponentProps<"form">) {
   const t = useTranslations();
-  const { promptGoogleOneTap, setShowSignModal } = useAppContext();
+  const { promptGoogleOneTap, setShowSignModal, isGoogleLoading } = useAppContext();
 
   const handleGoogleLogin = () => {
     promptGoogleOneTap();
-    setShowSignModal(false); // 关闭模态框
+    // 不要立即关闭模态框，让用户看到加载状态
   };
 
   return (
@@ -88,9 +88,19 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
           variant="outline"
           className="w-full flex items-center gap-2"
           onClick={handleGoogleLogin}
+          disabled={isGoogleLoading}
         >
-          <SiGoogle className="w-4 h-4" />
-          {t("sign_modal.google_sign_in") || "Google 登录"}
+          {isGoogleLoading ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current" />
+              <span>正在加载 Google 登录...</span>
+            </>
+          ) : (
+            <>
+              <SiGoogle className="w-4 h-4" />
+              {t("sign_modal.google_sign_in") || "Google 登录"}
+            </>
+          )}
         </Button>
       ) : process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true" && (
         <Button
