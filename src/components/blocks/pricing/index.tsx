@@ -357,6 +357,14 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                             const savedUser = localStorage.getItem('user_info');
                             console.log("🚨 localStorage user:", savedUser ? JSON.parse(savedUser) : null);
                             
+                            // 如果 localStorage 有用户但 AppContext 没有，手动设置
+                            if (savedUser && !user) {
+                              console.log("🚨 FIXING SYNC ISSUE: Setting user in AppContext from localStorage");
+                              const userInfo = JSON.parse(savedUser);
+                              setUser(userInfo);
+                              // 直接继续执行，不需要重新点击
+                            }
+                            
                             // 测试数据库验证
                             if (savedUser) {
                               const userInfo = JSON.parse(savedUser);

@@ -293,24 +293,27 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     // 从 localStorage 恢复用户状态
     const savedUser = localStorage.getItem('user_info');
-    console.log("🔍 [AppContext] Loading user from localStorage:", !!savedUser);
+    console.log("🔍🔍🔍 [AppContext] useEffect triggered - Loading user from localStorage:", !!savedUser);
     
     if (savedUser) {
       try {
         const userInfo = JSON.parse(savedUser);
-        console.log("🔍 [AppContext] Restored user:", userInfo.email);
+        console.log("🔍🔍🔍 [AppContext] Parsing saved user:", userInfo);
+        console.log("🔍🔍🔍 [AppContext] Setting user in AppContext:", userInfo.email);
         setUser(userInfo);
         
         // 恢复后立即获取最新的用户信息
+        console.log("🔍🔍🔍 [AppContext] Calling fetchUserInfo...");
         fetchUserInfo(userInfo.email);
         setIsUserLoading(false);
+        console.log("🔍🔍🔍 [AppContext] User restoration completed");
       } catch (error) {
-        console.error("Failed to parse saved user info:", error);
+        console.error("🔍🔍🔍 [AppContext] Failed to parse saved user info:", error);
         localStorage.removeItem('user_info');
         setIsUserLoading(false);
       }
     } else {
-      console.log("🔍 [AppContext] No saved user found in localStorage");
+      console.log("🔍🔍🔍 [AppContext] No saved user found in localStorage");
       setIsUserLoading(false);
     }
   }, []);
