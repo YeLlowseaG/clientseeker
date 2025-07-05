@@ -25,6 +25,55 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
 
   console.log("🔍 [Pricing] User state:", !!user, user?.email, "Loading:", isUserLoading);
 
+  // 检查localStorage中的用户状态，补充AppContext可能的延迟
+  useEffect(() => {
+    const checkUserState = () => {
+      const savedUser = localStorage.getItem('user_info');
+      if (savedUser && !user) {
+        console.log("🔍 [Pricing] Found user in localStorage but not in AppContext, this indicates sync issue");
+      }
+    };
+    
+    checkUserState();
+  }, [user]);
+
+  // 从 localStorage 和数据库验证用户状态
+  const verifyUserFromStorage = async () => {
+    try {
+      // 先检查 localStorage
+      const savedUser = localStorage.getItem('user_info');
+      if (!savedUser) {
+        console.log("🔍 [Pricing] No user in localStorage");
+        return null;
+      }
+
+      const userInfo = JSON.parse(savedUser);
+      console.log("🔍 [Pricing] Found user in localStorage:", userInfo.email);
+
+      // 从数据库验证用户是否存在
+      const response = await fetch(`/api/get-user-info?email=${encodeURIComponent(userInfo.email)}`, {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        console.log("🔍 [Pricing] User verification failed:", response.status);
+        return null;
+      }
+
+      const { code, data } = await response.json();
+      if (code !== 0 || !data) {
+        console.log("🔍 [Pricing] User not found in database");
+        return null;
+      }
+
+      console.log("🔍 [Pricing] User verified in database:", data.email);
+      return data;
+    } catch (error) {
+      console.error("🔍 [Pricing] User verification error:", error);
+      return null;
+    }
+  };
+
   const handleCheckout = async (item: PricingItem, cn_pay: boolean = false) => {
     try {
       console.log("🔍 [Pricing] handleCheckout - user state:", !!user, user?.email, "Loading:", isUserLoading);
@@ -35,11 +84,15 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
         return;
       }
       
-      if (!user) {
-        console.log("🔍 [Pricing] No user found, showing login modal");
+      // 直接从数据库验证用户登录状态
+      const currentUser = await verifyUserFromStorage();
+      if (!currentUser) {
+        console.log("🔍 [Pricing] No authenticated user found, showing login modal");
         setShowSignModal(true);
         return;
       }
+      
+      console.log("🔍 [Pricing] User verified from database:", currentUser.email);
 
       // Skip payment for free tier
       if (item.product_id === 'free') {
@@ -55,6 +108,7 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
         amount: cn_pay ? item.cn_amount : item.amount,
         currency: cn_pay ? "cny" : item.currency,
         valid_months: item.valid_months,
+        user_email: currentUser.email, // 使用验证后的用户邮箱
       };
 
       setIsLoading(true);
