@@ -153,13 +153,7 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
               </RadioGroup>
             </div>
           )}
-          <div
-            className={`w-full mt-0 grid gap-6 md:grid-cols-${
-              pricing.items?.filter(
-                (item) => !item.group || item.group === group
-              )?.length
-            }`}
-          >
+          <div className="w-full mt-0 grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
             {pricing.items?.map((item, index) => {
               if (item.group && item.group !== group) {
                 return null;
@@ -233,57 +227,53 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                       )}
                     </div>
                     <div className="flex flex-col gap-2">
-                      {/* 主要支付按钮和人民币支付放在同一行 */}
-                      <div className="flex items-center gap-2">
-                        {item.button && (
-                          <Button
-                            className="flex-1 flex items-center justify-center gap-2 font-semibold"
-                            disabled={isLoading}
-                            onClick={() => {
-                              if (isLoading) {
-                                return;
-                              }
-                              handleCheckout(item);
-                            }}
-                          >
-                            {(!isLoading ||
-                              (isLoading && productId !== item.product_id)) && (
-                              <p>{item.button.title}</p>
-                            )}
-
-                            {isLoading && productId === item.product_id && (
-                              <p>{item.button.title}</p>
-                            )}
-                            {isLoading && productId === item.product_id && (
-                              <Loader className="mr-2 h-4 w-4 animate-spin" />
-                            )}
-                            {item.button.icon && (
-                              <Icon name={item.button.icon} className="size-4" />
-                            )}
-                          </Button>
-                        )}
-                        
-                        {item.cn_amount && item.cn_amount > 0 && (
+                      {item.cn_amount && item.cn_amount > 0 ? (
+                        <div className="flex items-center gap-x-2 mt-2">
+                          <span className="text-sm">人民币支付 👉</span>
                           <div
-                            className="flex items-center gap-1 p-2 hover:cursor-pointer hover:bg-gray-100 rounded-md transition-colors"
+                            className="inline-block p-2 hover:cursor-pointer hover:bg-base-200 rounded-md"
                             onClick={() => {
                               if (isLoading) {
                                 return;
                               }
                               handleCheckout(item, true);
                             }}
-                            title="人民币支付"
                           >
-                            <span className="text-xs text-gray-600">CNY</span>
                             <img
                               src="/imgs/cnpay.png"
                               alt="cnpay"
-                              className="w-16 h-8 rounded"
+                              className="w-20 h-10 rounded-lg"
                             />
                           </div>
-                        )}
-                      </div>
-                      
+                        </div>
+                      ) : null}
+                      {item.button && (
+                        <Button
+                          className="w-full flex items-center justify-center gap-2 font-semibold"
+                          disabled={isLoading}
+                          onClick={() => {
+                            if (isLoading) {
+                              return;
+                            }
+                            handleCheckout(item);
+                          }}
+                        >
+                          {(!isLoading ||
+                            (isLoading && productId !== item.product_id)) && (
+                            <p>{item.button.title}</p>
+                          )}
+
+                          {isLoading && productId === item.product_id && (
+                            <p>{item.button.title}</p>
+                          )}
+                          {isLoading && productId === item.product_id && (
+                            <Loader className="mr-2 h-4 w-4 animate-spin" />
+                          )}
+                          {item.button.icon && (
+                            <Icon name={item.button.icon} className="size-4" />
+                          )}
+                        </Button>
+                      )}
                       {item.tip && (
                         <p className="text-muted-foreground text-sm mt-2">
                           {item.tip}
