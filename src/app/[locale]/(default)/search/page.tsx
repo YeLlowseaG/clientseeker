@@ -146,7 +146,9 @@ export default function SearchPage() {
         }),
       });
 
+      console.log("🔍 [Search] Response status:", response.status, response.ok);
       const data: SearchResult = await response.json();
+      console.log("🔍 [Search] Response data:", data);
 
       if (data.success) {
         // 缓存所有结果
@@ -168,6 +170,11 @@ export default function SearchPage() {
           setQuotaInfo(data.quota);
         }
       } else {
+        console.error("🔍 [Search] Search failed:", {
+          status: response.status,
+          data: data
+        });
+        
         if (response.status === 403) {
           // 配额不足
           setError(data.message || '搜索配额已用完，请升级套餐或等待配额重置');
@@ -175,7 +182,7 @@ export default function SearchPage() {
           // 未认证
           setError('请先登录后再进行搜索');
         } else {
-          setError(data.message || '搜索失败，请重试');
+          setError(data.message || data.error || '搜索失败，请重试');
         }
       }
     } catch (error) {

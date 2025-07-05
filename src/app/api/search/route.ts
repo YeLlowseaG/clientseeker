@@ -13,22 +13,46 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     let userUuid = '';
 
+    console.log("🔍 [Search API] Request body:", {
+      query: body.query,
+      city: body.city,
+      userEmail: body.userEmail,
+      hasUserEmail: !!body.userEmail
+    });
+
     // 检查用户身份验证 - 支持两种方式
     const session = await auth();
+    console.log("🔍 [Search API] NextAuth session:", {
+      hasSession: !!session,
+      hasUser: !!session?.user,
+      userUuid: session?.user?.uuid
+    });
+
     if (session?.user?.uuid) {
       // NextAuth session 方式
       userUuid = session.user.uuid;
+      console.log("🔍 [Search API] Using NextAuth session, userUuid:", userUuid);
     } else if (body.userEmail) {
       // 新的email验证方式
+      console.log("🔍 [Search API] Looking up user by email:", body.userEmail);
       const user = await findUserByEmail(body.userEmail);
+      console.log("🔍 [Search API] User lookup result:", {
+        found: !!user,
+        uuid: user?.uuid,
+        email: user?.email
+      });
+      
       if (!user?.uuid) {
+        console.error("🔍 [Search API] User not found for email:", body.userEmail);
         return NextResponse.json({
           error: 'User not found',
           success: false
         }, { status: 401 });
       }
       userUuid = user.uuid;
+      console.log("🔍 [Search API] Using email auth, userUuid:", userUuid);
     } else {
+      console.error("🔍 [Search API] No authentication method available");
       return NextResponse.json({
         error: 'Authentication required',
         success: false
@@ -36,8 +60,12 @@ export async function POST(request: NextRequest) {
     }
 
     // 检查用户搜索配额
+    console.log("🔍 [Search API] Checking quota for user:", userUuid);
     const quotaCheck = await SubscriptionService.checkUserQuota(userUuid);
+    console.log("🔍 [Search API] Quota check result:", quotaCheck);
+    
     if (!quotaCheck.hasQuota) {
+      console.error("🔍 [Search API] Quota exceeded:", quotaCheck);
       return NextResponse.json({
         error: 'Search quota exceeded',
         message: quotaCheck.message,
