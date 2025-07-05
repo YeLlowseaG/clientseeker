@@ -23,7 +23,9 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
   const [isLoading, setIsLoading] = useState(false);
   const [productId, setProductId] = useState<string | null>(null);
 
+  console.log("🔍🔍🔍 [Pricing] PRICING COMPONENT RENDERED 🔍🔍🔍");
   console.log("🔍 [Pricing] User state:", !!user, user?.email, "Loading:", isUserLoading);
+  console.log("🔍 [Pricing] Complete user object:", user);
 
   // 检查localStorage中的用户状态，补充AppContext可能的延迟
   useEffect(() => {
@@ -345,8 +347,39 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                         <Button
                           className="w-full flex items-center justify-center gap-2 font-semibold"
                           disabled={isLoading}
-                          onClick={() => {
+                          onClick={async () => {
+                            console.log("🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨");
+                            console.log("🚨 BUTTON CLICKED:", item.product_name);
+                            console.log("🚨 AppContext user state:", { hasUser: !!user, email: user?.email, isLoading: isUserLoading });
+                            console.log("🚨 Complete user object:", user);
+                            
+                            // 检查 localStorage
+                            const savedUser = localStorage.getItem('user_info');
+                            console.log("🚨 localStorage user:", savedUser ? JSON.parse(savedUser) : null);
+                            
+                            // 测试数据库验证
+                            if (savedUser) {
+                              const userInfo = JSON.parse(savedUser);
+                              console.log("🚨 Testing database verification for:", userInfo.email);
+                              try {
+                                const response = await fetch(`/api/get-user-info?email=${encodeURIComponent(userInfo.email)}`, {
+                                  method: "POST",
+                                });
+                                console.log("🚨 Database response status:", response.status, response.ok);
+                                if (response.ok) {
+                                  const { code, data } = await response.json();
+                                  console.log("🚨 Database response:", { code, hasData: !!data, email: data?.email });
+                                } else {
+                                  console.log("🚨 Database response failed");
+                                }
+                              } catch (error) {
+                                console.log("🚨 Database verification error:", error);
+                              }
+                            }
+                            console.log("🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨");
+                            
                             if (isLoading) {
+                              console.log("🚨 Button click ignored - already loading");
                               return;
                             }
                             handleCheckout(item);
