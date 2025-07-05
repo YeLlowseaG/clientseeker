@@ -20,7 +20,6 @@ const AppContext = createContext({} as ContextValue);
 export const useAppContext = () => useContext(AppContext);
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  console.log("🔍 [AppContext] Provider initialized - START");
 
   const [theme, setTheme] = useState<string>(() => {
     return process.env.NEXT_PUBLIC_DEFAULT_THEME || "";
@@ -47,6 +46,30 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       
       localStorage.setItem('user_info', JSON.stringify(userInfo));
       setUser(userInfo);
+      
+      // 保存用户到数据库
+      try {
+        const saveResponse = await fetch('/api/save-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userInfo),
+        });
+        
+        if (saveResponse.ok) {
+          const { user: savedUser } = await saveResponse.json();
+          // 更新本地用户信息为数据库返回的完整信息
+          localStorage.setItem('user_info', JSON.stringify(savedUser));
+          setUser(savedUser);
+        }
+      } catch (saveError) {
+        console.error("Failed to save user to database:", saveError);
+        // 即使保存失败也继续登录流程
+      }
+      
+      // 获取完整的用户信息（包括credits等）
+      fetchUserInfo(googleUser.email);
       
       // 显示成功提示
       const successMessage = document.createElement('div');
@@ -88,31 +111,33 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     autoPrompt: false, // 禁用自动弹出
   });
 
-  const fetchUserInfo = async function () {
-    console.log("🔍 [AppContext] fetchUserInfo called");
+  const fetchUserInfo = async function (userEmail?: string) {
+    if (!userEmail && !user?.email) {
+      return;
+    }
+    
+    const email = userEmail || user?.email;
+    if (!email) return;
+    
     try {
-      console.log("🔍 [AppContext] Making request to /api/get-user-info");
-      const resp = await fetch("/api/get-user-info", {
+      const resp = await fetch(`/api/get-user-info?email=${encodeURIComponent(email)}`, {
         method: "POST",
       });
 
-      console.log("🔍 [AppContext] Response status:", resp.status, "ok:", resp.ok);
       if (!resp.ok) {
         throw new Error("fetch user info failed with status: " + resp.status);
       }
 
       const { code, message, data } = await resp.json();
-      console.log("🔍 [AppContext] Response data:", { code, message, userData: !!data });
       if (code !== 0) {
         throw new Error(message);
       }
 
-      console.log("🔍 [AppContext] Setting user data:", data?.email, data?.nickname);
       setUser(data);
 
       updateInvite(data);
     } catch (e) {
-      console.error("🔍 [AppContext] fetch user info failed:", e);
+      console.error("fetch user info failed:", e);
     }
   };
 
@@ -174,7 +199,6 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     if (savedUser) {
       try {
         const userInfo = JSON.parse(savedUser);
-        console.log("Restoring user from localStorage:", userInfo.email);
         setUser(userInfo);
       } catch (error) {
         console.error("Failed to parse saved user info:", error);

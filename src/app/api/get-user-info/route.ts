@@ -1,13 +1,27 @@
 import { respData, respErr, respJson } from "@/lib/resp";
 
-import { findUserByUuid } from "@/models/user";
+import { findUserByUuid, findUserByEmail } from "@/models/user";
 import { getUserUuid } from "@/services/user";
 import { getUserCredits } from "@/services/credit";
 import { User } from "@/types/user";
 
 export async function POST(req: Request) {
   try {
-    const user_uuid = await getUserUuid();
+    let user_uuid = await getUserUuid();
+    
+    // 如果没有通过NextAuth获取到uuid，尝试从URL参数获取email
+    if (!user_uuid) {
+      const url = new URL(req.url);
+      const email = url.searchParams.get('email');
+      
+      if (email) {
+        const user = await findUserByEmail(email);
+        if (user?.uuid) {
+          user_uuid = user.uuid;
+        }
+      }
+    }
+    
     if (!user_uuid) {
       return respJson(-2, "no auth");
     }

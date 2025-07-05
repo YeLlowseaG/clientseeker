@@ -134,7 +134,8 @@ export default function SearchPage() {
           city: cityParam,
           page: 1, // 总是请求第一页以获取所有数据
           pageSize: 1000, // 请求更多数据以便前端分页
-          userRegionType: selectedRegion.regionType // 用户手动选择的地区类型
+          userRegionType: selectedRegion.regionType, // 用户手动选择的地区类型
+          userEmail: user?.email // 添加用户email用于后端验证
         }),
       });
 
@@ -222,7 +223,8 @@ export default function SearchPage() {
             selectedRegion.city?.name || selectedRegion.province?.name || '',
           page: 1,
           pageSize: Math.max(totalCount, 1000), // 导出所有结果
-          userRegionType: selectedRegion.regionType
+          userRegionType: selectedRegion.regionType,
+          userEmail: user?.email // 添加用户email用于后端验证
         }),
       });
 

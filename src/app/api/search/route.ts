@@ -3,22 +3,37 @@ import { MapServiceManager, SearchParams, BusinessInfo } from '@/lib/maps';
 import { getLocationFromIP, getClientIP } from '@/lib/geo';
 import { auth } from '@/auth';
 import { SubscriptionService } from '@/services/subscription';
+import { findUserByEmail } from '@/models/user';
 
 // 全局缓存，避免重复API调用
 const searchCache = new Map<string, BusinessInfo[]>();
 
 export async function POST(request: NextRequest) {
   try {
-    // 检查用户身份验证
+    const body = await request.json();
+    let userUuid = '';
+
+    // 检查用户身份验证 - 支持两种方式
     const session = await auth();
-    if (!session?.user?.uuid) {
+    if (session?.user?.uuid) {
+      // NextAuth session 方式
+      userUuid = session.user.uuid;
+    } else if (body.userEmail) {
+      // 新的email验证方式
+      const user = await findUserByEmail(body.userEmail);
+      if (!user?.uuid) {
+        return NextResponse.json({
+          error: 'User not found',
+          success: false
+        }, { status: 401 });
+      }
+      userUuid = user.uuid;
+    } else {
       return NextResponse.json({
         error: 'Authentication required',
         success: false
       }, { status: 401 });
     }
-
-    const userUuid = session.user.uuid;
 
     // 检查用户搜索配额
     const quotaCheck = await SubscriptionService.checkUserQuota(userUuid);
@@ -36,7 +51,6 @@ export async function POST(request: NextRequest) {
       }, { status: 403 });
     }
 
-    const body = await request.json();
     const { query, city, latitude, longitude, radius, category, limit, page, pageSize, userRegionType }: SearchParams & { userRegionType?: 'china' | 'international' } = body;
 
     if (!query) {
