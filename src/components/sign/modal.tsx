@@ -74,30 +74,24 @@ export default function SignModal() {
 
 function ProfileForm({ className }: React.ComponentProps<"form">) {
   const t = useTranslations();
+  const { promptGoogleOneTap, setShowSignModal } = useAppContext();
+
+  const handleGoogleLogin = () => {
+    promptGoogleOneTap();
+    setShowSignModal(false); // 关闭模态框
+  };
 
   return (
     <div className={cn("grid items-start gap-4", className)}>
-      {/* <div className="grid gap-2">
-        <Label htmlFor="email">{t("sign_modal.email_title")}</Label>
-        <Input type="email" id="email" placeholder="xxx@xxx.com" />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="password">{t("sign_modal.password_title")}</Label>
-        <Input id="password" type="password" />
-      </div>
-      <Button type="submit" className="w-full flex items-center gap-2">
-        <SiGmail className="w-4 h-4" />
-        {t("sign_modal.email_sign_in")}
-      </Button> */}
-
       {process.env.NEXT_PUBLIC_AUTH_GOOGLE_ONE_TAP_ENABLED === "true" ? (
-        <div className="w-full p-4 border border-dashed border-gray-300 rounded-lg text-center">
-          <SiGoogle className="w-6 h-6 mx-auto mb-2 text-gray-500" />
-          <p className="text-sm text-gray-600 mb-2">Google 登录</p>
-          <p className="text-xs text-gray-500">
-            请等待 Google One Tap 登录弹窗出现，或刷新页面重试
-          </p>
-        </div>
+        <Button
+          variant="outline"
+          className="w-full flex items-center gap-2"
+          onClick={handleGoogleLogin}
+        >
+          <SiGoogle className="w-4 h-4" />
+          {t("sign_modal.google_sign_in") || "Google 登录"}
+        </Button>
       ) : process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true" && (
         <Button
           variant="outline"

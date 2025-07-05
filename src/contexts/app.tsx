@@ -13,8 +13,7 @@ import { CacheKey } from "@/services/constant";
 import { ContextValue } from "@/types/context";
 import { User } from "@/types/user";
 import moment from "moment";
-import useOneTapLogin from "@/hooks/useOneTapLogin";
-import { useSession } from "next-auth/react";
+import { useGoogleOneTap } from "@/hooks/useGoogleOneTap";
 
 const AppContext = createContext({} as ContextValue);
 
@@ -22,22 +21,6 @@ export const useAppContext = () => useContext(AppContext);
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   console.log("🔍 [AppContext] Provider initialized - START");
-  
-  const { data: session } = useSession();
-  console.log("🔍 [AppContext] useSession result:", !!session, session);
-  
-  console.log("Google One Tap config:", {
-    enabled: process.env.NEXT_PUBLIC_AUTH_GOOGLE_ONE_TAP_ENABLED,
-    clientId: process.env.NEXT_PUBLIC_AUTH_GOOGLE_ID
-  });
-  
-  if (
-    process.env.NEXT_PUBLIC_AUTH_GOOGLE_ONE_TAP_ENABLED === "true" &&
-    process.env.NEXT_PUBLIC_AUTH_GOOGLE_ID
-  ) {
-    console.log("Initializing Google One Tap...");
-    useOneTapLogin();
-  }
 
   const [theme, setTheme] = useState<string>(() => {
     return process.env.NEXT_PUBLIC_DEFAULT_THEME || "";
@@ -47,6 +30,63 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
   const [showFeedback, setShowFeedback] = useState<boolean>(false);
+
+  // Google One Tap 登录处理
+  const handleGoogleSuccess = async (googleUser: any) => {
+    try {
+      console.log("Google One Tap successful:", googleUser);
+      
+      // 保存用户信息到 localStorage
+      const userInfo = {
+        uuid: googleUser.sub,
+        email: googleUser.email,
+        nickname: googleUser.name,
+        avatar_url: googleUser.picture,
+        created_at: new Date().toISOString(),
+      };
+      
+      localStorage.setItem('user_info', JSON.stringify(userInfo));
+      setUser(userInfo);
+      
+      // 显示成功提示
+      const successMessage = document.createElement('div');
+      successMessage.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #10b981;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      `;
+      successMessage.innerHTML = '✅ 登录成功！';
+      document.body.appendChild(successMessage);
+      
+      setTimeout(() => {
+        if (successMessage.parentNode) {
+          successMessage.parentNode.removeChild(successMessage);
+        }
+      }, 3000);
+      
+    } catch (error) {
+      console.error("Google login processing failed:", error);
+    }
+  };
+
+  const handleGoogleError = (error: any) => {
+    console.error("Google One Tap error:", error);
+  };
+
+  // 初始化 Google One Tap (禁用自动弹出)
+  const { logout: googleLogout, promptGoogleOneTap } = useGoogleOneTap({
+    onSuccess: handleGoogleSuccess,
+    onError: handleGoogleError,
+    autoPrompt: false, // 禁用自动弹出
+  });
 
   const fetchUserInfo = async function () {
     console.log("🔍 [AppContext] fetchUserInfo called");
@@ -129,45 +169,27 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    console.log("🔍 [AppContext] useEffect triggered - session:", !!session, "session.user:", !!session?.user, "current user:", !!user);
-    
-    if (session) {
-      if (session.user) {
-        console.log("🔍 [AppContext] Session has user data, fetching user info");
-        fetchUserInfo();
-      } else {
-        console.log("🔍 [AppContext] Session exists but no user data, trying to fetch anyway");
-        fetchUserInfo();
-      }
-    } else {
-      console.log("🔍 [AppContext] No session, clearing user state");
-      setUser(null);
-    }
-  }, [session]);
-
-  // 强制检查：即使没有 session，如果已认证就尝试获取用户信息
-  useEffect(() => {
-    const checkAuth = async () => {
+    // 从 localStorage 恢复用户状态
+    const savedUser = localStorage.getItem('user_info');
+    if (savedUser) {
       try {
-        const response = await fetch('/api/auth/session');
-        const sessionData = await response.json();
-        console.log("🔍 [AppContext] Manual session check:", sessionData);
-        
-        if (sessionData && sessionData.user && !user) {
-          console.log("🔍 [AppContext] Found session data manually, fetching user info");
-          fetchUserInfo();
-        }
+        const userInfo = JSON.parse(savedUser);
+        console.log("Restoring user from localStorage:", userInfo.email);
+        setUser(userInfo);
       } catch (error) {
-        console.log("🔍 [AppContext] Manual session check failed:", error);
+        console.error("Failed to parse saved user info:", error);
+        localStorage.removeItem('user_info');
       }
-    };
-
-    // 如果 status 是 authenticated 但没有 session 或 user，尝试手动获取
-    if (!session && !user) {
-      console.log("🔍 [AppContext] No session/user, manually checking auth status");
-      checkAuth();
     }
-  }, [session, user]);
+  }, []);
+
+  // 登出功能
+  const logout = () => {
+    localStorage.removeItem('user_info');
+    setUser(null);
+    googleLogout();
+    console.log("User logged out");
+  };
 
   return (
     <AppContext.Provider
@@ -178,13 +200,12 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
         setShowSignModal,
         user,
         setUser,
+        logout,
+        promptGoogleOneTap,
         showFeedback,
         setShowFeedback,
       }}
     >
-      <div style={{position: 'fixed', top: 0, left: 0, background: 'blue', color: 'white', padding: '4px', zIndex: 9999}}>
-        🔍 AppContext: Session={!!session}, User={!!user}
-      </div>
       {children}
     </AppContext.Provider>
   );

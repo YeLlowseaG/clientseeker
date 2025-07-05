@@ -13,12 +13,13 @@ import {
 
 import { Link } from "@/i18n/navigation";
 import { User } from "@/types/user";
-import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { NavItem } from "@/types/blocks/base";
+import { useAppContext } from "@/contexts/app";
 
 export default function SignUser({ user }: { user: User }) {
   const t = useTranslations();
+  const { logout } = useAppContext();
 
   const dropdownItems: NavItem[] = [
     {
@@ -38,7 +39,7 @@ export default function SignUser({ user }: { user: User }) {
     },
     {
       title: t("user.sign_out"),
-      onClick: () => signOut(),
+      onClick: logout,
     },
   ];
 

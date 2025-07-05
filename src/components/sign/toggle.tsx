@@ -9,7 +9,6 @@ export default function SignToggle() {
   const t = useTranslations();
   const { user } = useAppContext();
 
-  console.log("🔍 [SignToggle] Rendering with user:", !!user, user?.email);
 
   return (
     <div className="flex items-center gap-x-2 px-2 cursor-pointer">
