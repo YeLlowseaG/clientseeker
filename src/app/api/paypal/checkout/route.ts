@@ -7,7 +7,7 @@ import { eq } from 'drizzle-orm';
 import { getSnowId } from '@/lib/hash';
 import { getPricingPage } from '@/services/page';
 import { PricingItem } from '@/types/blocks/pricing';
-import { findUserByEmail } from '@/services/user';
+import { findUserByEmail } from '@/models/user';
 
 export async function POST(request: NextRequest) {
   try {
