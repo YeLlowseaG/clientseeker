@@ -14,7 +14,17 @@ export async function POST(request: NextRequest) {
     console.log("🔍 [PayPal] PayPal checkout API called");
     
     const body = await request.json();
+    console.log("🔍 [PayPal] Full request body:", JSON.stringify(body, null, 2));
+    
     const { user_email } = body;
+    
+    if (!user_email) {
+      console.log("🔍 [PayPal] No user_email in request body");
+      return NextResponse.json({
+        error: 'user_email is required',
+        success: false
+      }, { status: 400 });
+    }
     
     console.log("🔍 [PayPal] Request body user_email:", user_email);
     
@@ -32,8 +42,8 @@ export async function POST(request: NextRequest) {
       userEmail = session.user.email!;
       userName = session.user.name || 'User';
       console.log("🔍 [PayPal] Using NextAuth session for user:", userEmail);
-    } else if (user_email) {
-      // 没有 NextAuth 会话但有用户邮箱，验证用户是否存在于数据库
+    } else {
+      // 没有 NextAuth 会话，验证用户是否存在于数据库
       console.log("🔍 [PayPal] No NextAuth session, validating user from database:", user_email);
       
       const existingUser = await findUserByEmail(user_email);
@@ -49,13 +59,6 @@ export async function POST(request: NextRequest) {
       userEmail = existingUser.email;
       userName = existingUser.nickname || 'User';
       console.log("🔍 [PayPal] User validated from database:", userEmail, "UUID:", userUuid);
-    } else {
-      // 没有任何认证信息
-      console.log("🔍 [PayPal] No authentication found");
-      return NextResponse.json({
-        error: 'Authentication required',
-        success: false
-      }, { status: 401 });
     }
 
     const {
