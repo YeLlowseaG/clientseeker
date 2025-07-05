@@ -203,14 +203,19 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     // 从 localStorage 恢复用户状态
     const savedUser = localStorage.getItem('user_info');
+    console.log("🔍 [AppContext] Loading user from localStorage:", !!savedUser);
+    
     if (savedUser) {
       try {
         const userInfo = JSON.parse(savedUser);
+        console.log("🔍 [AppContext] Restored user:", userInfo.email);
         setUser(userInfo);
       } catch (error) {
         console.error("Failed to parse saved user info:", error);
         localStorage.removeItem('user_info');
       }
+    } else {
+      console.log("🔍 [AppContext] No saved user found in localStorage");
     }
   }, []);
 
