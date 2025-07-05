@@ -49,6 +49,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       
       // 保存用户到数据库
       try {
+        console.log("🔍 [Google Login] Saving user to database:", userInfo);
         const saveResponse = await fetch('/api/save-user', {
           method: 'POST',
           headers: {
@@ -57,14 +58,20 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
           body: JSON.stringify(userInfo),
         });
         
+        console.log("🔍 [Google Login] Save response status:", saveResponse.status, saveResponse.ok);
+        
         if (saveResponse.ok) {
           const { user: savedUser } = await saveResponse.json();
+          console.log("🔍 [Google Login] User saved successfully:", savedUser);
           // 更新本地用户信息为数据库返回的完整信息
           localStorage.setItem('user_info', JSON.stringify(savedUser));
           setUser(savedUser);
+        } else {
+          const errorData = await saveResponse.json();
+          console.error("🔍 [Google Login] Failed to save user - response:", errorData);
         }
       } catch (saveError) {
-        console.error("Failed to save user to database:", saveError);
+        console.error("🔍 [Google Login] Failed to save user to database:", saveError);
         // 即使保存失败也继续登录流程
       }
       
