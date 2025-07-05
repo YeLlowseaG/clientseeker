@@ -37,6 +37,51 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     try {
       console.log("Google One Tap successful:", googleUser);
       
+      // 立即显示"登录状态更新中"的提示
+      const updateMessage = document.createElement('div');
+      updateMessage.id = 'login-status-update';
+      updateMessage.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #3b82f6;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      `;
+      updateMessage.innerHTML = `
+        <div style="
+          width: 16px;
+          height: 16px;
+          border: 2px solid transparent;
+          border-top: 2px solid white;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        "></div>
+        <span>登录状态更新中...</span>
+      `;
+      
+      // 添加旋转动画的CSS
+      if (!document.getElementById('spin-animation-style')) {
+        const style = document.createElement('style');
+        style.id = 'spin-animation-style';
+        style.textContent = `
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+      document.body.appendChild(updateMessage);
+      
       // 保存用户信息到 localStorage
       const userInfo = {
         uuid: googleUser.sub,
@@ -78,7 +123,13 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       }
       
       // 获取完整的用户信息（包括credits等）
-      fetchUserInfo(googleUser.email);
+      await fetchUserInfo(googleUser.email);
+      
+      // 移除"登录状态更新中"提示
+      const updateMessage = document.getElementById('login-status-update');
+      if (updateMessage && updateMessage.parentNode) {
+        updateMessage.parentNode.removeChild(updateMessage);
+      }
       
       // 关闭登录模态框
       setShowSignModal(false);
@@ -97,6 +148,9 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
         font-weight: 500;
         z-index: 10000;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 8px;
       `;
       successMessage.innerHTML = '✅ 登录成功！';
       document.body.appendChild(successMessage);
@@ -109,6 +163,36 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       
     } catch (error) {
       console.error("Google login processing failed:", error);
+      
+      // 移除"登录状态更新中"提示
+      const updateMessage = document.getElementById('login-status-update');
+      if (updateMessage && updateMessage.parentNode) {
+        updateMessage.parentNode.removeChild(updateMessage);
+      }
+      
+      // 显示错误提示
+      const errorMessage = document.createElement('div');
+      errorMessage.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #ef4444;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      `;
+      errorMessage.innerHTML = '❌ 登录处理失败，请重试';
+      document.body.appendChild(errorMessage);
+      
+      setTimeout(() => {
+        if (errorMessage.parentNode) {
+          errorMessage.parentNode.removeChild(errorMessage);
+        }
+      }, 3000);
     }
   };
 
