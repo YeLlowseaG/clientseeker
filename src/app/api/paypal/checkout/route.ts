@@ -123,12 +123,18 @@ export async function POST(request: NextRequest) {
     await db().insert(orders).values(order);
 
     // 创建 PayPal 支付
+    console.log("🔍 [PayPal] Creating PayPal client...");
     const paypalClient = new PayPalClient();
+    console.log("🔍 [PayPal] PayPal client created successfully");
     
     if (interval === 'monthly' || interval === 'yearly') {
       // 订阅支付
+      console.log("🔍 [PayPal] Creating subscription for:", { product_id, interval, amount, currency });
+      const planId = await getOrCreatePlan(paypalClient, product_id, product_name, amount, currency, interval);
+      console.log("🔍 [PayPal] Plan created/retrieved:", planId);
+      
       const subscriptionData = {
-        plan_id: await getOrCreatePlan(paypalClient, product_id, product_name, amount, currency, interval),
+        plan_id: planId,
         subscriber: {
           name: {
             given_name: userName.split(' ')[0] || 'User',
@@ -151,7 +157,9 @@ export async function POST(request: NextRequest) {
         custom_id: orderNo.toString()
       };
 
+      console.log("🔍 [PayPal] Creating subscription with data:", JSON.stringify(subscriptionData, null, 2));
       const subscription = await paypalClient.createSubscription(subscriptionData);
+      console.log("🔍 [PayPal] Subscription created:", subscription.id);
       
       // 更新订单状态
       await db()
@@ -173,6 +181,7 @@ export async function POST(request: NextRequest) {
 
     } else {
       // 一次性支付
+      console.log("🔍 [PayPal] Creating one-time payment for:", { product_id, amount, currency });
       const orderData = {
         intent: 'CAPTURE',
         purchase_units: [{
@@ -195,7 +204,9 @@ export async function POST(request: NextRequest) {
         }
       };
 
+      console.log("🔍 [PayPal] Creating order with data:", JSON.stringify(orderData, null, 2));
       const paypalOrder = await paypalClient.createOrder(orderData);
+      console.log("🔍 [PayPal] Order created:", paypalOrder.id);
       
       // 更新订单状态
       await db()
@@ -217,7 +228,17 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error: any) {
-    console.error('PayPal checkout error:', error);
+    console.error('🔍 [PayPal] PayPal checkout error:', error);
+    console.error('🔍 [PayPal] Error message:', error.message);
+    console.error('🔍 [PayPal] Error stack:', error.stack);
+    
+    // 检查 PayPal 环境变量
+    console.log('🔍 [PayPal] Environment check:', {
+      hasClientId: !!process.env.PAYPAL_CLIENT_ID,
+      hasClientSecret: !!process.env.PAYPAL_CLIENT_SECRET,
+      environment: process.env.PAYPAL_ENVIRONMENT || 'sandbox'
+    });
+    
     return NextResponse.json({
       error: 'Payment processing failed',
       message: error.message,
