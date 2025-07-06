@@ -11,6 +11,7 @@ import Icon from "@/components/icon";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useAppContext } from "@/contexts/app";
+import WeChatPayModal from "@/components/wechat-pay-modal";
 
 export default function Pricing({ pricing }: { pricing: PricingType }) {
   if (pricing.disabled) {
@@ -22,6 +23,8 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
   const [group, setGroup] = useState(pricing.groups?.[0]?.name);
   const [isLoading, setIsLoading] = useState(false);
   const [productId, setProductId] = useState<string | null>(null);
+  const [showWeChatModal, setShowWeChatModal] = useState(false);
+  const [wechatOrderData, setWechatOrderData] = useState<any>(null);
 
   console.log("🔍🔍🔍 [Pricing] PRICING COMPONENT RENDERED 🔍🔍🔍");
   console.log("🔍 [Pricing] User state:", !!user, user?.email, "Loading:", isUserLoading);
@@ -82,6 +85,53 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
     } catch (error) {
       console.error("🔍 [Pricing] User verification error:", error);
       return null;
+    }
+  };
+
+  const handleWeChatCheckout = async (item: PricingItem) => {
+    try {
+      console.log("🔍 [Pricing] WeChat Pay checkout started for:", item.product_name);
+      
+      // 如果用户状态还在加载中，不执行操作
+      if (isUserLoading) {
+        console.log("🔍 [Pricing] User still loading, aborting WeChat checkout");
+        return;
+      }
+      
+      // 验证用户登录状态
+      const currentUser = await verifyUserFromStorage();
+      if (!currentUser) {
+        console.log("🔍 [Pricing] ❌ NO AUTHENTICATED USER FOUND - SHOWING LOGIN MODAL");
+        setShowSignModal(true);
+        return;
+      }
+      
+      // Skip payment for free tier
+      if (item.product_id === 'free') {
+        toast.success('Free tier activated! You can now start searching.');
+        return;
+      }
+
+      // 计算人民币金额
+      const cnyAmount = Math.round(item.amount * 7.2);
+      
+      const orderData = {
+        product_id: item.product_id,
+        product_name: item.product_name,
+        credits: item.credits,
+        interval: item.interval,
+        amount: item.amount, // 保持美元金额，API内部会转换
+        currency: item.currency,
+        valid_months: item.valid_months,
+        user_email: currentUser.email,
+      };
+
+      setWechatOrderData(orderData);
+      setShowWeChatModal(true);
+      
+    } catch (error) {
+      console.error("WeChat Pay checkout error:", error);
+      toast.error("WeChat Pay initialization failed");
     }
   };
 
@@ -325,19 +375,19 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                     <div className="flex flex-col gap-2">
                       {item.cn_amount && item.cn_amount > 0 ? (
                         <div className="flex items-center gap-x-2 mt-2">
-                          <span className="text-sm">人民币支付 👉</span>
+                          <span className="text-sm">微信支付 👉</span>
                           <div
                             className="inline-block p-2 hover:cursor-pointer hover:bg-base-200 rounded-md"
                             onClick={() => {
                               if (isLoading) {
                                 return;
                               }
-                              handleCheckout(item, true);
+                              handleWeChatCheckout(item);
                             }}
                           >
                             <img
                               src="/imgs/cnpay.png"
-                              alt="cnpay"
+                              alt="WeChat Pay"
                               className="w-20 h-10 rounded-lg"
                             />
                           </div>
@@ -422,6 +472,15 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
           </div>
         </div>
       </div>
+      
+      <WeChatPayModal
+        isOpen={showWeChatModal}
+        onClose={() => {
+          setShowWeChatModal(false);
+          setWechatOrderData(null);
+        }}
+        orderData={wechatOrderData}
+      />
     </section>
   );
 }
