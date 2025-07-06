@@ -80,10 +80,10 @@
           "Dedicated account manager"
         ],
         "interval": "monthly",
-        "amount": 9900,
-        "cn_amount": 69900,
+        "amount": 99,
+        "cn_amount": 700,
         "currency": "USD",
-        "price": "$99",
+        "price": "$0.99",
         "original_price": "$149",
         "unit": "USD",
         "is_featured": false,
