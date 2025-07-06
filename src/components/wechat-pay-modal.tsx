@@ -29,6 +29,7 @@ export default function WeChatPayModal({ isOpen, onClose, orderData }: WeChatPay
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'checking' | 'success' | 'failed' | 'expired'>('pending');
   const [timeLeft, setTimeLeft] = useState(300); // 5分钟倒计时
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>("");
+  const [amountCny, setAmountCny] = useState<number>(0);
 
   // 创建WeChat支付订单
   const createWeChatOrder = async () => {
@@ -54,6 +55,7 @@ export default function WeChatPayModal({ isOpen, onClose, orderData }: WeChatPay
       setQrCodeUrl(result.code_url);
       setOrderNo(result.order_no);
       setTimeLeft(result.expires_in || 300);
+      setAmountCny(result.amount_cny || 0);
       
       // 生成二维码图片
       const qrDataUrl = await QRCode.toDataURL(result.code_url, {
@@ -134,6 +136,7 @@ export default function WeChatPayModal({ isOpen, onClose, orderData }: WeChatPay
     setPaymentStatus('pending');
     setTimeLeft(300);
     setQrCodeDataUrl("");
+    setAmountCny(0);
     setIsLoading(false);
   };
 
@@ -178,7 +181,7 @@ export default function WeChatPayModal({ isOpen, onClose, orderData }: WeChatPay
               <div className="text-center space-y-2">
                 <p className="text-sm font-medium">Scan QR code with WeChat to pay</p>
                 <p className="text-xs text-muted-foreground">
-                  Amount: ¥{orderData ? Math.round(orderData.amount * 7.2) : 0}
+                  Amount: ¥{amountCny}
                 </p>
                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                   <Clock className="h-4 w-4" />
