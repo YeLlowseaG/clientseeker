@@ -146,7 +146,7 @@ export default function SubscriptionStatus({ userEmail }: SubscriptionStatusProp
                 <div className="flex items-center gap-1">
                   <Target className="h-4 w-4" />
                   <span>
-                    {locale === 'zh' ? '剩余：' : 'Remaining: '}
+                    {locale === 'zh' ? '剩余搜索次数：' : 'Searches left: '}
                     {subscription.credits_remaining === -1 
                       ? (locale === 'zh' ? '无限制' : 'Unlimited')
                       : subscription.credits_remaining
