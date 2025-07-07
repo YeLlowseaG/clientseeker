@@ -38,17 +38,8 @@ export default function WeChatLoginButton({
 
   // 检查微信登录是否启用
   const isWeChatEnabled = process.env.NEXT_PUBLIC_WECHAT_LOGIN_ENABLED === 'true';
-  
-  // 调试信息
-  console.log('WeChat Login Debug:', {
-    NEXT_PUBLIC_WECHAT_LOGIN_ENABLED: process.env.NEXT_PUBLIC_WECHAT_LOGIN_ENABLED,
-    NEXT_PUBLIC_WECHAT_APP_ID: process.env.NEXT_PUBLIC_WECHAT_APP_ID,
-    isWeChatEnabled,
-    isChineseLocale
-  });
 
   if (!isWeChatEnabled) {
-    console.log('WeChat login disabled, returning null');
     return null;
   }
 
