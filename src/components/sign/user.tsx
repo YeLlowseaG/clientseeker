@@ -16,10 +16,46 @@ import { User } from "@/types/user";
 import { useTranslations } from "next-intl";
 import { NavItem } from "@/types/blocks/base";
 import { useAppContext } from "@/contexts/app";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function SignUser({ user }: { user: User }) {
   const t = useTranslations();
   const { logout } = useAppContext();
+  const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+
+  // 优化的退出登录函数
+  const handleLogout = async () => {
+    if (isLoggingOut) return; // 防止重复点击
+    
+    setIsLoggingOut(true);
+    try {
+      // 1. 先调用AppContext的logout清理本地状态
+      logout();
+      
+      // 2. 调用NextAuth的signOut并重定向到首页
+      await signOut({ 
+        redirect: false, // 阻止NextAuth自动重定向
+        callbackUrl: "/" 
+      });
+      
+      // 3. 手动跳转到首页
+      router.push("/");
+      
+      // 4. 强制刷新页面确保状态完全清除
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 100);
+      
+    } catch (error) {
+      console.error("Logout error:", error);
+      // 如果出错，强制跳转到首页
+      window.location.href = "/";
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   const dropdownItems: NavItem[] = [
     {
@@ -30,8 +66,9 @@ export default function SignUser({ user }: { user: User }) {
       url: "/dashboard",
     },
     {
-      title: t("user.sign_out"),
-      onClick: logout,
+      title: isLoggingOut ? "正在退出..." : t("user.sign_out"),
+      onClick: handleLogout,
+      disabled: isLoggingOut,
     },
   ];
 
@@ -48,14 +85,23 @@ export default function SignUser({ user }: { user: User }) {
           <React.Fragment key={index}>
             <DropdownMenuItem
               key={index}
-              className="flex justify-center cursor-pointer"
+              className={`flex justify-center ${
+                (item as any).disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+              }`}
+              disabled={(item as any).disabled}
             >
               {item.url ? (
                 <Link href={item.url as any} target={item.target}>
                   {item.title}
                 </Link>
               ) : (
-                <button onClick={item.onClick}>{item.title}</button>
+                <button 
+                  onClick={item.onClick}
+                  disabled={(item as any).disabled}
+                  className={`${(item as any).disabled ? 'cursor-not-allowed opacity-50' : ''}`}
+                >
+                  {item.title}
+                </button>
               )}
             </DropdownMenuItem>
             {index !== dropdownItems.length - 1 && <DropdownMenuSeparator />}
