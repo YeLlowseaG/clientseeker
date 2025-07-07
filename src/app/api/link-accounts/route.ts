@@ -41,9 +41,10 @@ export async function POST(request: NextRequest) {
         // 保留原有邮箱和核心信息
         // 可以选择性更新头像（如果原来没有的话）
         avatar_url: existingUser.avatar_url || wechatData.headimgurl,
-        // 添加微信相关信息到扩展字段（如果有的话）
+        // 保存微信openid到signin_openid字段，用于后续识别
+        signin_openid: wechatData.openid,
+        signin_provider: 'wechat',
         updated_at: new Date(),
-        // 可以在这里添加微信openid到某个字段，用于后续识别
       })
       .where(eq(users.uuid, existingUserId))
       .returning();

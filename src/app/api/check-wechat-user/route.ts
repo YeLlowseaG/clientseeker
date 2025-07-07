@@ -17,32 +17,44 @@ export async function GET(request: NextRequest) {
     console.log('Checking WeChat openid existence:', openid);
 
     // 检查openid是否已经关联到某个用户
-    // 我们需要检查两种情况：
-    // 1. uuid字段直接是openid (新的微信用户)
-    // 2. 或者email字段包含这个openid (旧的假邮箱用户)
+    // 优先检查signin_openid字段，这是关联微信账户的正确方式
     
-    const existingUsers = await db()
+    const linkedUsers = await db()
       .select()
       .from(users)
       .where(
-        eq(users.uuid, openid)
+        eq(users.signin_openid, openid)
       )
       .limit(1);
 
-    // 如果没找到，再检查是否有假邮箱格式的用户
+    // 如果没找到，再检查是否有旧的uuid或假邮箱格式的用户
     let alternativeUsers: any[] = [];
-    if (existingUsers.length === 0) {
-      const fakeEmail = `${openid}@wechat.user`;
-      alternativeUsers = await db()
+    if (linkedUsers.length === 0) {
+      // 检查uuid字段 (可能是旧的实现)
+      const uuidUsers = await db()
         .select()
         .from(users)
         .where(
-          eq(users.email, fakeEmail)
+          eq(users.uuid, openid)
         )
         .limit(1);
+      
+      if (uuidUsers.length === 0) {
+        // 检查假邮箱格式
+        const fakeEmail = `${openid}@wechat.user`;
+        alternativeUsers = await db()
+          .select()
+          .from(users)
+          .where(
+            eq(users.email, fakeEmail)
+          )
+          .limit(1);
+      } else {
+        alternativeUsers = uuidUsers;
+      }
     }
 
-    const foundUser = existingUsers[0] || alternativeUsers[0];
+    const foundUser = linkedUsers[0] || alternativeUsers[0];
 
     return NextResponse.json({
       exists: !!foundUser,

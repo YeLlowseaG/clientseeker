@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     console.log("🔍 [Save User API] Request body:", body);
     
-    const { uuid, email, nickname, avatar_url, created_at } = body;
+    const { uuid, email, nickname, avatar_url, created_at, openid } = body;
 
     if (!email || !uuid) {
       console.error("🔍 [Save User API] Missing required fields:", { email: !!email, uuid: !!uuid });
@@ -38,6 +38,9 @@ export async function POST(request: NextRequest) {
       savedUser = existingUser;
     } else {
       console.log("🔍 [Save User API] Creating new user...");
+      // 检测是否为微信用户（通过openid判断）
+      const isWeChatUser = !!openid;
+      
       // 直接调用 insertUser，绕过 saveUser 中的 credits 逻辑
       const newUser = await insertUser({
         uuid,
@@ -45,8 +48,9 @@ export async function POST(request: NextRequest) {
         nickname: nickname || email.split('@')[0],
         avatar_url: avatar_url || '',
         created_at: new Date(created_at),
-        signin_type: 'google',
-        signin_provider: 'google',
+        signin_type: isWeChatUser ? 'wechat' : 'google',
+        signin_provider: isWeChatUser ? 'wechat' : 'google',
+        signin_openid: openid || null,
         invite_code: '',
         invited_by: '',
         is_affiliate: false,
