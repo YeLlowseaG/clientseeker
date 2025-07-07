@@ -38,10 +38,28 @@ export default function DashboardPage() {
 
   const fetchQuotaInfo = async () => {
     try {
-      const response = await fetch("/api/user/quota");
+      const response = await fetch("/api/user/subscription");
       if (response.ok) {
         const data = await response.json();
-        setQuotaInfo(data);
+        if (data.hasActiveSubscription) {
+          setQuotaInfo({
+            remaining: data.creditsRemaining,
+            total: data.creditsTotal,
+            used: data.creditsUsed,
+            productId: data.productId,
+            productName: data.productName,
+            periodEnd: data.periodEnd
+          });
+        } else {
+          // 没有活跃订阅，显示免费版信息
+          setQuotaInfo({
+            remaining: 0,
+            total: 10,
+            used: 10,
+            productId: "free",
+            productName: "Free Trial"
+          });
+        }
       }
     } catch (error) {
       console.error("Failed to fetch quota info:", error);
@@ -74,9 +92,9 @@ export default function DashboardPage() {
   const getProductDisplayName = (productId: string) => {
     const productNames = {
       free: "体验版",
-      personal: "个人版", 
-      professional: "专业版",
-      enterprise: "企业版"
+      monthly: "单月套餐", 
+      annual: "年套餐",
+      enterprise: "企业套餐"
     };
     return productNames[productId as keyof typeof productNames] || productId;
   };
@@ -84,8 +102,8 @@ export default function DashboardPage() {
   const getProductBadgeVariant = (productId: string) => {
     const variants = {
       free: "secondary" as const,
-      personal: "default" as const,
-      professional: "destructive" as const, 
+      monthly: "default" as const,
+      annual: "destructive" as const, 
       enterprise: "outline" as const
     };
     return variants[productId as keyof typeof variants] || "default";
@@ -121,9 +139,11 @@ export default function DashboardPage() {
             <Search className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{quotaInfo?.remaining || 0}</div>
+            <div className="text-2xl font-bold">
+              {quotaInfo?.productId === 'enterprise' ? '无限制' : (quotaInfo?.remaining || 0)}
+            </div>
             <p className="text-xs text-muted-foreground">
-              总共 {quotaInfo?.total || 0} 次
+              {quotaInfo?.productId === 'enterprise' ? '企业套餐' : `总共 ${quotaInfo?.total || 0} 次`}
             </p>
           </CardContent>
         </Card>
