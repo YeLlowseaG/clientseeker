@@ -249,6 +249,28 @@ export default function SearchPage() {
         return;
       }
 
+      // 格式化手机号码，确保Excel中显示为文本
+      const formatPhoneForExcel = (phone: any): string => {
+        if (!phone) return '暂无';
+        
+        // 转换为字符串，确保保留前导零
+        let phoneStr = String(phone).trim();
+        
+        // 如果是空字符串或无意义的值，返回暂无
+        if (!phoneStr || phoneStr === '0' || phoneStr === '000') {
+          return '暂无';
+        }
+        
+        // 处理可能丢失前导零的区号（如：10位数字且不以1开头）
+        if (/^\d{10}$/.test(phoneStr) && /^[2-9]/.test(phoneStr)) {
+          console.log(`导出时修复缺失前导0的号码: "${phone}" -> "0${phoneStr}"`);
+          phoneStr = '0' + phoneStr;
+        }
+        
+        // 在号码前添加制表符，强制Excel将其识别为文本
+        return '\t' + phoneStr;
+      };
+
       // 准备CSV数据 - 使用所有搜索结果
       const headers = ['客户名称', '地址', '联系电话', '评分', '行业类别', '数据来源'];
       const csvData = [
@@ -256,7 +278,7 @@ export default function SearchPage() {
         ...data.results.map((business: any) => [
           business.name,
           business.address,
-          business.phone || '暂无',
+          formatPhoneForExcel(business.phone),
           business.rating?.toString() || '暂无',
           business.category || '暂无',
           business.source === 'gaode' ? '高德地图' : '百度地图'
