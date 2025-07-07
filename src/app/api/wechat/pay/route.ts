@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
     console.log("🔍 [WeChat Pay] WeChat Pay client created successfully");
 
     // 使用配置中的cn_amount作为人民币金额（单位：分）
-    const cnyAmount = item.cn_amount;
+    const cnyAmount = item.cn_amount || item.amount || 0;
     
     // 创建微信Native支付订单
     console.log("🔍 [WeChat Pay] Creating Native payment for:", { product_id, amount: cnyAmount, currency: 'CNY' });
