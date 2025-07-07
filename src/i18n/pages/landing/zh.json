@@ -13,6 +13,11 @@
     "nav": {
       "items": [
         {
+          "title": "首页",
+          "url": "/",
+          "icon": "RiHome2Line"
+        },
+        {
           "title": "功能介绍",
           "url": "/features",
           "icon": "RiSparkling2Line"
