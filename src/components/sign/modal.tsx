@@ -76,7 +76,7 @@ export default function SignModal() {
 function ProfileForm({ className }: React.ComponentProps<"form">) {
   const t = useTranslations();
   const locale = useLocale();
-  const { promptGoogleOneTap, setShowSignModal, isGoogleLoading } = useAppContext();
+  const { promptGoogleOneTap, setShowSignModal, isGoogleLoading, setUser } = useAppContext();
   
   const isChineseLocale = locale === 'zh';
 
@@ -87,13 +87,39 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
 
   const handleWeChatSuccess = (userInfo: any) => {
     console.log('WeChat login success in modal:', userInfo);
-    // 微信登录成功后关闭模态框
+    
+    // 更新用户状态到AppContext
+    setUser(userInfo);
+    
+    // 关闭登录模态框
     setShowSignModal(false);
     
-    // 刷新页面以更新用户状态
+    // 显示成功提示
+    const successMessage = document.createElement('div');
+    successMessage.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 10000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    `;
+    successMessage.innerHTML = '✅ 微信登录成功！';
+    document.body.appendChild(successMessage);
+    
     setTimeout(() => {
-      window.location.reload();
-    }, 500);
+      if (successMessage.parentNode) {
+        successMessage.parentNode.removeChild(successMessage);
+      }
+    }, 3000);
   };
 
   const handleWeChatError = (error: any) => {
