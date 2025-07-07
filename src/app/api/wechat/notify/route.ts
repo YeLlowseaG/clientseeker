@@ -3,6 +3,7 @@ import { WeChatPayClient } from '@/lib/wechatpay';
 import { db } from '@/db';
 import { orders } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { SubscriptionService } from '@/services/subscription';
 
 export async function POST(request: NextRequest) {
   try {
@@ -111,8 +112,23 @@ export async function POST(request: NextRequest) {
       
       console.log("🔍 [WeChat Notify] Order marked as completed:", orderNo);
       
-      // TODO: 这里可以添加用户权限激活逻辑
-      // 例如：增加用户credits、激活订阅等
+      // 激活用户订阅权限
+      const activationSuccess = await SubscriptionService.activateSubscriptionFromOrder({
+        user_uuid: order.user_uuid,
+        user_email: order.user_email,
+        order_no: order.order_no,
+        product_id: order.product_id || 'monthly',
+        product_name: order.product_name || 'ClientSeeker Monthly Plan',
+        credits: order.credits || 100,
+        valid_months: order.valid_months || 1,
+        amount: order.amount,
+      });
+
+      if (activationSuccess) {
+        console.log("🔍 [WeChat Notify] User subscription activated successfully");
+      } else {
+        console.error("🔍 [WeChat Notify] Failed to activate user subscription");
+      }
       
     } else {
       console.log("🔍 [WeChat Notify] Payment not successful:", paymentData.trade_state);

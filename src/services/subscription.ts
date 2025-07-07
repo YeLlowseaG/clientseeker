@@ -93,6 +93,18 @@ export class SubscriptionService {
       };
     }
 
+    // 企业套餐无限制
+    if (subscription.product_id === 'enterprise') {
+      return {
+        hasQuota: true,
+        remaining: -1, // -1 表示无限制
+        total: -1,
+        used: subscription.credits_used,
+        productId: subscription.product_id,
+        message: "Enterprise plan - Unlimited searches"
+      };
+    }
+
     return {
       hasQuota: subscription.credits_remaining > 0,
       remaining: subscription.credits_remaining,
@@ -132,6 +144,18 @@ export class SubscriptionService {
         return true;
       }
       return false;
+    }
+
+    // 企业套餐无限制，只记录使用次数
+    if (subscription.product_id === 'enterprise') {
+      await db()
+        .update(subscriptions)
+        .set({
+          credits_used: subscription.credits_used + amount,
+          updated_at: new Date()
+        })
+        .where(eq(subscriptions.id, subscription.id));
+      return true;
     }
 
     if (subscription.credits_remaining >= amount) {
@@ -181,11 +205,12 @@ export class SubscriptionService {
     productId: string,
     productName: string,
     creditsTotal: number,
+    validMonths: number = 1,
     stripeSubscriptionId?: string
   ): Promise<UserSubscription> {
     const now = new Date();
     const periodEnd = new Date(now);
-    periodEnd.setMonth(periodEnd.getMonth() + 1); // 1个月有效期
+    periodEnd.setMonth(periodEnd.getMonth() + validMonths); // 根据套餐有效期设置
 
     // 先停用所有现有订阅
     await db()
@@ -205,7 +230,7 @@ export class SubscriptionService {
         status: "active",
         credits_total: creditsTotal,
         credits_used: 0,
-        credits_remaining: creditsTotal,
+        credits_remaining: creditsTotal === -1 ? -1 : creditsTotal, // 企业套餐保持-1
         period_start: now,
         period_end: periodEnd,
         stripe_subscription_id: stripeSubscriptionId,
@@ -215,6 +240,60 @@ export class SubscriptionService {
       .returning();
 
     return newSubscription[0];
+  }
+
+  // 从订单激活用户订阅
+  static async activateSubscriptionFromOrder(orderData: {
+    user_uuid: string;
+    user_email: string;
+    order_no: string;
+    product_id: string;
+    product_name: string;
+    credits: number;
+    valid_months: number;
+    amount: number;
+  }): Promise<boolean> {
+    try {
+      console.log("🔍 [Subscription] Activating subscription from order:", {
+        user_email: orderData.user_email,
+        product_id: orderData.product_id,
+        credits: orderData.credits
+      });
+
+      // 跳过免费套餐
+      if (orderData.product_id === 'free') {
+        console.log("🔍 [Subscription] Skipping free plan activation");
+        return true;
+      }
+
+      // 根据新套餐结构设置正确的积分
+      let creditsTotal = orderData.credits;
+      if (orderData.product_id === 'monthly') {
+        creditsTotal = 100; // 单月套餐100次
+      } else if (orderData.product_id === 'annual') {
+        creditsTotal = 500; // 年套餐500次/月
+      } else if (orderData.product_id === 'enterprise') {
+        creditsTotal = -1; // 企业套餐无限制
+      }
+
+      // 创建付费订阅
+      await this.createPaidSubscription(
+        orderData.user_uuid,
+        orderData.product_id,
+        orderData.product_name,
+        creditsTotal,
+        orderData.valid_months,
+        orderData.order_no // 使用订单号作为标识
+      );
+
+      console.log("🔍 [Subscription] Subscription activated successfully");
+      return true;
+
+    } catch (error: any) {
+      console.error('🔍 [Subscription] Error activating subscription from order:', error);
+      console.error('🔍 [Subscription] Error message:', error.message);
+      return false;
+    }
   }
 
   // 续费订阅（重置配额）

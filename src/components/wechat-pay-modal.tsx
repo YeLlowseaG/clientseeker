@@ -91,11 +91,15 @@ export default function WeChatPayModal({ isOpen, onClose, orderData }: WeChatPay
         if (result.success && result.status === 'completed') {
           setPaymentStatus('success');
           clearInterval(pollInterval);
-          toast.success('Payment successful!');
+          toast.success('Payment successful! Your subscription has been activated.');
           setTimeout(() => {
             onClose();
-            // 可以添加页面刷新或用户状态更新逻辑
-            window.location.reload();
+            // 发送自定义事件通知父组件更新用户状态
+            window.dispatchEvent(new CustomEvent('subscription-updated'));
+            // 延迟刷新以确保状态更新
+            setTimeout(() => {
+              window.location.reload();
+            }, 500);
           }, 2000);
         } else if (result.status === 'failed') {
           setPaymentStatus('failed');
@@ -200,7 +204,8 @@ export default function WeChatPayModal({ isOpen, onClose, orderData }: WeChatPay
               <CheckCircle className="h-12 w-12 text-green-500" />
               <div className="text-center">
                 <p className="font-medium text-green-600">Payment Successful!</p>
-                <p className="text-sm text-muted-foreground">Your order has been processed</p>
+                <p className="text-sm text-muted-foreground">Your subscription has been activated</p>
+                <p className="text-xs text-muted-foreground mt-2">Redirecting to refresh your access...</p>
               </div>
             </div>
           )}
