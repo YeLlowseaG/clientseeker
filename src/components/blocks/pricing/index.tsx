@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Loader } from "lucide-react";
+import { Check, Loader, CreditCard } from "lucide-react";
 import { PricingItem, Pricing as PricingType } from "@/types/blocks/pricing";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useAppContext } from "@/contexts/app";
 import WeChatPayModal from "@/components/wechat-pay-modal";
+import { useLocale } from "next-intl";
 
 export default function Pricing({ pricing }: { pricing: PricingType }) {
   if (pricing.disabled) {
@@ -19,32 +20,27 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
   }
 
   const { user, setUser, setShowSignModal, isUserLoading } = useAppContext();
+  const locale = useLocale();
 
   const [group, setGroup] = useState(pricing.groups?.[0]?.name);
   const [isLoading, setIsLoading] = useState(false);
   const [productId, setProductId] = useState<string | null>(null);
   const [showWeChatModal, setShowWeChatModal] = useState(false);
   const [wechatOrderData, setWechatOrderData] = useState<any>(null);
-
-  console.log("🔍🔍🔍 [Pricing] PRICING COMPONENT RENDERED 🔍🔍🔍");
-  console.log("🔍 [Pricing] User state:", !!user, user?.email, "Loading:", isUserLoading);
-  console.log("🔍 [Pricing] Complete user object:", user);
+  
+  // 支付方式状态管理
+  const [paymentMethods, setPaymentMethods] = useState<{[key: string]: 'wechat' | 'paypal'}>({});
+  
+  // 根据语言环境判断是否优先微信支付
+  const isChineseLocale = locale === 'zh';
 
   // 检查localStorage中的用户状态，补充AppContext可能的延迟
   useEffect(() => {
     const checkUserState = () => {
       const savedUser = localStorage.getItem('user_info');
-      console.log("🔍 [Pricing] localStorage check:", {
-        hasLocalStorageUser: !!savedUser,
-        hasAppContextUser: !!user,
-        userEmail: user?.email || 'none',
-        isUserLoading,
-        localStorageContent: savedUser ? JSON.parse(savedUser) : null
-      });
       
       if (savedUser && !user) {
-        console.log("🔍 [Pricing] SYNC ISSUE: Found user in localStorage but not in AppContext");
-        console.log("🔍 [Pricing] localStorage user:", JSON.parse(savedUser));
+        console.log("Sync issue: Found user in localStorage but not in AppContext");
       }
     };
     
@@ -57,12 +53,10 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
       // 先检查 localStorage
       const savedUser = localStorage.getItem('user_info');
       if (!savedUser) {
-        console.log("🔍 [Pricing] No user in localStorage");
         return null;
       }
 
       const userInfo = JSON.parse(savedUser);
-      console.log("🔍 [Pricing] Found user in localStorage:", userInfo.email);
 
       // 从数据库验证用户是否存在
       const response = await fetch(`/api/get-user-info?email=${encodeURIComponent(userInfo.email)}`, {
@@ -70,38 +64,31 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
       });
 
       if (!response.ok) {
-        console.log("🔍 [Pricing] User verification failed:", response.status);
         return null;
       }
 
       const { code, data } = await response.json();
       if (code !== 0 || !data) {
-        console.log("🔍 [Pricing] User not found in database");
         return null;
       }
 
-      console.log("🔍 [Pricing] User verified in database:", data.email);
       return data;
     } catch (error) {
-      console.error("🔍 [Pricing] User verification error:", error);
+      console.error("User verification error:", error);
       return null;
     }
   };
 
   const handleWeChatCheckout = async (item: PricingItem) => {
     try {
-      console.log("🔍 [Pricing] WeChat Pay checkout started for:", item.product_name);
-      
       // 如果用户状态还在加载中，不执行操作
       if (isUserLoading) {
-        console.log("🔍 [Pricing] User still loading, aborting WeChat checkout");
         return;
       }
       
       // 验证用户登录状态
       const currentUser = await verifyUserFromStorage();
       if (!currentUser) {
-        console.log("🔍 [Pricing] ❌ NO AUTHENTICATED USER FOUND - SHOWING LOGIN MODAL");
         setShowSignModal(true);
         return;
       }
@@ -137,48 +124,18 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
 
   const handleCheckout = async (item: PricingItem, cn_pay: boolean = false) => {
     try {
-      console.log("🔍 [Pricing] ========== CHECKOUT STARTED ==========");
-      console.log("🔍 [Pricing] handleCheckout called with:", {
-        productId: item.product_id,
-        productName: item.product_name,
-        cnPay: cn_pay
-      });
-      console.log("🔍 [Pricing] Current state:", {
-        hasAppContextUser: !!user,
-        userEmail: user?.email || 'none',
-        isUserLoading,
-        userObject: user
-      });
-      
-      // 立即检查 localStorage
-      const savedUser = localStorage.getItem('user_info');
-      console.log("🔍 [Pricing] localStorage immediate check:", {
-        hasLocalStorageUser: !!savedUser,
-        localStorageContent: savedUser ? JSON.parse(savedUser) : null
-      });
-      
       // 如果用户状态还在加载中，不执行操作
       if (isUserLoading) {
-        console.log("🔍 [Pricing] User still loading, aborting checkout");
         return;
       }
       
       // 直接从数据库验证用户登录状态
-      console.log("🔍 [Pricing] Starting user verification from storage/database...");
       const currentUser = await verifyUserFromStorage();
-      console.log("🔍 [Pricing] User verification result:", {
-        success: !!currentUser,
-        userEmail: currentUser?.email || 'none',
-        userObject: currentUser
-      });
       
       if (!currentUser) {
-        console.log("🔍 [Pricing] ❌ NO AUTHENTICATED USER FOUND - SHOWING LOGIN MODAL");
         setShowSignModal(true);
         return;
       }
-      
-      console.log("🔍 [Pricing] ✅ User verified from database:", currentUser.email);
 
       // Skip payment for free tier
       if (item.product_id === 'free') {
@@ -239,13 +196,47 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
     }
   };
 
+  // 初始化默认支付方式
   useEffect(() => {
     if (pricing.items) {
       setGroup(pricing.items[0].group);
       setProductId(pricing.items[0].product_id);
       setIsLoading(false);
+      
+      // 根据语言环境设置默认支付方式
+      const initialPaymentMethods: {[key: string]: 'wechat' | 'paypal'} = {};
+      pricing.items.forEach(item => {
+        if (item.product_id) {
+          // 中文环境且支持微信支付时，默认微信支付
+          if (isChineseLocale && item.cn_amount && item.cn_amount > 0) {
+            initialPaymentMethods[item.product_id] = 'wechat';
+          } else {
+            initialPaymentMethods[item.product_id] = 'paypal';
+          }
+        }
+      });
+      setPaymentMethods(initialPaymentMethods);
     }
-  }, [pricing.items]);
+  }, [pricing.items, isChineseLocale]);
+
+  // 处理支付方式切换
+  const handlePaymentMethodChange = (productId: string, method: 'wechat' | 'paypal') => {
+    setPaymentMethods(prev => ({
+      ...prev,
+      [productId]: method
+    }));
+  };
+
+  // 统一的支付处理函数
+  const handlePayment = async (item: PricingItem) => {
+    const selectedMethod = paymentMethods[item.product_id] || 'paypal';
+    
+    if (selectedMethod === 'wechat') {
+      await handleWeChatCheckout(item);
+    } else {
+      await handleCheckout(item);
+    }
+  };
 
   return (
     <section id={pricing.name} className="py-16">
@@ -372,95 +363,107 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                         </ul>
                       )}
                     </div>
-                    <div className="flex flex-col gap-2">
-                      {item.cn_amount && item.cn_amount > 0 ? (
-                        <div className="flex items-center gap-x-2 mt-2">
-                          <span className="text-sm">微信支付 👉</span>
-                          <div
-                            className="inline-block p-2 hover:cursor-pointer hover:bg-base-200 rounded-md"
-                            onClick={() => {
-                              if (isLoading) {
-                                return;
-                              }
-                              handleWeChatCheckout(item);
-                            }}
-                          >
-                            <img
-                              src="/imgs/cnpay.png"
-                              alt="WeChat Pay"
-                              className="w-20 h-10 rounded-lg"
-                            />
+                    <div className="flex flex-col gap-3">
+                      {/* 支付方式选择器 */}
+                      {item.cn_amount && item.cn_amount > 0 && (
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2 text-sm font-medium">
+                            <CreditCard className="h-4 w-4" />
+                            <span>{isChineseLocale ? '支付方式' : 'Payment Method'}</span>
                           </div>
+                          <RadioGroup
+                            value={paymentMethods[item.product_id] || 'paypal'}
+                            onValueChange={(value: 'wechat' | 'paypal') => 
+                              handlePaymentMethodChange(item.product_id, value)
+                            }
+                            className="grid grid-cols-1 gap-2"
+                          >
+                            {/* 微信支付选项 */}
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="wechat" id={`wechat-${item.product_id}`} />
+                              <Label htmlFor={`wechat-${item.product_id}`} className="flex items-center gap-2 cursor-pointer">
+                                <img
+                                  src="/imgs/cnpay.png"
+                                  alt="WeChat Pay"
+                                  className="w-6 h-3 rounded"
+                                />
+                                <span className="text-sm">
+                                  {isChineseLocale ? '微信支付' : 'WeChat Pay'}
+                                </span>
+                                {isChineseLocale && (
+                                  <Badge variant="secondary" className="text-xs">推荐</Badge>
+                                )}
+                              </Label>
+                            </div>
+                            
+                            {/* PayPal支付选项 */}
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="paypal" id={`paypal-${item.product_id}`} />
+                              <Label htmlFor={`paypal-${item.product_id}`} className="flex items-center gap-2 cursor-pointer">
+                                <svg className="w-6 h-3" viewBox="0 0 24 12" fill="none">
+                                  <path d="M7.076 0C3.698 0 0.96 2.393 0.96 5.339c0 1.672.738 3.026 2.132 3.026.59 0 1.144-.27 1.463-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C9.49.183 8.29 0 7.076 0z" fill="#003087"/>
+                                  <path d="M15.999 0c-3.378 0-6.115 2.393-6.115 5.339 0 1.672.738 3.026 2.131 3.026.59 0 1.145-.27 1.464-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C18.413.183 17.213 0 15.999 0z" fill="#009cde"/>
+                                </svg>
+                                <span className="text-sm">PayPal</span>
+                                {!isChineseLocale && (
+                                  <Badge variant="secondary" className="text-xs">Recommended</Badge>
+                                )}
+                              </Label>
+                            </div>
+                          </RadioGroup>
                         </div>
-                      ) : null}
+                      )}
+
+                      {/* 统一支付按钮 */}
                       {item.button && (
                         <Button
                           className="w-full flex items-center justify-center gap-2 font-semibold"
                           disabled={isLoading}
                           onClick={async () => {
-                            console.log("🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨");
-                            console.log("🚨 BUTTON CLICKED:", item.product_name);
-                            console.log("🚨 AppContext user state:", { hasUser: !!user, email: user?.email, isLoading: isUserLoading });
-                            console.log("🚨 Complete user object:", user);
-                            
-                            // 检查 localStorage
-                            const savedUser = localStorage.getItem('user_info');
-                            console.log("🚨 localStorage user:", savedUser ? JSON.parse(savedUser) : null);
-                            
-                            // 如果 localStorage 有用户但 AppContext 没有，手动设置
-                            if (savedUser && !user) {
-                              console.log("🚨 FIXING SYNC ISSUE: Setting user in AppContext from localStorage");
-                              const userInfo = JSON.parse(savedUser);
-                              setUser(userInfo);
-                              // 直接继续执行，不需要重新点击
-                            }
-                            
-                            // 测试数据库验证
-                            if (savedUser) {
-                              const userInfo = JSON.parse(savedUser);
-                              console.log("🚨 Testing database verification for:", userInfo.email);
-                              try {
-                                const response = await fetch(`/api/get-user-info?email=${encodeURIComponent(userInfo.email)}`, {
-                                  method: "POST",
-                                });
-                                console.log("🚨 Database response status:", response.status, response.ok);
-                                if (response.ok) {
-                                  const { code, data } = await response.json();
-                                  console.log("🚨 Database response:", { code, hasData: !!data, email: data?.email });
-                                } else {
-                                  console.log("🚨 Database response failed");
-                                }
-                              } catch (error) {
-                                console.log("🚨 Database verification error:", error);
-                              }
-                            }
-                            console.log("🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨");
-                            
                             if (isLoading) {
-                              console.log("🚨 Button click ignored - already loading");
                               return;
                             }
-                            handleCheckout(item);
+                            await handlePayment(item);
                           }}
                         >
-                          {(!isLoading ||
-                            (isLoading && productId !== item.product_id)) && (
-                            <p>{item.button.title}</p>
+                          {(!isLoading || (isLoading && productId !== item.product_id)) && (
+                            <>
+                              {paymentMethods[item.product_id] === 'wechat' ? (
+                                <>
+                                  <img src="/imgs/cnpay.png" alt="WeChat Pay" className="w-5 h-2.5 rounded" />
+                                  <span>{isChineseLocale ? '微信支付' : 'Pay with WeChat'}</span>
+                                </>
+                              ) : (
+                                <>
+                                  <svg className="w-5 h-2.5" viewBox="0 0 24 12" fill="none">
+                                    <path d="M7.076 0C3.698 0 0.96 2.393 0.96 5.339c0 1.672.738 3.026 2.132 3.026.59 0 1.144-.27 1.463-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C9.49.183 8.29 0 7.076 0z" fill="currentColor"/>
+                                    <path d="M15.999 0c-3.378 0-6.115 2.393-6.115 5.339 0 1.672.738 3.026 2.131 3.026.59 0 1.145-.27 1.464-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C18.413.183 17.213 0 15.999 0z" fill="currentColor"/>
+                                  </svg>
+                                  <span>{isChineseLocale ? 'PayPal支付' : 'Pay with PayPal'}</span>
+                                </>
+                              )}
+                            </>
                           )}
 
                           {isLoading && productId === item.product_id && (
-                            <p>{item.button.title}</p>
-                          )}
-                          {isLoading && productId === item.product_id && (
-                            <Loader className="mr-2 h-4 w-4 animate-spin" />
-                          )}
-                          {item.button.icon && (
-                            <Icon name={item.button.icon} className="size-4" />
+                            <>
+                              <Loader className="h-4 w-4 animate-spin" />
+                              <span>{isChineseLocale ? '处理中...' : 'Processing...'}</span>
+                            </>
                           )}
                         </Button>
                       )}
+                      
+                      {/* 安全提示 */}
+                      <div className="text-xs text-muted-foreground text-center space-y-1">
+                        <p>{isChineseLocale ? '🔒 安全支付，支持退款' : '🔒 Secure payment, refund supported'}</p>
+                        {paymentMethods[item.product_id] === 'wechat' && (
+                          <p>{isChineseLocale ? '支持微信、支付宝扫码支付' : 'Supports WeChat and Alipay QR code payment'}</p>
+                        )}
+                      </div>
+
                       {item.tip && (
-                        <p className="text-muted-foreground text-sm mt-2">
+                        <p className="text-muted-foreground text-sm mt-2 text-center">
                           {item.tip}
                         </p>
                       )}
