@@ -52,6 +52,7 @@ export interface NavItem {
   className?: string;
   children?: NavItem[];
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 export interface Nav {
