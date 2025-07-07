@@ -139,9 +139,8 @@ export async function POST(request: NextRequest) {
     const wechatPayClient = new WeChatPayClient();
     console.log("🔍 [WeChat Pay] WeChat Pay client created successfully");
 
-    // 计算人民币金额 (假设1美元=7.2人民币)，微信支付金额单位是分
-    // amount 是美元的分，需要先转换为美元，再转换为人民币分
-    const cnyAmount = Math.round((amount / 100) * 7.2 * 100);
+    // 使用配置中的cn_amount作为人民币金额（单位：分）
+    const cnyAmount = item.cn_amount;
     
     // 创建微信Native支付订单
     console.log("🔍 [WeChat Pay] Creating Native payment for:", { product_id, amount: cnyAmount, currency: 'CNY' });
