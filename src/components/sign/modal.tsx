@@ -105,6 +105,12 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
   const loginButtons = [];
 
   // 微信登录按钮
+  console.log('Modal Debug - WeChat Login:', {
+    NEXT_PUBLIC_WECHAT_LOGIN_ENABLED: process.env.NEXT_PUBLIC_WECHAT_LOGIN_ENABLED,
+    NEXT_PUBLIC_WECHAT_APP_ID: process.env.NEXT_PUBLIC_WECHAT_APP_ID,
+    isChineseLocale
+  });
+  
   const wechatButton = process.env.NEXT_PUBLIC_WECHAT_LOGIN_ENABLED === "true" && (
     <WeChatLoginButton
       key="wechat"
