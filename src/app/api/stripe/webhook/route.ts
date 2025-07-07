@@ -99,6 +99,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
         productId,
         productName || `ClientSeeker ${productId}`,
         credits,
+        1, // validMonths - 默认1个月
         session.subscription as string
       );
     }
