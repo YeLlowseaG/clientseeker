@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { useAppContext } from "@/contexts/app";
 import WeChatPayModal from "@/components/wechat-pay-modal";
 import SubscriptionWarning from "@/components/subscription-warning";
+import SubscriptionStatus from "@/components/subscription-status";
 import { useLocale } from "next-intl";
 
 export default function Pricing({ pricing }: { pricing: PricingType }) {
@@ -305,6 +306,11 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
             {pricing.description}
           </p>
         </div>
+        
+        {/* 订阅状态展示区域 */}
+        {user?.email && (
+          <SubscriptionStatus userEmail={user.email} />
+        )}
         <div className="w-full flex flex-col items-center gap-2">
           {pricing.groups && pricing.groups.length > 0 && (
             <div className="flex h-12 mb-12 items-center rounded-md bg-muted p-1 text-lg">

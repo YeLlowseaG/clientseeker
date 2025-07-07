@@ -1,188 +1,163 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import React, { useState, useEffect } from "react";
+import { Calendar, CreditCard, Target, Clock } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Clock, AlertTriangle } from "lucide-react";
+import { useLocale } from "next-intl";
 
-interface SubscriptionInfo {
-  hasActiveSubscription: boolean;
-  productId: string;
-  productName: string;
-  creditsRemaining: number;
-  creditsTotal: number;
-  creditsUsed: number;
-  periodEnd: string | null;
+interface UserSubscription {
+  id: number;
+  user_uuid: string;
+  product_id: string;
+  product_name: string;
   status: string;
+  credits_total: number;
+  credits_used: number;
+  credits_remaining: number;
+  period_start: Date | null;
+  period_end: Date | null;
+  stripe_subscription_id: string | null;
+  created_at: Date | null;
+  updated_at: Date | null;
 }
 
-export default function SubscriptionStatus() {
-  const { data: session } = useSession();
-  const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo | null>(null);
-  const [loading, setLoading] = useState(true);
+interface SubscriptionStatusProps {
+  userEmail: string;
+}
 
-  const fetchSubscriptionInfo = async () => {
-    if (!session?.user?.email) {
+export default function SubscriptionStatus({ userEmail }: SubscriptionStatusProps) {
+  const [subscription, setSubscription] = useState<UserSubscription | null>(null);
+  const [loading, setLoading] = useState(true);
+  const locale = useLocale();
+
+  useEffect(() => {
+    fetchSubscriptionStatus();
+  }, [userEmail]);
+
+  const fetchSubscriptionStatus = async () => {
+    if (!userEmail) {
       setLoading(false);
       return;
     }
 
     try {
-      const response = await fetch('/api/user/subscription', {
-        method: 'GET',
+      const response = await fetch('/api/user/subscription-status', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ userEmail }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        setSubscriptionInfo(data);
+        setSubscription(data.subscription);
       }
     } catch (error) {
-      console.error('Error fetching subscription info:', error);
+      console.error('Failed to fetch subscription status:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchSubscriptionInfo();
-  }, [session]);
+  const formatDate = (date: Date | string | null) => {
+    if (!date) return 'N/A';
+    const d = new Date(date);
+    return d.toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US');
+  };
 
-  // 监听订阅更新事件
-  useEffect(() => {
-    const handleSubscriptionUpdate = () => {
-      fetchSubscriptionInfo();
+  const getProductDisplayName = (productId: string) => {
+    const productNames = {
+      'free': locale === 'zh' ? '免费试用' : 'Free Trial',
+      'monthly': locale === 'zh' ? '单月套餐' : 'Monthly Plan',
+      'annual': locale === 'zh' ? '年度套餐' : 'Annual Plan',
+      'enterprise': locale === 'zh' ? '企业套餐' : 'Enterprise Plan'
     };
+    return productNames[productId as keyof typeof productNames] || productId;
+  };
 
-    window.addEventListener('subscription-updated', handleSubscriptionUpdate);
-    return () => {
-      window.removeEventListener('subscription-updated', handleSubscriptionUpdate);
-    };
-  }, []);
+  const getDaysRemaining = (endDate: Date | string | null) => {
+    if (!endDate) return 0;
+    const end = new Date(endDate);
+    const now = new Date();
+    const diffTime = end.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.max(0, diffDays);
+  };
+
+  const getUsagePercentage = () => {
+    if (!subscription || subscription.credits_total === -1) return 0;
+    if (subscription.credits_total === 0) return 0;
+    return Math.round((subscription.credits_used / subscription.credits_total) * 100);
+  };
 
   if (loading) {
     return (
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-sm">Subscription Status</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="animate-pulse">
-            <div className="h-4 bg-gray-200 rounded mb-2"></div>
-            <div className="h-3 bg-gray-200 rounded w-2/3"></div>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="mb-8">
+        <Alert>
+          <CreditCard className="h-4 w-4" />
+          <AlertDescription>
+            {locale === 'zh' ? '正在加载订阅状态...' : 'Loading subscription status...'}
+          </AlertDescription>
+        </Alert>
+      </div>
     );
   }
 
-  if (!session?.user) {
-    return (
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-sm">Subscription Status</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">Please sign in to view your subscription</p>
-        </CardContent>
-      </Card>
-    );
+  if (!subscription || subscription.product_id === 'free') {
+    return null; // 免费用户不显示状态条
   }
 
-  if (!subscriptionInfo?.hasActiveSubscription) {
-    return (
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-sm">Subscription Status</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center space-x-2">
-            <AlertTriangle className="h-4 w-4 text-yellow-500" />
-            <span className="text-sm">No active subscription</span>
-          </div>
-          <p className="text-xs text-muted-foreground mt-1">Choose a plan to get started</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const getPlanBadgeVariant = (productId: string) => {
-    switch (productId) {
-      case 'free': return 'secondary';
-      case 'monthly': return 'default';
-      case 'annual': return 'default';
-      case 'enterprise': return 'default';
-      default: return 'secondary';
-    }
-  };
-
-  const getPlanDisplayName = (productId: string) => {
-    switch (productId) {
-      case 'free': return 'Trial';
-      case 'monthly': return 'Monthly Plan';
-      case 'annual': return 'Annual Plan';
-      case 'enterprise': return 'Enterprise Plan';
-      default: return productId;
-    }
-  };
-
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString();
-  };
+  const daysRemaining = getDaysRemaining(subscription.period_end);
+  const usagePercentage = getUsagePercentage();
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle className="text-sm">Subscription Status</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium">Current Plan:</span>
-          <Badge variant={getPlanBadgeVariant(subscriptionInfo.productId)}>
-            {getPlanDisplayName(subscriptionInfo.productId)}
-          </Badge>
-        </div>
-
-        {subscriptionInfo.creditsTotal !== -1 && (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <span>Searches Remaining:</span>
-              <span className="font-medium">
-                {subscriptionInfo.creditsRemaining} / {subscriptionInfo.creditsTotal}
-              </span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                style={{
-                  width: `${(subscriptionInfo.creditsRemaining / subscriptionInfo.creditsTotal) * 100}%`
-                }}
-              ></div>
+    <div className="mb-8">
+      <Alert className="border-blue-200 bg-blue-50">
+        <CreditCard className="h-4 w-4 text-blue-600" />
+        <AlertDescription>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="font-medium text-blue-800">
+                  {locale === 'zh' ? '当前订阅：' : 'Current Subscription: '}
+                </span>
+                <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                  {getProductDisplayName(subscription.product_id)}
+                </Badge>
+                {daysRemaining <= 7 && daysRemaining > 0 && (
+                  <Badge variant="destructive" className="text-xs">
+                    {locale === 'zh' ? `${daysRemaining}天后到期` : `${daysRemaining} days left`}
+                  </Badge>
+                )}
+              </div>
+              
+              <div className="flex flex-wrap gap-4 text-sm text-blue-700">
+                <div className="flex items-center gap-1">
+                  <Calendar className="h-4 w-4" />
+                  <span>
+                    {locale === 'zh' ? '到期：' : 'Expires: '}
+                    {formatDate(subscription.period_end)}
+                  </span>
+                </div>
+                
+                <div className="flex items-center gap-1">
+                  <Target className="h-4 w-4" />
+                  <span>
+                    {locale === 'zh' ? '剩余：' : 'Remaining: '}
+                    {subscription.credits_remaining === -1 
+                      ? (locale === 'zh' ? '无限制' : 'Unlimited')
+                      : subscription.credits_remaining
+                    }
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-        )}
-
-        {subscriptionInfo.creditsTotal === -1 && (
-          <div className="flex items-center space-x-2">
-            <CheckCircle className="h-4 w-4 text-green-500" />
-            <span className="text-sm font-medium text-green-600">Unlimited Searches</span>
-          </div>
-        )}
-
-        {subscriptionInfo.periodEnd && (
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <div className="flex items-center space-x-1">
-              <Clock className="h-3 w-3" />
-              <span>Expires:</span>
-            </div>
-            <span>{formatDate(subscriptionInfo.periodEnd)}</span>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+        </AlertDescription>
+      </Alert>
+    </div>
   );
 }
