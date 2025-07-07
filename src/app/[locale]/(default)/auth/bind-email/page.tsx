@@ -228,14 +228,14 @@ export default function BindEmailPage() {
             <ul className="space-y-1">
               <li>
                 {isChineseLocale 
-                  ? '• 使用微信或Google任一方式登录'
-                  : '• Login with either WeChat or Google'
+                  ? '• 使用微信或邮箱任一方式登录同一账户'
+                  : '• Use WeChat or email to login to the same account'
                 }
               </li>
               <li>
                 {isChineseLocale 
-                  ? '• 同步所有账户数据和订阅'
-                  : '• Sync all account data and subscriptions'
+                  ? '• 统一管理所有账户数据和订阅'
+                  : '• Unified management of all account data and subscriptions'
                 }
               </li>
               <li>
