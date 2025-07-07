@@ -84,10 +84,12 @@ export async function POST(request: NextRequest) {
     }
     
     // 验证金额（可选，增加安全性）
-    const expectedAmount = order.amount * 7.2; // 转换为人民币
-    const paidAmount = paymentData.amount.total / 100; // 微信金额单位是分
+    // 由于我们现在直接使用cn_amount，这里不需要汇率转换
+    // order.amount 现在是人民币的分，paymentData.amount.total 也是人民币的分
+    const expectedAmount = order.amount; // 人民币分
+    const paidAmount = paymentData.amount.total; // 人民币分
     
-    if (Math.abs(expectedAmount - paidAmount) > 0.01) {
+    if (Math.abs(expectedAmount - paidAmount) > 1) { // 允许1分的误差
       console.error("🔍 [WeChat Notify] Amount mismatch:", {
         expected: expectedAmount,
         paid: paidAmount,
