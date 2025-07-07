@@ -1,4 +1,5 @@
 import { BusinessInfo } from './config';
+import { mapsPageConfig } from './page-config';
 
 export interface GoogleSearchParams {
   query: string;
@@ -50,9 +51,9 @@ export class GoogleMapService {
         return [];
       }
 
-      // 对前10个结果获取详细信息（包括电话号码）
+      // 对前N个结果获取详细信息（包括电话号码）
       const detailedResults = [];
-      const maxDetailsToFetch = 10; // 只获取前10个的电话号码
+      const maxDetailsToFetch = mapsPageConfig.google.maxDetailsToFetch;
       
       for (let i = 0; i < pageResults.results.length; i++) {
         const place = pageResults.results[i];
@@ -94,7 +95,7 @@ export class GoogleMapService {
 
   async searchPlaces(params: GoogleSearchParams): Promise<BusinessInfo[]> {
     const allResults: BusinessInfo[] = [];
-    const maxPages = params.maxPages || 3; // Google默认最多3页
+    const maxPages = params.maxPages || mapsPageConfig.google.maxPages;
     let nextPageToken: string | undefined = params.pagetoken;
     
     console.log(`开始Google地图多页搜索，最多请求${maxPages}页`);
@@ -149,8 +150,8 @@ export class GoogleMapService {
 
         // Google API需要等待几秒才能使用next_page_token
         if (page < maxPages) {
-          console.log('等待2秒后请求下一页...');
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          console.log(`等待${mapsPageConfig.google.pageDelay}ms后请求下一页...`);
+          await new Promise(resolve => setTimeout(resolve, mapsPageConfig.google.pageDelay));
         }
 
       } catch (error) {

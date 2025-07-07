@@ -2,6 +2,7 @@ import { BusinessInfo, mapConfig } from './config';
 import { GaodeMapService } from './gaode';
 import { BaiduMapService } from './baidu';
 import { GoogleMapService } from './google';
+import { mapsPageConfig, logMapsConfig, validateMapsConfig } from './page-config';
 
 export interface SearchParams {
   query: string;
@@ -24,6 +25,10 @@ export class MapServiceManager {
     this.gaodeService = new GaodeMapService(mapConfig.gaode.key);
     this.baiduService = new BaiduMapService(mapConfig.baidu.ak);
     this.googleService = new GoogleMapService(mapConfig.google.key);
+    
+    // 启动时记录配置信息
+    logMapsConfig();
+    validateMapsConfig();
   }
 
   // 缓存搜索结果，避免重复API调用
@@ -88,8 +93,8 @@ export class MapServiceManager {
     try {
       console.log('使用高德地图分页搜索...');
       
-      // 高德地图：每页20条，根据前端需要的页数计算实际请求页数
-      const gaodePageSize = 20;
+      // 高德地图：根据配置确定每页条数
+      const gaodePageSize = mapsPageConfig.gaode.pageSize;
       const startIndex = (page - 1) * pageSize;
       const endIndex = startIndex + pageSize;
       
@@ -200,15 +205,15 @@ export class MapServiceManager {
       keywords: params.query,
       city: params.city,
       types: params.category,
-      offset: 20, // 每页固定20条
-      maxPages: 5 // 请求5页，共100条
+      offset: mapsPageConfig.gaode.pageSize,
+      maxPages: mapsPageConfig.gaode.maxPages
     });
 
     const baiduResults = await this.searchBaiduMultiPage({
       query: params.query,
       region: params.city || '全国',
-      page_size: 20,
-      maxPages: 5 // 百度地图也请求5页，共100条
+      page_size: mapsPageConfig.baidu.pageSize,
+      maxPages: mapsPageConfig.baidu.maxPages
     });
 
     console.log(`高德地图获取${gaodeResults.length}条，百度地图获取${baiduResults.length}条`);
@@ -245,7 +250,7 @@ export class MapServiceManager {
 
         // 添加延迟避免请求过于频繁
         if (page < params.maxPages - 1) {
-          await new Promise(resolve => setTimeout(resolve, 300));
+          await new Promise(resolve => setTimeout(resolve, mapsPageConfig.baidu.pageDelay));
         }
 
       } catch (error) {
@@ -264,7 +269,7 @@ export class MapServiceManager {
   private async searchGoogle(params: SearchParams): Promise<BusinessInfo[]> {
     const searchParams: any = {
       query: params.query,
-      maxPages: 3 // Google地图最多请求3页
+      maxPages: mapsPageConfig.google.maxPages
     };
 
     if (params.latitude && params.longitude) {

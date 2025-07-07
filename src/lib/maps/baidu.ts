@@ -1,4 +1,5 @@
 import { BusinessInfo } from './config';
+import { mapsPageConfig } from './page-config';
 
 export interface BaiduSearchParams {
   query: string;
@@ -46,7 +47,7 @@ export class BaiduMapService {
     url.searchParams.set('region', params.region);
     url.searchParams.set('output', 'json');
     url.searchParams.set('city_limit', (params.city_limit || true).toString());
-    url.searchParams.set('page_size', (params.page_size || 20).toString());
+    url.searchParams.set('page_size', (params.page_size || mapsPageConfig.baidu.pageSize).toString());
     url.searchParams.set('page_num', (params.page_num || 0).toString());
     url.searchParams.set('scope', (params.scope || 2).toString());
 

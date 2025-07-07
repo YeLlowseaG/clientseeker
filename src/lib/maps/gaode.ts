@@ -1,4 +1,5 @@
 import { BusinessInfo } from './config';
+import { mapsPageConfig } from './page-config';
 
 export interface GaodeSearchParams {
   keywords: string;
@@ -39,7 +40,7 @@ export class GaodeMapService {
 
   async searchSinglePagePOI(params: GaodeSearchParams): Promise<BusinessInfo[]> {
     // 只搜索单页数据，不循环多页
-    console.log(`高德地图单页搜索: 第${params.page || 1}页，每页${params.offset || 20}条`);
+    console.log(`高德地图单页搜索: 第${params.page || 1}页，每页${params.offset || mapsPageConfig.gaode.pageSize}条`);
     
     try {
       const pageResults = await this.searchSinglePage(params);
@@ -53,8 +54,8 @@ export class GaodeMapService {
 
   async searchPOI(params: GaodeSearchParams): Promise<BusinessInfo[]> {
     const allResults: BusinessInfo[] = [];
-    const maxPages = params.maxPages || 3; // 降低到3页避免API限制
-    const offset = params.offset || 20; // 每页20条
+    const maxPages = params.maxPages || mapsPageConfig.gaode.maxPages;
+    const offset = params.offset || mapsPageConfig.gaode.pageSize;
     
     console.log(`开始多页搜索，最多请求${maxPages}页，每页${offset}条`);
 
@@ -82,7 +83,7 @@ export class GaodeMapService {
 
         // 添加延迟避免请求过于频繁
         if (page < maxPages) {
-          await new Promise(resolve => setTimeout(resolve, 500)); // 增加到500ms
+          await new Promise(resolve => setTimeout(resolve, mapsPageConfig.gaode.pageDelay));
         }
 
       } catch (error) {
@@ -122,7 +123,7 @@ export class GaodeMapService {
     
     url.searchParams.set('keywords', keywords);
     url.searchParams.set('city', cityParam);
-    url.searchParams.set('offset', (params.offset || 20).toString());
+    url.searchParams.set('offset', (params.offset || mapsPageConfig.gaode.pageSize).toString());
     url.searchParams.set('page', (params.page || 1).toString());
     url.searchParams.set('extensions', 'all'); // 总是返回详细信息，包括电话
     url.searchParams.set('output', 'json');
