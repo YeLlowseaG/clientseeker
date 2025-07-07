@@ -88,8 +88,8 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
   const handleWeChatSuccess = (userInfo: any) => {
     console.log('WeChat login success in modal:', userInfo);
     
-    // 更新用户状态到AppContext
-    setUser(userInfo);
+    // 保存用户信息到localStorage
+    localStorage.setItem('user_info', JSON.stringify(userInfo));
     
     // 关闭登录模态框
     setShowSignModal(false);
@@ -112,14 +112,13 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
       align-items: center;
       gap: 8px;
     `;
-    successMessage.innerHTML = '✅ 微信登录成功！';
+    successMessage.innerHTML = '✅ 微信登录成功！正在更新...';
     document.body.appendChild(successMessage);
     
+    // 使用页面刷新确保状态正确更新
     setTimeout(() => {
-      if (successMessage.parentNode) {
-        successMessage.parentNode.removeChild(successMessage);
-      }
-    }, 3000);
+      window.location.reload();
+    }, 1500);
   };
 
   const handleWeChatError = (error: any) => {
