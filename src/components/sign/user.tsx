@@ -30,14 +30,6 @@ export default function SignUser({ user }: { user: User }) {
       url: "/dashboard",
     },
     {
-      title: t("user.search") || "开始搜索",
-      url: "/search",
-    },
-    {
-      title: t("user.admin_system"),
-      url: "/admin/users",
-    },
-    {
       title: t("user.sign_out"),
       onClick: logout,
     },

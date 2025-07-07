@@ -7,6 +7,8 @@
   "user": {
     "sign_in": "Sign In",
     "sign_out": "Sign Out",
+    "dashboard": "Dashboard",
+    "search": "Search",
     "credits": "Credits",
     "api_keys": "API Keys",
     "my_orders": "My Orders",
