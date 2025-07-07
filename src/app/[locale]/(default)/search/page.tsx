@@ -272,10 +272,28 @@ export default function SearchPage() {
       const BOM = '\uFEFF';
       const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
       
-      // 生成文件名：客户联系信息_关键词_时间戳.csv
+      // 生成文件名：客户联系信息_城市_关键词_时间戳.csv
       const timestamp = new Date().getTime();
       const safeQuery = query.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_'); // 清理特殊字符
-      const filename = `客户联系信息_${safeQuery}_${timestamp}.csv`;
+      
+      // 构建城市信息
+      let cityName = '';
+      if (selectedRegion.district) {
+        cityName = `${selectedRegion.city?.name || ''}_${selectedRegion.district.name}`;
+      } else if (selectedRegion.city) {
+        cityName = selectedRegion.city.name;
+      } else if (selectedRegion.province) {
+        cityName = selectedRegion.province.name;
+      } else if (location?.city) {
+        cityName = location.city;
+      }
+      
+      // 清理城市名称中的特殊字符
+      const safeCityName = cityName.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_');
+      
+      const filename = safeCityName 
+        ? `客户联系信息_${safeCityName}_${safeQuery}_${timestamp}.csv`
+        : `客户联系信息_${safeQuery}_${timestamp}.csv`;
       
       // 创建下载链接
       const link = document.createElement('a');
