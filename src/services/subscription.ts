@@ -269,9 +269,9 @@ export class SubscriptionService {
       // 根据新套餐结构设置正确的积分
       let creditsTotal = orderData.credits;
       if (orderData.product_id === 'monthly') {
-        creditsTotal = 100; // 单月套餐100次
+        creditsTotal = 500; // 单月套餐500次
       } else if (orderData.product_id === 'annual') {
-        creditsTotal = 500; // 年套餐500次/月
+        creditsTotal = 3000; // 年套餐3000次/月
       } else if (orderData.product_id === 'enterprise') {
         creditsTotal = -1; // 企业套餐无限制
       }

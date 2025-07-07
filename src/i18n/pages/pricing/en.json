@@ -43,11 +43,10 @@
         "description": "Perfect for occasional users and short-term projects.",
         "features_title": "Includes",
         "features": [
-          "100 searches per month",
+          "500 searches per month",
           "Complete business information",
           "Full phone numbers displayed",
-          "CSV data export (10 times/month)",
-          "Advanced filtering",
+          "CSV data export",
           "Search history",
           "Email support"
         ],
@@ -67,7 +66,7 @@
         },
         "product_id": "monthly",
         "product_name": "ClientSeeker Monthly Plan",
-        "credits": 100,
+        "credits": 500,
         "valid_months": 1
       },
       {
@@ -76,10 +75,10 @@
         "label": "Best Value",
         "features_title": "Everything in Monthly Plan, plus",
         "features": [
-          "500 searches per month",
+          "3000 searches per month",
           "Unlimited data export",
-          "Batch search (50 items/time)",
-          "Multi-source map integration",
+          "Multi-source map integration (Gaode+Baidu+Google)",
+          "Search history",
           "Priority customer support"
         ],
         "interval": "yearly",
@@ -98,7 +97,7 @@
         },
         "product_id": "annual",
         "product_name": "ClientSeeker Annual Plan",
-        "credits": 500,
+        "credits": 3000,
         "valid_months": 12
       },
       {

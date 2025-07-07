@@ -43,11 +43,10 @@
         "description": "适合偶尔使用和短期项目。",
         "features_title": "包含",
         "features": [
-          "每月 100 次搜索",
+          "每月 500 次搜索",
           "完整企业信息",
           "显示完整电话号码",
-          "CSV 数据导出（10次/月）",
-          "高级筛选功能",
+          "CSV 数据导出",
           "搜索历史记录",
           "邮件支持"
         ],
@@ -67,7 +66,7 @@
         },
         "product_id": "monthly",
         "product_name": "ClientSeeker 单月套餐",
-        "credits": 100,
+        "credits": 500,
         "valid_months": 1
       },
       {
@@ -76,10 +75,10 @@
         "label": "性价比最高",
         "features_title": "包含单月套餐所有功能，另加",
         "features": [
-          "每月 500 次搜索",
+          "每月 3000 次搜索",
           "无限数据导出",
-          "批量搜索（50条/次）",
-          "多地图源整合",
+          "多地图源整合（高德+百度+Google）",
+          "搜索历史记录",
           "优先客服支持"
         ],
         "interval": "yearly",
@@ -98,7 +97,7 @@
         },
         "product_id": "annual",
         "product_name": "ClientSeeker 年套餐",
-        "credits": 500,
+        "credits": 3000,
         "valid_months": 12
       },
       {
