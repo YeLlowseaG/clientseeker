@@ -191,7 +191,7 @@ export default function DashboardPage() {
                   <Button 
                     size="sm" 
                     className="mt-3"
-                    onClick={() => router.push("/#pricing")}
+                    onClick={() => router.push("/pricing")}
                   >
                     立即升级
                   </Button>
@@ -238,7 +238,7 @@ export default function DashboardPage() {
           <div className="flex space-x-4 pt-4 border-t">
             <Button 
               variant="outline"
-              onClick={() => router.push("/#pricing")}
+              onClick={() => router.push("/pricing")}
             >
               升级套餐
             </Button>
