@@ -127,28 +127,30 @@ export async function GET(request: NextRequest) {
 
     console.log('WeChat login successful for user:', userInfo.nickname);
 
-    // 检查是否已存在同openid的用户
+    // 检查openid是否已经关联到某个用户
     try {
-      const checkResponse = await fetch(`${process.env.NEXT_PUBLIC_WEB_URL}/api/check-email?email=${encodeURIComponent(userInfo.email)}`);
+      // 首先检查这个openid是否已经在数据库中
+      const checkOpenidResponse = await fetch(`${process.env.NEXT_PUBLIC_WEB_URL}/api/check-wechat-user?openid=${userInfoData.openid}`);
       
-      if (checkResponse.ok) {
-        const checkData = await checkResponse.json();
+      if (checkOpenidResponse.ok) {
+        const openidData = await checkOpenidResponse.json();
         
-        if (checkData.exists) {
-          // 用户已存在，直接登录
-          console.log('WeChat user already exists, proceeding with login');
+        if (openidData.exists) {
+          // 这个微信账户已经绑定过，直接登录
+          console.log('WeChat openid already linked, proceeding with login');
           
           // 获取完整用户信息
-          const getUserResponse = await fetch(`${process.env.NEXT_PUBLIC_WEB_URL}/api/get-user-info?email=${encodeURIComponent(userInfo.email)}`, {
+          const getUserResponse = await fetch(`${process.env.NEXT_PUBLIC_WEB_URL}/api/get-user-info?email=${encodeURIComponent(openidData.email)}`, {
             method: 'POST',
           });
           
           if (getUserResponse.ok) {
             const { data: existingUser } = await getUserResponse.json();
+            // 更新userInfo为数据库中的真实用户信息
             Object.assign(userInfo, existingUser);
           }
         } else {
-          // 新用户，需要邮箱绑定
+          // 新的微信账户，需要邮箱绑定
           console.log('New WeChat user, redirecting to email binding');
           
           // 将用户数据存储到临时存储中
@@ -225,7 +227,7 @@ export async function GET(request: NextRequest) {
         }
       }
     } catch (error) {
-      console.error('Error checking user existence:', error);
+      console.error('Error checking WeChat user existence:', error);
       // 出错时继续原有流程
     }
 

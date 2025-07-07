@@ -140,8 +140,32 @@ export default function BindEmailPage() {
     // 清理临时数据
     localStorage.removeItem('temp_wechat_user');
     
-    // 跳转到搜索页面
-    router.push('/search');
+    // 显示成功提示
+    const successMessage = document.createElement('div');
+    successMessage.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 10000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    `;
+    successMessage.innerHTML = '✅ 账户绑定成功！';
+    document.body.appendChild(successMessage);
+    
+    // 延迟跳转，让用户看到成功提示
+    setTimeout(() => {
+      if (successMessage.parentNode) {
+        successMessage.parentNode.removeChild(successMessage);
+      }
+      // 跳转到搜索页面
+      router.push('/search');
+    }, 1500);
   };
 
   if (!wechatUserData) {
