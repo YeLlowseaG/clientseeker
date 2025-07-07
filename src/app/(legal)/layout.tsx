@@ -3,18 +3,15 @@ import "@/app/globals.css";
 import { MdOutlineHome } from "react-icons/md";
 import { Metadata } from "next";
 import React from "react";
-import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations();
-
   return {
     title: {
-      template: `%s | ${t("metadata.title")}`,
-      default: t("metadata.title"),
+      template: `%s | ClientSeeker`,
+      default: "ClientSeeker",
     },
-    description: t("metadata.description"),
-    keywords: t("metadata.keywords"),
+    description: "ClientSeeker - Professional Customer Development Tool",
+    keywords: "ClientSeeker, customer development, lead generation",
   };
 }
 
