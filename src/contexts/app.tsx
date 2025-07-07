@@ -321,6 +321,10 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   // 登出功能
   const logout = () => {
     localStorage.removeItem('user_info');
+    // 清理微信登录相关数据
+    localStorage.removeItem('wechat_user_info');
+    localStorage.removeItem('wechat_login_success');
+    localStorage.removeItem('wechat_oauth_state');
     setUser(null);
     googleLogout();
     console.log("User logged out");
