@@ -76,10 +76,49 @@ export function useWeChatLogin(config: WeChatLoginConfig = {}): WeChatLoginResul
         throw new Error('Failed to open WeChat login popup. Please allow popups for this site.');
       }
 
+      // 监听来自弹窗的消息
+      const handleMessage = (event: MessageEvent) => {
+        if (event.origin !== window.location.origin) {
+          return;
+        }
+
+        const { type, userInfo, error, redirectUrl } = event.data;
+
+        if (type === 'WECHAT_LOGIN_SUCCESS') {
+          // 登录成功
+          clearInterval(checkClosed);
+          updateLoading(false);
+          popup.close();
+          
+          // 清理临时数据
+          localStorage.removeItem('wechat_oauth_state');
+          
+          onSuccess?.(userInfo);
+        } else if (type === 'WECHAT_LOGIN_ERROR') {
+          // 登录失败
+          clearInterval(checkClosed);
+          updateLoading(false);
+          popup.close();
+          
+          onError?.({ message: error });
+        } else if (type === 'WECHAT_BIND_EMAIL_REQUIRED') {
+          // 需要绑定邮箱
+          clearInterval(checkClosed);
+          updateLoading(false);
+          popup.close();
+          
+          // 跳转到邮箱绑定页面
+          window.location.href = redirectUrl;
+        }
+      };
+
+      window.addEventListener('message', handleMessage);
+
       // 监听弹窗关闭或成功回调
       const checkClosed = setInterval(() => {
         if (popup.closed) {
           clearInterval(checkClosed);
+          window.removeEventListener('message', handleMessage);
           updateLoading(false);
           
           // 检查是否登录成功（通过localStorage或其他方式）
@@ -107,6 +146,7 @@ export function useWeChatLogin(config: WeChatLoginConfig = {}): WeChatLoginResul
         if (!popup.closed) {
           popup.close();
           clearInterval(checkClosed);
+          window.removeEventListener('message', handleMessage);
           updateLoading(false);
           onError?.({ message: 'WeChat login timeout' });
         }

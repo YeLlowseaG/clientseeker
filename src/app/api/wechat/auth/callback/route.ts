@@ -127,28 +127,106 @@ export async function GET(request: NextRequest) {
 
     console.log('WeChat login successful for user:', userInfo.nickname);
 
-    // 尝试保存用户到数据库
+    // 检查是否已存在同openid的用户
     try {
-      const saveResponse = await fetch(`${process.env.NEXT_PUBLIC_WEB_URL}/api/save-user`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userInfo),
-      });
-
-      if (saveResponse.ok) {
-        const { user: savedUser } = await saveResponse.json();
-        console.log('WeChat user saved to database successfully');
+      const checkResponse = await fetch(`${process.env.NEXT_PUBLIC_WEB_URL}/api/check-email?email=${encodeURIComponent(userInfo.email)}`);
+      
+      if (checkResponse.ok) {
+        const checkData = await checkResponse.json();
         
-        // 更新用户信息为数据库返回的完整信息
-        Object.assign(userInfo, savedUser);
-      } else {
-        console.error('Failed to save WeChat user to database');
+        if (checkData.exists) {
+          // 用户已存在，直接登录
+          console.log('WeChat user already exists, proceeding with login');
+          
+          // 获取完整用户信息
+          const getUserResponse = await fetch(`${process.env.NEXT_PUBLIC_WEB_URL}/api/get-user-info?email=${encodeURIComponent(userInfo.email)}`, {
+            method: 'POST',
+          });
+          
+          if (getUserResponse.ok) {
+            const { data: existingUser } = await getUserResponse.json();
+            Object.assign(userInfo, existingUser);
+          }
+        } else {
+          // 新用户，需要邮箱绑定
+          console.log('New WeChat user, redirecting to email binding');
+          
+          // 将用户数据存储到临时存储中
+          const tempUserData = {
+            openid: userInfoData.openid,
+            nickname: userInfoData.nickname,
+            headimgurl: userInfoData.headimgurl,
+            sex: userInfoData.sex,
+            province: userInfoData.province,
+            city: userInfoData.city,
+            country: userInfoData.country,
+          };
+          
+          // 返回重定向到邮箱绑定页面
+          return new NextResponse(`
+            <html>
+              <head>
+                <title>微信登录 - 邮箱绑定</title>
+                <style>
+                  body {
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    margin: 0;
+                    background: #f5f5f5;
+                  }
+                  .redirect-container {
+                    background: white;
+                    padding: 40px;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                    text-align: center;
+                    max-width: 400px;
+                  }
+                  .loading {
+                    font-size: 14px;
+                    color: #1890ff;
+                    margin-top: 20px;
+                  }
+                </style>
+              </head>
+              <body>
+                <div class="redirect-container">
+                  <div>🔗</div>
+                  <h2>完成注册</h2>
+                  <p>请绑定邮箱以完成注册</p>
+                  <div class="loading">正在跳转...</div>
+                </div>
+                
+                <script>
+                  // 存储临时用户数据
+                  localStorage.setItem('temp_wechat_user', '${JSON.stringify(tempUserData)}');
+                  
+                  // 通知父窗口重定向到邮箱绑定页面
+                  if (window.opener) {
+                    window.opener.postMessage({
+                      type: 'WECHAT_BIND_EMAIL_REQUIRED',
+                      redirectUrl: '/auth/bind-email'
+                    }, '*');
+                  }
+                  
+                  // 2秒后关闭窗口
+                  setTimeout(() => {
+                    window.close();
+                  }, 2000);
+                </script>
+              </body>
+            </html>
+          `, {
+            headers: { 'Content-Type': 'text/html' },
+          });
+        }
       }
-    } catch (saveError) {
-      console.error('Error saving WeChat user:', saveError);
-      // 继续流程，不阻塞登录
+    } catch (error) {
+      console.error('Error checking user existence:', error);
+      // 出错时继续原有流程
     }
 
     // 返回成功页面，通过postMessage传递用户信息
