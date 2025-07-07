@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Loader, CreditCard } from "lucide-react";
+import { Check, Loader, CreditCard, CheckCircle } from "lucide-react";
 import { PricingItem, Pricing as PricingType } from "@/types/blocks/pricing";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useAppContext } from "@/contexts/app";
 import WeChatPayModal from "@/components/wechat-pay-modal";
+import SubscriptionWarning from "@/components/subscription-warning";
 import { useLocale } from "next-intl";
 
 export default function Pricing({ pricing }: { pricing: PricingType }) {
@@ -27,6 +28,9 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
   const [productId, setProductId] = useState<string | null>(null);
   const [showWeChatModal, setShowWeChatModal] = useState(false);
   const [wechatOrderData, setWechatOrderData] = useState<any>(null);
+  const [showSubscriptionWarning, setShowSubscriptionWarning] = useState(false);
+  const [pendingPurchase, setPendingPurchase] = useState<{item: PricingItem, isWechat: boolean} | null>(null);
+  const [currentSubscription, setCurrentSubscription] = useState<any>(null);
   
   // 支付方式状态管理
   const [paymentMethods, setPaymentMethods] = useState<{[key: string]: 'wechat' | 'paypal'}>({});
@@ -46,6 +50,33 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
     
     checkUserState();
   }, [user, isUserLoading]);
+
+  // 获取用户当前订阅状态
+  useEffect(() => {
+    const fetchCurrentSubscription = async () => {
+      const currentUser = await verifyUserFromStorage();
+      if (currentUser) {
+        try {
+          const response = await fetch('/api/user/subscription-status', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userEmail: currentUser.email }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setCurrentSubscription(data.subscription);
+          }
+        } catch (error) {
+          console.error('Failed to fetch current subscription:', error);
+        }
+      }
+    };
+
+    fetchCurrentSubscription();
+  }, [user]);
 
   // 从 localStorage 和数据库验证用户状态
   const verifyUserFromStorage = async () => {
@@ -227,15 +258,82 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
     }));
   };
 
-  // 统一的支付处理函数
-  const handlePayment = async (item: PricingItem) => {
-    const selectedMethod = paymentMethods[item.product_id] || 'paypal';
-    
-    if (selectedMethod === 'wechat') {
+  // 检查是否需要显示订阅警告
+  const checkSubscriptionConflict = async (item: PricingItem, isWechat: boolean) => {
+    // 跳过免费套餐
+    if (item.product_id === 'free') {
+      if (isWechat) {
+        await handleWeChatCheckout(item);
+      } else {
+        await handleCheckout(item);
+      }
+      return;
+    }
+
+    // 验证用户登录状态
+    const currentUser = await verifyUserFromStorage();
+    if (!currentUser) {
+      setShowSignModal(true);
+      return;
+    }
+
+    // 检查用户是否已有活跃订阅
+    try {
+      const response = await fetch('/api/user/subscription-status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userEmail: currentUser.email }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.subscription && data.subscription.product_id !== 'free') {
+          // 有活跃订阅，显示警告
+          setPendingPurchase({ item, isWechat });
+          setShowSubscriptionWarning(true);
+          return;
+        }
+      }
+    } catch (error) {
+      console.error('Failed to check subscription status:', error);
+    }
+
+    // 没有冲突，直接进行支付
+    if (isWechat) {
       await handleWeChatCheckout(item);
     } else {
       await handleCheckout(item);
     }
+  };
+
+  // 确认购买（从警告弹窗）
+  const handleConfirmPurchase = async () => {
+    if (!pendingPurchase) return;
+    
+    setShowSubscriptionWarning(false);
+    
+    if (pendingPurchase.isWechat) {
+      await handleWeChatCheckout(pendingPurchase.item);
+    } else {
+      await handleCheckout(pendingPurchase.item);
+    }
+    
+    setPendingPurchase(null);
+  };
+
+  // 取消购买
+  const handleCancelPurchase = () => {
+    setShowSubscriptionWarning(false);
+    setPendingPurchase(null);
+  };
+
+  // 统一的支付处理函数
+  const handlePayment = async (item: PricingItem) => {
+    const selectedMethod = paymentMethods[item.product_id] || 'paypal';
+    
+    await checkSubscriptionConflict(item, selectedMethod === 'wechat');
   };
 
   return (
@@ -414,44 +512,75 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                         </div>
                       )}
 
-                      {/* 统一支付按钮 */}
+                      {/* 统一支付按钮或已购买状态 */}
                       {item.button && (
-                        <Button
-                          className="w-full flex items-center justify-center gap-2 font-semibold"
-                          disabled={isLoading}
-                          onClick={async () => {
-                            if (isLoading) {
-                              return;
-                            }
-                            await handlePayment(item);
-                          }}
-                        >
-                          {(!isLoading || (isLoading && productId !== item.product_id)) && (
-                            <>
-                              {paymentMethods[item.product_id] === 'wechat' ? (
+                        <>
+                          {currentSubscription && currentSubscription.product_id === item.product_id ? (
+                            <div className="w-full space-y-2">
+                              <Button
+                                className="w-full flex items-center justify-center gap-2 font-semibold"
+                                disabled={true}
+                                variant="outline"
+                              >
+                                <CheckCircle className="h-4 w-4 text-green-600" />
+                                <span>{isChineseLocale ? '已购买' : 'Purchased'}</span>
+                              </Button>
+                              <div className="text-xs text-muted-foreground text-center">
+                                <p>
+                                  {isChineseLocale ? '到期时间：' : 'Expires: '}
+                                  {currentSubscription.period_end 
+                                    ? new Date(currentSubscription.period_end).toLocaleDateString(isChineseLocale ? 'zh-CN' : 'en-US')
+                                    : 'N/A'
+                                  }
+                                </p>
+                                <p>
+                                  {isChineseLocale ? '剩余次数：' : 'Remaining: '}
+                                  {currentSubscription.credits_remaining === -1 
+                                    ? (isChineseLocale ? '无限制' : 'Unlimited')
+                                    : currentSubscription.credits_remaining
+                                  }
+                                </p>
+                              </div>
+                            </div>
+                          ) : (
+                            <Button
+                              className="w-full flex items-center justify-center gap-2 font-semibold"
+                              disabled={isLoading}
+                              onClick={async () => {
+                                if (isLoading) {
+                                  return;
+                                }
+                                await handlePayment(item);
+                              }}
+                            >
+                              {(!isLoading || (isLoading && productId !== item.product_id)) && (
                                 <>
-                                  <img src="/imgs/cnpay.png" alt="WeChat Pay" className="w-5 h-2.5 rounded" />
-                                  <span>{isChineseLocale ? '微信支付' : 'Pay with WeChat'}</span>
-                                </>
-                              ) : (
-                                <>
-                                  <svg className="w-5 h-2.5" viewBox="0 0 24 12" fill="none">
-                                    <path d="M7.076 0C3.698 0 0.96 2.393 0.96 5.339c0 1.672.738 3.026 2.132 3.026.59 0 1.144-.27 1.463-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C9.49.183 8.29 0 7.076 0z" fill="currentColor"/>
-                                    <path d="M15.999 0c-3.378 0-6.115 2.393-6.115 5.339 0 1.672.738 3.026 2.131 3.026.59 0 1.145-.27 1.464-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C18.413.183 17.213 0 15.999 0z" fill="currentColor"/>
-                                  </svg>
-                                  <span>{isChineseLocale ? 'PayPal支付' : 'Pay with PayPal'}</span>
+                                  {paymentMethods[item.product_id] === 'wechat' ? (
+                                    <>
+                                      <img src="/imgs/cnpay.png" alt="WeChat Pay" className="w-5 h-2.5 rounded" />
+                                      <span>{isChineseLocale ? '微信支付' : 'Pay with WeChat'}</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <svg className="w-5 h-2.5" viewBox="0 0 24 12" fill="none">
+                                        <path d="M7.076 0C3.698 0 0.96 2.393 0.96 5.339c0 1.672.738 3.026 2.132 3.026.59 0 1.144-.27 1.463-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C9.49.183 8.29 0 7.076 0z" fill="currentColor"/>
+                                        <path d="M15.999 0c-3.378 0-6.115 2.393-6.115 5.339 0 1.672.738 3.026 2.131 3.026.59 0 1.145-.27 1.464-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C18.413.183 17.213 0 15.999 0z" fill="currentColor"/>
+                                      </svg>
+                                      <span>{isChineseLocale ? 'PayPal支付' : 'Pay with PayPal'}</span>
+                                    </>
+                                  )}
                                 </>
                               )}
-                            </>
-                          )}
 
-                          {isLoading && productId === item.product_id && (
-                            <>
-                              <Loader className="h-4 w-4 animate-spin" />
-                              <span>{isChineseLocale ? '处理中...' : 'Processing...'}</span>
-                            </>
+                              {isLoading && productId === item.product_id && (
+                                <>
+                                  <Loader className="h-4 w-4 animate-spin" />
+                                  <span>{isChineseLocale ? '处理中...' : 'Processing...'}</span>
+                                </>
+                              )}
+                            </Button>
                           )}
-                        </Button>
+                        </>
                       )}
                       
                       {/* 安全提示 */}
@@ -484,6 +613,23 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
         }}
         orderData={wechatOrderData}
       />
+      
+      {/* 订阅警告模态框 */}
+      {showSubscriptionWarning && pendingPurchase && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
+            <div className="p-6">
+              <SubscriptionWarning
+                userEmail={user?.email || ''}
+                newProductId={pendingPurchase.item.product_id}
+                newProductName={pendingPurchase.item.product_name || pendingPurchase.item.title || ''}
+                onConfirm={handleConfirmPurchase}
+                onCancel={handleCancelPurchase}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
