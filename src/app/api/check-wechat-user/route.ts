@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
       .limit(1);
 
     // 如果没找到，再检查是否有假邮箱格式的用户
-    let alternativeUsers = [];
+    let alternativeUsers: any[] = [];
     if (existingUsers.length === 0) {
       const fakeEmail = `${openid}@wechat.user`;
       alternativeUsers = await db()
