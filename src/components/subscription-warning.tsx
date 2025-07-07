@@ -26,16 +26,14 @@ interface SubscriptionWarningProps {
   userEmail: string;
   newProductId: string;
   newProductName: string;
-  onConfirm: () => void;
-  onCancel: () => void;
+  onClose: () => void;
 }
 
 export default function SubscriptionWarning({ 
   userEmail, 
   newProductId, 
   newProductName, 
-  onConfirm, 
-  onCancel 
+  onClose 
 }: SubscriptionWarningProps) {
   const [currentSubscription, setCurrentSubscription] = useState<UserSubscription | null>(null);
   const [loading, setLoading] = useState(false);
@@ -115,12 +113,12 @@ export default function SubscriptionWarning({
       <AlertTriangle className="h-4 w-4 text-orange-600" />
       <AlertDescription className="space-y-3">
         <div className="font-medium text-orange-800">
-          {locale === 'zh' ? '重复购买警告' : 'Duplicate Purchase Warning'}
+          {locale === 'zh' ? '重复购买提醒' : 'Duplicate Purchase Reminder'}
         </div>
         
         <div className="text-sm text-orange-700 space-y-2">
           <div>
-            {locale === 'zh' ? '您已购买了以下套餐，请勿重复购买：' : 'You have already purchased the following plan, please do not purchase again:'}
+            {locale === 'zh' ? '您已购买了以下套餐：' : 'You have already purchased the following plan:'}
           </div>
           
           <div className="bg-white rounded-lg p-3 border border-orange-200">
@@ -149,49 +147,26 @@ export default function SubscriptionWarning({
             </div>
           </div>
           
-          <div>
-            {locale === 'zh' 
-              ? `如果您确实要购买新的"${newProductName}"套餐，将会发生以下情况：`
-              : `If you really want to purchase the new "${newProductName}" plan, the following will happen:`
-            }
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+            <div className="text-blue-800 font-medium text-sm mb-2">
+              {locale === 'zh' ? '⏰ 到期时间提醒' : '⏰ Expiry Reminder'}
+            </div>
+            <div className="text-blue-700 text-sm">
+              {locale === 'zh' 
+                ? `您的套餐将于 ${formatDate(currentSubscription?.period_end)} 到期，此期间请勿重复购买。`
+                : `Your plan will expire on ${formatDate(currentSubscription?.period_end)}. Please do not purchase again during this period.`
+              }
+            </div>
           </div>
-          
-          <ul className="list-disc list-inside ml-4 space-y-1">
-            <li>
-              {locale === 'zh' 
-                ? '立即停用您当前的订阅' 
-                : 'Immediately deactivate your current subscription'
-              }
-            </li>
-            <li>
-              {locale === 'zh' 
-                ? '当前套餐的剩余次数将被清零' 
-                : 'Remaining quota from current plan will be lost'
-              }
-            </li>
-            <li>
-              {locale === 'zh' 
-                ? '开始使用新套餐的配额' 
-                : 'Start using the new plan\'s quota'
-              }
-            </li>
-          </ul>
         </div>
         
-        <div className="flex gap-2 mt-4">
+        <div className="flex justify-center mt-4">
           <Button 
-            onClick={onConfirm}
+            onClick={onClose}
             size="sm"
-            variant="destructive"
+            className="w-full"
           >
-            {locale === 'zh' ? '仍要购买' : 'Still Purchase'}
-          </Button>
-          <Button 
-            onClick={onCancel}
-            size="sm"
-            variant="outline"
-          >
-            {locale === 'zh' ? '取消' : 'Cancel'}
+            {locale === 'zh' ? '确定' : 'OK'}
           </Button>
         </div>
       </AlertDescription>
