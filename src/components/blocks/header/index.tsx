@@ -143,10 +143,8 @@ export default function Header({ header }: { header: HeaderType }) {
                               })
                             )}
                             onClick={() => {
-                              console.log("Dashboard button clicked in header");
-                              console.log("Current URL:", window.location.href);
-                              console.log("About to navigate to: https://www.clientseeker.pro/dashboard");
-                              window.location.replace("https://www.clientseeker.pro/dashboard");
+                              console.log("User center button clicked - redirecting to user-center page");
+                              window.location.href = "/user-center";
                             }}
                           >
                             {item.icon && (
@@ -303,10 +301,8 @@ export default function Header({ header }: { header: HeaderType }) {
                         <button
                           key={i}
                           onClick={() => {
-                            console.log("Dashboard button clicked in mobile menu");
-                            console.log("Current URL:", window.location.href);
-                            console.log("About to navigate to: https://www.clientseeker.pro/dashboard");
-                            window.location.replace("https://www.clientseeker.pro/dashboard");
+                            console.log("User center button clicked in mobile - redirecting to user-center page");
+                            window.location.href = "/user-center";
                           }}
                           className="font-semibold my-4 flex items-center gap-2 px-4 text-left"
                         >

@@ -64,10 +64,8 @@ export default function SignUser({ user }: { user: User }) {
     {
       title: t("user.dashboard") || "用户中心",
       onClick: () => {
-        console.log("Dashboard clicked in user dropdown");
-        console.log("Current URL:", window.location.href);
-        console.log("About to navigate to: https://www.clientseeker.pro/dashboard");
-        window.location.replace("https://www.clientseeker.pro/dashboard");
+        console.log("User center clicked in dropdown - redirecting to user-center page");
+        window.location.href = "/user-center";
       },
     },
     {
