@@ -28,6 +28,7 @@ export function OrganizationStructuredData() {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer service",
+      email: "clientseeker@mail.xilou.life",
       availableLanguage: ["Chinese", "English"],
     },
     sameAs: [],
