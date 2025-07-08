@@ -150,7 +150,347 @@
     "global_coverage": "Integrate Gaode Maps, Baidu Maps, Google Maps and other data sources to support global business information query",
     "high_accuracy": "We integrate multiple authoritative data sources and use intelligent algorithms for deduplication and verification. The accuracy rate of contact information exceeds 85%. The system will prioritize displaying merchants with phone numbers to ensure that the contact information obtained is authentic and effective.",
     "start_search_instruction": "Enter target customer industry or keywords, select region, and start getting customer contact information",
-    "comprehensive_service_description": "ClientSeeker is based on multi-source data integration technology to provide precise global customer contact information acquisition services for sales teams, marketing personnel, and business owners. By integrating authoritative data sources such as Gaode Maps, Baidu Maps, Google Maps, etc., we can help you quickly locate potential customers in target industries worldwide, obtain accurate enterprise contact information, and significantly improve the success rate of domestic and international business expansion."
+    "comprehensive_service_description": "ClientSeeker is based on multi-source data integration technology to provide precise global customer contact information acquisition services for sales teams, marketing personnel, and business owners. By integrating authoritative data sources such as Gaode Maps, Baidu Maps, Google Maps, etc., we can help you quickly locate potential customers in target industries worldwide, obtain accurate enterprise contact information, and significantly improve the success rate of domestic and international business expansion.",
+    "what_is_clientseeker": "What is ClientSeeker?",
+    "what_is_description": "ClientSeeker is a professional global customer development tool that supports business contact information queries in mainland China and overseas markets",
+    "why_choose_clientseeker": "Why Choose ClientSeeker?",
+    "how_to_use_clientseeker": "How to Use ClientSeeker to Find Customers?",
+    "clientseeker_features": "ClientSeeker Core Features",
+    "popular_industries": "Popular Potential Customer Industries",
+    "faq": "Frequently Asked Questions",
+    "back_to_top": "Back to Top",
+    "get_customer_info": "Get Customer Information",
+    "precise_search": "Precise Search",
+    "contact_info_retrieval": "Contact Information Retrieval",
+    "multi_source_integration_title": "Multi-Source Data Integration",
+    "data_export": "Data Export",
+    "geographic_positioning": "Geographic Positioning",
+    "quality_assessment": "Quality Assessment",
+    "searching_status": "Searching for customer information...",
+    "searching_step1": "🔍 Getting potential customer list",
+    "searching_step2": "📞 Retrieving detailed contact information",
+    "searching_step3": "🔄 Organizing and sorting results",
+    "search_time_estimate": "Getting contact phone numbers for each customer, estimated 30-60 seconds",
+    "start_finding_customers": "Start Finding Customers",
+    "no_relevant_customers": "No relevant customers found",
+    "how_to_use": {
+      "step1": {
+        "title": "Enter Search Keywords",
+        "description": "Enter target industry or business type in the search box, such as 'restaurant', 'beauty salon', 'auto repair shop', etc."
+      },
+      "step2": {
+        "title": "Select Target Region",
+        "description": "Use the region selector to precisely locate provinces, cities, and counties. The system will automatically identify your current location"
+      },
+      "step3": {
+        "title": "Get Customer Information",
+        "description": "Click the search button, and the system will automatically retrieve target customer contact information, supporting CSV file export"
+      }
+    },
+    "core_features": {
+      "precise_search": {
+        "title": "Precise Search",
+        "description": "Support industry keyword search, covering major cities and regions worldwide, accurately targeting customer groups"
+      },
+      "contact_retrieval": {
+        "title": "Contact Information Retrieval",
+        "description": "Obtain key contact information such as business phone numbers and addresses, with smart deduplication optimization prioritizing effective contact information"
+      },
+      "multi_source": {
+        "title": "Multi-Source Data Integration",
+        "description": "Integrate multiple data sources including Gaode Maps, Baidu Maps, Google Maps, etc., supporting global business information queries"
+      },
+      "data_export": {
+        "title": "Data Export",
+        "description": "Domestic data supports one-click CSV export, Google Maps data can be viewed and used online"
+      },
+      "geo_location": {
+        "title": "Geographic Positioning",
+        "description": "Intelligently identify user location, support precise geographic range search down to county level"
+      },
+      "quality_rating": {
+        "title": "Quality Assessment",
+        "description": "Display merchant ratings and category information to help filter high-quality potential customers"
+      }
+    },
+    "industries": {
+      "food_beverage": {
+        "title": "🍽️ Food & Beverage",
+        "examples": "Restaurants, coffee shops, fast food, hot pot restaurants",
+        "suitable": "Suitable for: food suppliers, tableware manufacturers, equipment suppliers"
+      },
+      "beauty": {
+        "title": "💄 Beauty & Hair",
+        "examples": "Beauty salons, barbershops, nail salons, SPAs",
+        "suitable": "Suitable for: cosmetics suppliers, beauty equipment merchants, skincare brands"
+      },
+      "automotive": {
+        "title": "🚗 Automotive Services",
+        "examples": "Auto repair shops, car washes, 4S stores, tire shops",
+        "suitable": "Suitable for: auto parts dealers, lubricant suppliers, tool manufacturers"
+      },
+      "healthcare": {
+        "title": "🏥 Healthcare",
+        "examples": "Clinics, pharmacies, health checkup centers, dental clinics",
+        "suitable": "Suitable for: medical equipment dealers, pharmaceutical suppliers, health products"
+      },
+      "home_decoration": {
+        "title": "🏠 Home & Decoration",
+        "examples": "Decoration companies, furniture stores, building material stores, design studios",
+        "suitable": "Suitable for: building material suppliers, furniture manufacturers, decoration material dealers"
+      },
+      "education": {
+        "title": "🎓 Education & Training",
+        "examples": "Training institutions, kindergartens, tutoring classes, art training",
+        "suitable": "Suitable for: educational supplies dealers, equipment suppliers, book publishers"
+      }
+    },
+    "industry_tip": "💡 Tip: Enter these industry keywords in the search box to quickly find corresponding potential customers",
+    "faq_items": {
+      "legal_compliance": {
+        "question": "❓ Is ClientSeeker's data source legal and compliant?",
+        "answer": "Yes, all data comes from publicly accessible business directories, map services, and enterprise registration information. We strictly comply with relevant regulations such as the Data Security Law and Personal Information Protection Law, and do not involve any privacy data acquisition."
+      },
+      "accuracy_rate": {
+        "question": "❓ What is the accuracy rate of search results?",
+        "answer": "We integrate multiple authoritative data sources and use intelligent algorithms for deduplication and verification. The contact information accuracy rate exceeds 85%. The system prioritizes displaying merchants with phone numbers to ensure the contact information obtained is authentic and effective."
+      },
+      "batch_export": {
+        "question": "❓ Does it support batch export of customer data?",
+        "answer": "Yes. You can export search results to CSV format files with one click, including customer names, addresses, contact phones, ratings and other information, convenient for further analysis and management in Excel."
+      },
+      "usage_precautions": {
+        "question": "❓ What should I pay attention to when using ClientSeeker?",
+        "answer": "Please be sure to comply with anti-spam laws and regulations and respect customer privacy. The obtained contact information should only be used for legitimate business purposes and must not be used for harassment, fraud and other illegal activities. It is recommended to clearly state your identity and purpose when contacting customers."
+      },
+      "improve_search": {
+        "question": "❓ How to improve search results?",
+        "answer": "It is recommended to use specific industry keywords, such as 'Sichuan cuisine restaurant' instead of 'restaurant'; select specific geographic areas instead of entire provinces; try multiple related keyword combinations for more comprehensive results."
+      },
+      "data_update": {
+        "question": "❓ How often is the data updated?",
+        "answer": "Our data is updated weekly to ensure timeliness. Newly opened businesses will appear in search results within 1-2 weeks, and closed business information will be cleaned up promptly."
+      }
+    },
+    "region_selector": {
+      "region_selection": "Region Selection",
+      "ip_detection": "IP Detection",
+      "china": "China",
+      "international": "International",
+      "select_region_type": "Select Region Type",
+      "select_province": "Select Province",
+      "select_country": "Select Country",
+      "select_city": "Select City",
+      "select_district": "Select District",
+      "select_province_city": "Please select province/city/district",
+      "select_country_region": "Please select country/region",
+      "loading_regions": "Loading region data..."
+    },
+    "login_required": "Please login first to search",
+    "search_failed": "Search failed, please try again",
+    "network_error": "Search failed, please check network connection",
+    "no_phone": "N/A",
+    "no_data": "N/A",
+    "view_plans": "View Plans",
+    "network_warning_suggestion": "Suggestion: Switch to 'China' mode to use Gaode Maps for more results",
+    "domestic_data_description": "Gaode Maps, Baidu Maps (intelligent merge and deduplication, prioritizing merchants with phone numbers)",
+    "international_data_description": "Google Maps (global business data, export not supported)",
+    "gaode_maps": "Gaode Maps",
+    "baidu_maps": "Baidu Maps",
+    "export": {
+      "customer_name": "Customer Name",
+      "address": "Address",
+      "contact_phone": "Contact Phone",
+      "rating": "Rating",
+      "category": "Category",
+      "data_source": "Data Source",
+      "filename_prefix": "Customer Contact Info"
+    }
+  },
+  "features": {
+    "page_title": "ClientSeeker Features",
+    "page_description": "Explore the comprehensive features of ClientSeeker to enhance your customer development with precision and efficiency",
+    "core_features_overview": "Core Features Overview",
+    "feature_details": "Detailed Feature Descriptions",
+    "usage_statistics": "Usage Statistics",
+    "faq_title": "Frequently Asked Questions",
+    "cta_title": "Experience ClientSeeker Now",
+    "cta_description": "Start your efficient customer development journey and let potential customers find you",
+    "start_search": "Start Customer Search",
+    "view_pricing": "View Pricing Plans",
+    "core_features": {
+      "smart_search": {
+        "title": "Smart Search Engine",
+        "description": "Support natural language search, intelligently identify industry keywords, and precisely match target customer groups",
+        "badges": {
+          "keyword_search": "Keyword Search",
+          "industry_classification": "Industry Classification",
+          "fuzzy_matching": "Fuzzy Matching",
+          "smart_suggestions": "Smart Suggestions"
+        }
+      },
+      "contact_info": {
+        "title": "Contact Information Retrieval",
+        "description": "Automatically obtain enterprise phone numbers, addresses, ratings and other key information to provide complete customer profiles",
+        "badges": {
+          "phone_number": "Phone Number",
+          "detailed_address": "Detailed Address",
+          "rating_info": "Rating Information",
+          "industry_category": "Industry Category"
+        }
+      },
+      "precise_location": {
+        "title": "Precise Geographic Positioning",
+        "description": "Support global business search, accurate to county level in mainland China, covering major cities and regions overseas",
+        "badges": {
+          "province_city_district": "Province/City/District Selection",
+          "auto_location": "Auto Location",
+          "radius_search": "Radius Search",
+          "map_display": "Map Display"
+        }
+      },
+      "data_export": {
+        "title": "One-Click Data Export",
+        "description": "Support CSV format export, compatible with Excel, convenient for CRM system import and subsequent customer management",
+        "badges": {
+          "csv_export": "CSV Export",
+          "excel_compatible": "Excel Compatible",
+          "domestic_data": "Domestic Data",
+          "chinese_encoding": "Chinese Encoding"
+        }
+      },
+      "multi_source": {
+        "title": "Multi-Source Data Integration",
+        "description": "Integrate authoritative data sources such as Gaode Maps, Baidu Maps, Google Maps, etc., supporting global business queries",
+        "badges": {
+          "gaode_maps": "Gaode Maps",
+          "baidu_maps": "Baidu Maps",
+          "google_maps": "Google Maps",
+          "global_coverage": "Global Coverage"
+        }
+      },
+      "data_security": {
+        "title": "Data Security Guarantee",
+        "description": "Strictly comply with data protection regulations to ensure user privacy and data security",
+        "badges": {
+          "ssl_encryption": "SSL Encryption",
+          "privacy_protection": "Privacy Protection",
+          "compliant_data": "Compliant Data",
+          "secure_storage": "Secure Storage"
+        }
+      }
+    },
+    "detailed_features": {
+      "smart_search": {
+        "title": "Smart Search Engine",
+        "description": "Using advanced natural language processing technology, supporting multiple search methods to help you easily find target customers.",
+        "features": {
+          "keyword_matching": {
+            "title": "Intelligent Keyword Matching",
+            "description": "Support fuzzy search and automatically identify related industry vocabulary"
+          },
+          "industry_search": {
+            "title": "Industry Classification Search",
+            "description": "Precisely categorized by industry such as catering, beauty, auto repair, etc."
+          },
+          "search_suggestions": {
+            "title": "Search Suggestions",
+            "description": "Intelligently recommend related search terms to improve search efficiency"
+          }
+        },
+        "examples": {
+          "search_example": {
+            "title": "Search Example",
+            "description": "Enter \"Sichuan restaurant\" → Automatically match related catering enterprises"
+          },
+          "industry_categories": {
+            "title": "Industry Categories",
+            "description": "Catering, Beauty, Auto Repair, Healthcare, Education, etc."
+          },
+          "smart_tips": {
+            "title": "Smart Tips",
+            "description": "Automatically recommend related keywords based on input"
+          }
+        }
+      },
+      "comprehensive_info": {
+        "title": "Comprehensive Information Retrieval",
+        "description": "Obtain enterprise core contact information and basic data to provide accurate data support for your customer development.",
+        "features": {
+          "core_info": {
+            "title": "Core Information Retrieval",
+            "description": "Enterprise name, phone, address, rating and other key contact information"
+          },
+          "smart_deduplication": {
+            "title": "Smart Deduplication",
+            "description": "Automatically identify duplicate merchants to ensure information uniqueness"
+          },
+          "priority_sorting": {
+            "title": "Priority Sorting",
+            "description": "Prioritize displaying high-quality customers with phone numbers"
+          }
+        },
+        "examples": {
+          "contact_info": {
+            "title": "Contact Information",
+            "description": "Enterprise name, phone, detailed address, etc."
+          },
+          "rating_info": {
+            "title": "Rating Information",
+            "description": "User rating data from map services"
+          },
+          "industry_category": {
+            "title": "Industry Category",
+            "description": "Business type labels such as catering, beauty, auto repair, etc."
+          }
+        }
+      }
+    },
+    "statistics": {
+      "active_users": "Active Users",
+      "enterprise_database": "Enterprise Database",
+      "accuracy_rate": "Accuracy Rate",
+      "service_availability": "24/7 Service"
+    },
+    "faq": {
+      "regions_supported": {
+        "question": "Which regions support business search?",
+        "answer": "ClientSeeker supports global business search:",
+        "details": {
+          "china": {
+            "title": "Mainland China:",
+            "description": "Accurate to province, city and district levels, covering 34 provinces and autonomous regions"
+          },
+          "global": {
+            "title": "Other Global Regions:",
+            "description": "Covering major cities and regions through Google Maps"
+          }
+        }
+      },
+      "export_limitations": {
+        "question": "Are there any limitations on data export?",
+        "answer": "Data export functionality has different support levels based on data sources:",
+        "china_data": {
+          "title": "Mainland China Data",
+          "status": "Export Supported",
+          "description": "Business data from Gaode Maps and Baidu Maps supports CSV format export with complete contact information"
+        },
+        "google_data": {
+          "title": "Google Maps Data",
+          "status": "Not Currently Supported",
+          "description": "Global business data from Google Maps does not currently support export but can be viewed and used online"
+        }
+      },
+      "data_accuracy": {
+        "question": "How is data accuracy guaranteed?",
+        "answer": "We employ multiple measures to ensure data quality:",
+        "measures": [
+          "Multi-source data cross-validation with intelligent deduplication to ensure information uniqueness",
+          "Prioritize displaying high-quality business information with phone numbers",
+          "Regularly update database to ensure information timeliness"
+        ]
+      }
+    }
   },
   "dashboard": {
     "page_title": "User Center",

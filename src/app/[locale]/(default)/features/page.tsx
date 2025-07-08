@@ -5,42 +5,44 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 export default function FeaturesPage() {
+  const t = useTranslations();
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="container mx-auto px-4 py-12 max-w-6xl">
         {/* 页面标题 */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">ClientSeeker 功能介绍</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">{t('features.page_title')}</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            全面了解ClientSeeker的强大功能，助力您的客户开发工作更加高效精准
+            {t('features.page_description')}
           </p>
         </div>
 
         {/* 核心功能概览 */}
         <div className="mb-20">
-          <h2 className="text-3xl font-bold text-center mb-12">核心功能一览</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">{t('features.core_features_overview')}</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <Search className="h-8 w-8 text-blue-600" />
                 </div>
-                <CardTitle className="text-center">智能搜索引擎</CardTitle>
+                <CardTitle className="text-center">{t('features.core_features.smart_search.title')}</CardTitle>
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-muted-foreground mb-4">
-                  支持自然语言搜索，智能识别行业关键词，精准匹配目标客户群体
+                  {t('features.core_features.smart_search.description')}
                 </p>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-center gap-2">
-                    <Badge variant="outline">关键词搜索</Badge>
-                    <Badge variant="outline">行业分类</Badge>
+                    <Badge variant="outline">{t('features.core_features.smart_search.badges.keyword_search')}</Badge>
+                    <Badge variant="outline">{t('features.core_features.smart_search.badges.industry_classification')}</Badge>
                   </div>
                   <div className="flex items-center justify-center gap-2">
-                    <Badge variant="outline">模糊匹配</Badge>
-                    <Badge variant="outline">智能推荐</Badge>
+                    <Badge variant="outline">{t('features.core_features.smart_search.badges.fuzzy_matching')}</Badge>
+                    <Badge variant="outline">{t('features.core_features.smart_search.badges.smart_suggestions')}</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -51,20 +53,20 @@ export default function FeaturesPage() {
                 <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <Phone className="h-8 w-8 text-green-600" />
                 </div>
-                <CardTitle className="text-center">联系信息获取</CardTitle>
+                <CardTitle className="text-center">{t('features.core_features.contact_info.title')}</CardTitle>
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-muted-foreground mb-4">
-                  自动获取企业电话、地址、评分等关键信息，提供完整的客户档案
+                  {t('features.core_features.contact_info.description')}
                 </p>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-center gap-2">
-                    <Badge variant="outline">电话号码</Badge>
-                    <Badge variant="outline">详细地址</Badge>
+                    <Badge variant="outline">{t('features.core_features.contact_info.badges.phone_number')}</Badge>
+                    <Badge variant="outline">{t('features.core_features.contact_info.badges.detailed_address')}</Badge>
                   </div>
                   <div className="flex items-center justify-center gap-2">
-                    <Badge variant="outline">评分信息</Badge>
-                    <Badge variant="outline">行业分类</Badge>
+                    <Badge variant="outline">{t('features.core_features.contact_info.badges.rating_info')}</Badge>
+                    <Badge variant="outline">{t('features.core_features.contact_info.badges.industry_category')}</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -75,20 +77,20 @@ export default function FeaturesPage() {
                 <div className="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <MapPin className="h-8 w-8 text-purple-600" />
                 </div>
-                <CardTitle className="text-center">精准地理定位</CardTitle>
+                <CardTitle className="text-center">{t('features.core_features.precise_location.title')}</CardTitle>
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-muted-foreground mb-4">
-                  支持全球商家搜索，国内精确到区县级别，海外覆盖主要城市和地区
+                  {t('features.core_features.precise_location.description')}
                 </p>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-center gap-2">
-                    <Badge variant="outline">省市区选择</Badge>
-                    <Badge variant="outline">自动定位</Badge>
+                    <Badge variant="outline">{t('features.core_features.precise_location.badges.province_city_district')}</Badge>
+                    <Badge variant="outline">{t('features.core_features.precise_location.badges.auto_location')}</Badge>
                   </div>
                   <div className="flex items-center justify-center gap-2">
-                    <Badge variant="outline">范围搜索</Badge>
-                    <Badge variant="outline">地图展示</Badge>
+                    <Badge variant="outline">{t('features.core_features.precise_location.badges.radius_search')}</Badge>
+                    <Badge variant="outline">{t('features.core_features.precise_location.badges.map_display')}</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -99,20 +101,20 @@ export default function FeaturesPage() {
                 <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <Download className="h-8 w-8 text-orange-600" />
                 </div>
-                <CardTitle className="text-center">一键数据导出</CardTitle>
+                <CardTitle className="text-center">{t('features.core_features.data_export.title')}</CardTitle>
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-muted-foreground mb-4">
-                  支持CSV格式导出，兼容Excel打开，便于CRM系统导入和后续客户管理
+                  {t('features.core_features.data_export.description')}
                 </p>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-center gap-2">
-                    <Badge variant="outline">CSV导出</Badge>
-                    <Badge variant="outline">Excel兼容</Badge>
+                    <Badge variant="outline">{t('features.core_features.data_export.badges.csv_export')}</Badge>
+                    <Badge variant="outline">{t('features.core_features.data_export.badges.excel_compatible')}</Badge>
                   </div>
                   <div className="flex items-center justify-center gap-2">
-                    <Badge variant="outline">国内数据</Badge>
-                    <Badge variant="outline">中文编码</Badge>
+                    <Badge variant="outline">{t('features.core_features.data_export.badges.domestic_data')}</Badge>
+                    <Badge variant="outline">{t('features.core_features.data_export.badges.chinese_encoding')}</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -123,20 +125,20 @@ export default function FeaturesPage() {
                 <div className="bg-indigo-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <Globe className="h-8 w-8 text-indigo-600" />
                 </div>
-                <CardTitle className="text-center">多源数据整合</CardTitle>
+                <CardTitle className="text-center">{t('features.core_features.multi_source.title')}</CardTitle>
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-muted-foreground mb-4">
-                  整合高德地图、百度地图、Google Maps等权威数据源，支持全球商家查询
+                  {t('features.core_features.multi_source.description')}
                 </p>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-center gap-2">
-                    <Badge variant="outline">高德地图</Badge>
-                    <Badge variant="outline">百度地图</Badge>
+                    <Badge variant="outline">{t('features.core_features.multi_source.badges.gaode_maps')}</Badge>
+                    <Badge variant="outline">{t('features.core_features.multi_source.badges.baidu_maps')}</Badge>
                   </div>
                   <div className="flex items-center justify-center gap-2">
-                    <Badge variant="outline">Google Maps</Badge>
-                    <Badge variant="outline">全球覆盖</Badge>
+                    <Badge variant="outline">{t('features.core_features.multi_source.badges.google_maps')}</Badge>
+                    <Badge variant="outline">{t('features.core_features.multi_source.badges.global_coverage')}</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -147,20 +149,20 @@ export default function FeaturesPage() {
                 <div className="bg-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <Shield className="h-8 w-8 text-pink-600" />
                 </div>
-                <CardTitle className="text-center">数据安全保障</CardTitle>
+                <CardTitle className="text-center">{t('features.core_features.data_security.title')}</CardTitle>
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-muted-foreground mb-4">
-                  严格遵守数据保护法规，确保用户隐私和数据安全
+                  {t('features.core_features.data_security.description')}
                 </p>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-center gap-2">
-                    <Badge variant="outline">SSL加密</Badge>
-                    <Badge variant="outline">隐私保护</Badge>
+                    <Badge variant="outline">{t('features.core_features.data_security.badges.ssl_encryption')}</Badge>
+                    <Badge variant="outline">{t('features.core_features.data_security.badges.privacy_protection')}</Badge>
                   </div>
                   <div className="flex items-center justify-center gap-2">
-                    <Badge variant="outline">合规数据</Badge>
-                    <Badge variant="outline">安全存储</Badge>
+                    <Badge variant="outline">{t('features.core_features.data_security.badges.compliant_data')}</Badge>
+                    <Badge variant="outline">{t('features.core_features.data_security.badges.secure_storage')}</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -170,7 +172,7 @@ export default function FeaturesPage() {
 
         {/* 详细功能介绍 */}
         <div className="mb-20">
-          <h2 className="text-3xl font-bold text-center mb-12">功能详细说明</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">{t('features.feature_details')}</h2>
           <div className="space-y-12">
             {/* 智能搜索功能 */}
             <div className="bg-white rounded-xl p-8 shadow-sm">
@@ -178,10 +180,10 @@ export default function FeaturesPage() {
                 <div>
                   <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
                     <Search className="h-8 w-8 text-blue-600" />
-                    智能搜索引擎
+                    {t('features.detailed_features.smart_search.title')}
                   </h3>
                   <p className="text-muted-foreground mb-6">
-                    采用先进的自然语言处理技术，支持多种搜索方式，让您轻松找到目标客户。
+                    {t('features.detailed_features.smart_search.description')}
                   </p>
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
@@ -189,8 +191,8 @@ export default function FeaturesPage() {
                         <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
                       </div>
                       <div>
-                        <h4 className="font-semibold">关键词智能匹配</h4>
-                        <p className="text-sm text-muted-foreground">支持模糊搜索，自动识别相关行业词汇</p>
+                        <h4 className="font-semibold">{t('features.detailed_features.smart_search.features.keyword_matching.title')}</h4>
+                        <p className="text-sm text-muted-foreground">{t('features.detailed_features.smart_search.features.keyword_matching.description')}</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -198,8 +200,8 @@ export default function FeaturesPage() {
                         <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
                       </div>
                       <div>
-                        <h4 className="font-semibold">行业分类搜索</h4>
-                        <p className="text-sm text-muted-foreground">按餐饮、美容、汽修等行业精准分类</p>
+                        <h4 className="font-semibold">{t('features.detailed_features.smart_search.features.industry_search.title')}</h4>
+                        <p className="text-sm text-muted-foreground">{t('features.detailed_features.smart_search.features.industry_search.description')}</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -207,8 +209,8 @@ export default function FeaturesPage() {
                         <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
                       </div>
                       <div>
-                        <h4 className="font-semibold">搜索建议</h4>
-                        <p className="text-sm text-muted-foreground">智能推荐相关搜索词，提升搜索效率</p>
+                        <h4 className="font-semibold">{t('features.detailed_features.smart_search.features.search_suggestions.title')}</h4>
+                        <p className="text-sm text-muted-foreground">{t('features.detailed_features.smart_search.features.search_suggestions.description')}</p>
                       </div>
                     </div>
                   </div>
@@ -216,16 +218,16 @@ export default function FeaturesPage() {
                 <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-6">
                   <div className="space-y-3">
                     <div className="bg-white rounded-lg p-3 shadow-sm">
-                      <div className="text-sm font-medium">搜索示例</div>
-                      <div className="text-xs text-muted-foreground mt-1">输入"川菜餐厅" → 自动匹配相关餐饮企业</div>
+                      <div className="text-sm font-medium">{t('features.detailed_features.smart_search.examples.search_example.title')}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{t('features.detailed_features.smart_search.examples.search_example.description')}</div>
                     </div>
                     <div className="bg-white rounded-lg p-3 shadow-sm">
-                      <div className="text-sm font-medium">行业分类</div>
-                      <div className="text-xs text-muted-foreground mt-1">餐饮、美容、汽修、医疗、教育等</div>
+                      <div className="text-sm font-medium">{t('features.detailed_features.smart_search.examples.industry_categories.title')}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{t('features.detailed_features.smart_search.examples.industry_categories.description')}</div>
                     </div>
                     <div className="bg-white rounded-lg p-3 shadow-sm">
-                      <div className="text-sm font-medium">智能提示</div>
-                      <div className="text-xs text-muted-foreground mt-1">根据输入自动推荐相关关键词</div>
+                      <div className="text-sm font-medium">{t('features.detailed_features.smart_search.examples.smart_tips.title')}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{t('features.detailed_features.smart_search.examples.smart_tips.description')}</div>
                     </div>
                   </div>
                 </div>
@@ -239,16 +241,16 @@ export default function FeaturesPage() {
                   <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-6">
                     <div className="space-y-3">
                       <div className="bg-white rounded-lg p-3 shadow-sm">
-                        <div className="text-sm font-medium">联系信息</div>
-                        <div className="text-xs text-muted-foreground mt-1">企业名称、电话、详细地址等</div>
+                        <div className="text-sm font-medium">{t('features.detailed_features.comprehensive_info.examples.contact_info.title')}</div>
+                        <div className="text-xs text-muted-foreground mt-1">{t('features.detailed_features.comprehensive_info.examples.contact_info.description')}</div>
                       </div>
                       <div className="bg-white rounded-lg p-3 shadow-sm">
-                        <div className="text-sm font-medium">评分信息</div>
-                        <div className="text-xs text-muted-foreground mt-1">来自地图服务的用户评分数据</div>
+                        <div className="text-sm font-medium">{t('features.detailed_features.comprehensive_info.examples.rating_info.title')}</div>
+                        <div className="text-xs text-muted-foreground mt-1">{t('features.detailed_features.comprehensive_info.examples.rating_info.description')}</div>
                       </div>
                       <div className="bg-white rounded-lg p-3 shadow-sm">
-                        <div className="text-sm font-medium">行业分类</div>
-                        <div className="text-xs text-muted-foreground mt-1">餐饮、美容、汽修等业务类型标签</div>
+                        <div className="text-sm font-medium">{t('features.detailed_features.comprehensive_info.examples.industry_category.title')}</div>
+                        <div className="text-xs text-muted-foreground mt-1">{t('features.detailed_features.comprehensive_info.examples.industry_category.description')}</div>
                       </div>
                     </div>
                   </div>
@@ -256,10 +258,10 @@ export default function FeaturesPage() {
                 <div className="order-1 md:order-2">
                   <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
                     <Phone className="h-8 w-8 text-green-600" />
-                    全面信息获取
+                    {t('features.detailed_features.comprehensive_info.title')}
                   </h3>
                   <p className="text-muted-foreground mb-6">
-                    获取企业核心联系信息和基础资料，为您的客户开发提供准确的数据支持。
+                    {t('features.detailed_features.comprehensive_info.description')}
                   </p>
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
@@ -267,8 +269,8 @@ export default function FeaturesPage() {
                         <div className="w-2 h-2 bg-green-600 rounded-full"></div>
                       </div>
                       <div>
-                        <h4 className="font-semibold">核心信息获取</h4>
-                        <p className="text-sm text-muted-foreground">企业名称、电话、地址、评分等关键联系信息</p>
+                        <h4 className="font-semibold">{t('features.detailed_features.comprehensive_info.features.core_info.title')}</h4>
+                        <p className="text-sm text-muted-foreground">{t('features.detailed_features.comprehensive_info.features.core_info.description')}</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -276,8 +278,8 @@ export default function FeaturesPage() {
                         <div className="w-2 h-2 bg-green-600 rounded-full"></div>
                       </div>
                       <div>
-                        <h4 className="font-semibold">智能去重</h4>
-                        <p className="text-sm text-muted-foreground">自动识别重复商户，确保信息的唯一性</p>
+                        <h4 className="font-semibold">{t('features.detailed_features.comprehensive_info.features.smart_deduplication.title')}</h4>
+                        <p className="text-sm text-muted-foreground">{t('features.detailed_features.comprehensive_info.features.smart_deduplication.description')}</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -285,8 +287,8 @@ export default function FeaturesPage() {
                         <div className="w-2 h-2 bg-green-600 rounded-full"></div>
                       </div>
                       <div>
-                        <h4 className="font-semibold">优先级排序</h4>
-                        <p className="text-sm text-muted-foreground">优先展示有电话号码的高质量客户</p>
+                        <h4 className="font-semibold">{t('features.detailed_features.comprehensive_info.features.priority_sorting.title')}</h4>
+                        <p className="text-sm text-muted-foreground">{t('features.detailed_features.comprehensive_info.features.priority_sorting.description')}</p>
                       </div>
                     </div>
                   </div>
@@ -298,14 +300,14 @@ export default function FeaturesPage() {
 
         {/* 使用统计 */}
         <div className="mb-20">
-          <h2 className="text-3xl font-bold text-center mb-12">使用数据统计</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">{t('features.usage_statistics')}</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white rounded-xl p-6 text-center shadow-sm">
               <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <Users className="h-8 w-8 text-blue-600" />
               </div>
               <div className="text-3xl font-bold text-blue-600 mb-2">10,000+</div>
-              <div className="text-muted-foreground">活跃用户</div>
+              <div className="text-muted-foreground">{t('features.statistics.active_users')}</div>
             </div>
             
             <div className="bg-white rounded-xl p-6 text-center shadow-sm">
@@ -313,7 +315,7 @@ export default function FeaturesPage() {
                 <Target className="h-8 w-8 text-green-600" />
               </div>
               <div className="text-3xl font-bold text-green-600 mb-2">500万+</div>
-              <div className="text-muted-foreground">企业数据库</div>
+              <div className="text-muted-foreground">{t('features.statistics.enterprise_database')}</div>
             </div>
             
             <div className="bg-white rounded-xl p-6 text-center shadow-sm">
@@ -321,7 +323,7 @@ export default function FeaturesPage() {
                 <TrendingUp className="h-8 w-8 text-purple-600" />
               </div>
               <div className="text-3xl font-bold text-purple-600 mb-2">85%+</div>
-              <div className="text-muted-foreground">信息准确率</div>
+              <div className="text-muted-foreground">{t('features.statistics.accuracy_rate')}</div>
             </div>
             
             <div className="bg-white rounded-xl p-6 text-center shadow-sm">
@@ -329,34 +331,34 @@ export default function FeaturesPage() {
                 <Clock className="h-8 w-8 text-orange-600" />
               </div>
               <div className="text-3xl font-bold text-orange-600 mb-2">24/7</div>
-              <div className="text-muted-foreground">全天候服务</div>
+              <div className="text-muted-foreground">{t('features.statistics.service_availability')}</div>
             </div>
           </div>
         </div>
 
         {/* FAQ区域 */}
         <div className="mb-20">
-          <h2 className="text-3xl font-bold text-center mb-12">常见问题解答</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">{t('features.faq_title')}</h2>
           <div className="max-w-4xl mx-auto space-y-6">
             <Card className="border shadow-sm">
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-3">
                   <Globe className="h-6 w-6 text-blue-600" />
-                  支持哪些地区的商家搜索？
+                  {t('features.faq.regions_supported.question')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground leading-relaxed">
-                  ClientSeeker支持全球商家搜索：
+                  {t('features.faq.regions_supported.answer')}
                 </p>
                 <ul className="mt-3 space-y-2 text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
-                    <span><strong>中国大陆：</strong>精确到省市区三级，覆盖34个省市自治区</span>
+                    <span><strong>{t('features.faq.regions_supported.details.china.title')}</strong>{t('features.faq.regions_supported.details.china.description')}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                    <span><strong>全球其他地区：</strong>通过Google Maps覆盖主要城市和地区</span>
+                    <span><strong>{t('features.faq.regions_supported.details.global.title')}</strong>{t('features.faq.regions_supported.details.global.description')}</span>
                   </li>
                 </ul>
               </CardContent>
@@ -366,35 +368,35 @@ export default function FeaturesPage() {
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-3">
                   <Download className="h-6 w-6 text-orange-600" />
-                  数据导出有什么限制吗？
+                  {t('features.faq.export_limitations.question')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground leading-relaxed mb-3">
-                  数据导出功能根据数据源有不同的支持情况：
+                  {t('features.faq.export_limitations.answer')}
                 </p>
                 <div className="space-y-3">
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Badge variant="outline" className="bg-green-100 text-green-700 border-green-300">
-                        支持导出
+                        {t('features.faq.export_limitations.china_data.status')}
                       </Badge>
-                      <span className="font-medium text-green-800">中国大陆数据</span>
+                      <span className="font-medium text-green-800">{t('features.faq.export_limitations.china_data.title')}</span>
                     </div>
                     <p className="text-sm text-green-700">
-                      来自高德地图和百度地图的商家数据支持CSV格式导出，包含完整的联系信息
+                      {t('features.faq.export_limitations.china_data.description')}
                     </p>
                   </div>
                   
                   <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Badge variant="outline" className="bg-amber-100 text-amber-700 border-amber-300">
-                        暂不支持
+                        {t('features.faq.export_limitations.google_data.status')}
                       </Badge>
-                      <span className="font-medium text-amber-800">Google Maps数据</span>
+                      <span className="font-medium text-amber-800">{t('features.faq.export_limitations.google_data.title')}</span>
                     </div>
                     <p className="text-sm text-amber-700">
-                      来自Google Maps的全球商家数据暂时不支持导出，但可以在线查看和使用
+                      {t('features.faq.export_limitations.google_data.description')}
                     </p>
                   </div>
                 </div>
@@ -405,25 +407,25 @@ export default function FeaturesPage() {
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-3">
                   <Shield className="h-6 w-6 text-purple-600" />
-                  数据准确性如何保证？
+                  {t('features.faq.data_accuracy.question')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground leading-relaxed">
-                  我们采用多重措施确保数据质量：
+                  {t('features.faq.data_accuracy.answer')}
                 </p>
                 <ul className="mt-3 space-y-2 text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
-                    <span>多数据源交叉验证，智能去重确保信息唯一性</span>
+                    <span>{t('features.faq.data_accuracy.measures.0')}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
-                    <span>优先展示有电话号码的高质量商家信息</span>
+                    <span>{t('features.faq.data_accuracy.measures.1')}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
-                    <span>定期更新数据库，确保信息时效性</span>
+                    <span>{t('features.faq.data_accuracy.measures.2')}</span>
                   </li>
                 </ul>
               </CardContent>
@@ -433,20 +435,20 @@ export default function FeaturesPage() {
 
         {/* CTA区域 */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">立即体验ClientSeeker</h2>
+          <h2 className="text-3xl font-bold mb-4">{t('features.cta_title')}</h2>
           <p className="text-xl mb-8 opacity-90">
-            开始您的高效客户开发之旅，让潜在客户主动找到您
+            {t('features.cta_description')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" variant="secondary" asChild>
               <Link href="/search">
                 <Search className="h-5 w-5 mr-2" />
-                开始搜索客户
+                {t('features.start_search')}
               </Link>
             </Button>
             <Button size="lg" variant="ghost" asChild className="bg-white/20 text-white border border-white/50 hover:bg-white hover:text-blue-600">
               <Link href="/pricing">
-                查看定价方案
+                {t('features.view_pricing')}
               </Link>
             </Button>
           </div>

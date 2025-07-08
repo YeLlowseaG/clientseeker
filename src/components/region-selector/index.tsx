@@ -13,6 +13,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Region, SelectedRegion } from '@/lib/regions/types';
 import { getChinaRegions, getInternationalRegions } from '@/lib/regions/data';
+import { useTranslations } from 'next-intl';
 
 interface RegionSelectorProps {
   isChina: boolean; // IP检测的默认国家类型
@@ -27,6 +28,7 @@ export default function RegionSelector({
   onRegionChange,
   className = ''
 }: RegionSelectorProps) {
+  const t = useTranslations();
   const [provinces, setProvinces] = useState<Region[]>([]);
   const [cities, setCities] = useState<Region[]>([]);
   const [districts, setDistricts] = useState<Region[]>([]);
@@ -172,14 +174,14 @@ export default function RegionSelector({
     if (selectedRegion.province) {
       return selectedRegion.province.name;
     }
-    return currentRegionType === 'china' ? '请选择省市区' : '请选择国家地区';
+    return currentRegionType === 'china' ? t('search.region_selector.select_province_city') : t('search.region_selector.select_country_region');
   };
 
   if (loading) {
     return (
       <div className={`flex items-center gap-2 ${className}`}>
         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-        <span className="text-sm text-muted-foreground">加载地区数据...</span>
+        <span className="text-sm text-muted-foreground">{t('search.region_selector.loading_regions')}</span>
       </div>
     );
   }
@@ -188,9 +190,9 @@ export default function RegionSelector({
     <div className={`space-y-3 ${className}`}>
       <div className="flex items-center gap-2 mb-2">
         <MapPin className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm font-medium">地区选择</span>
+        <span className="text-sm font-medium">{t('search.region_selector.region_selection')}</span>
         <Badge variant="outline">
-          IP检测: {isChina ? '中国' : '国际'}
+          {t('search.region_selector.ip_detection')}: {isChina ? t('search.region_selector.china') : t('search.region_selector.international')}
         </Badge>
         {(selectedRegion.province || selectedRegion.city || selectedRegion.district) && (
           <Button
@@ -207,7 +209,7 @@ export default function RegionSelector({
       {/* 地区类型切换 */}
       <div className="flex items-center gap-2 mb-3">
         <Globe className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm text-muted-foreground">选择地区类型:</span>
+        <span className="text-sm text-muted-foreground">{t('search.region_selector.select_region_type')}:</span>
         <div className="flex gap-1">
           <Button
             variant={currentRegionType === 'china' ? 'default' : 'outline'}
@@ -215,7 +217,7 @@ export default function RegionSelector({
             onClick={() => handleRegionTypeChange('china')}
             className="h-7 px-3 text-xs"
           >
-            中国
+            {t('search.region_selector.china')}
           </Button>
           <Button
             variant={currentRegionType === 'international' ? 'default' : 'outline'}
@@ -223,7 +225,7 @@ export default function RegionSelector({
             onClick={() => handleRegionTypeChange('international')}
             className="h-7 px-3 text-xs"
           >
-            国际
+            {t('search.region_selector.international')}
           </Button>
         </div>
       </div>
@@ -235,7 +237,7 @@ export default function RegionSelector({
           onValueChange={handleProvinceChange}
         >
           <SelectTrigger>
-            <SelectValue placeholder={currentRegionType === 'china' ? "选择省份" : "选择国家"} />
+            <SelectValue placeholder={currentRegionType === 'china' ? t('search.region_selector.select_province') : t('search.region_selector.select_country')} />
           </SelectTrigger>
           <SelectContent>
             {provinces.map((province) => (
@@ -253,7 +255,7 @@ export default function RegionSelector({
           disabled={!selectedRegion.province || cities.length === 0}
         >
           <SelectTrigger>
-            <SelectValue placeholder="选择城市" />
+            <SelectValue placeholder={t('search.region_selector.select_city')} />
           </SelectTrigger>
           <SelectContent>
             {cities.map((city) => (
@@ -272,7 +274,7 @@ export default function RegionSelector({
             disabled={!selectedRegion.city || districts.length === 0}
           >
             <SelectTrigger>
-              <SelectValue placeholder="选择区县" />
+              <SelectValue placeholder={t('search.region_selector.select_district')} />
             </SelectTrigger>
             <SelectContent>
               {districts.map((district) => (

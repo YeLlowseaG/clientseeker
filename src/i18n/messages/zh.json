@@ -150,7 +150,347 @@
     "global_coverage": "整合高德地图、百度地图、Google Maps等多个数据源，支持全球商家信息查询",
     "high_accuracy": "我们整合多个权威数据源，通过智能算法进行去重和验证，联系信息准确率超过85%。系统会优先展示有电话号码的商户，确保获取的联系方式真实有效。",
     "start_search_instruction": "输入目标客户行业或关键词，选择地区，开始获取客户联系方式",
-    "comprehensive_service_description": "ClientSeeker基于多源数据整合技术，为销售团队、市场人员和企业主提供精准的全球客户联系信息获取服务。通过整合高德地图、百度地图、Google Maps等权威数据源，我们能够帮助您快速定位全球目标行业的潜在客户，获取准确的企业联系方式，显著提升国内外业务拓展成功率。"
+    "comprehensive_service_description": "ClientSeeker基于多源数据整合技术，为销售团队、市场人员和企业主提供精准的全球客户联系信息获取服务。通过整合高德地图、百度地图、Google Maps等权威数据源，我们能够帮助您快速定位全球目标行业的潜在客户，获取准确的企业联系方式，显著提升国内外业务拓展成功率。",
+    "what_is_clientseeker": "什么是ClientSeeker？",
+    "what_is_description": "ClientSeeker是一款专业的全球客户开发工具，支持中国大陆及海外市场商家联系信息查询",
+    "why_choose_clientseeker": "为什么选择ClientSeeker？",
+    "how_to_use_clientseeker": "如何使用ClientSeeker寻找客户？",
+    "clientseeker_features": "ClientSeeker核心功能",
+    "popular_industries": "热门潜在客户行业",
+    "faq": "常见问题",
+    "back_to_top": "回到顶部",
+    "get_customer_info": "获取客户信息",
+    "precise_search": "精准搜索",
+    "contact_info_retrieval": "联系信息获取",
+    "multi_source_integration_title": "多源数据整合",
+    "data_export": "数据导出",
+    "geographic_positioning": "地理定位",
+    "quality_assessment": "质量评估",
+    "searching_status": "正在搜索客户信息...",
+    "searching_step1": "🔍 获取潜在客户列表",
+    "searching_step2": "📞 获取详细联系方式", 
+    "searching_step3": "🔄 整理和排序结果",
+    "search_time_estimate": "正在获取每个客户的联系电话，预计需要 30-60 秒",
+    "start_finding_customers": "开始寻找客户",
+    "no_relevant_customers": "未找到相关客户",
+    "how_to_use": {
+      "step1": {
+        "title": "输入搜索关键词",
+        "description": "在搜索框中输入目标行业或业务类型，如\"餐厅\"、\"美容院\"、\"汽修店\"等"
+      },
+      "step2": {
+        "title": "选择目标地区", 
+        "description": "使用地区选择器精确定位省份、城市和区县，系统会自动识别您的当前位置"
+      },
+      "step3": {
+        "title": "获取客户信息",
+        "description": "点击搜索按钮，系统将自动获取目标客户的联系方式，支持导出CSV文件"
+      }
+    },
+    "core_features": {
+      "precise_search": {
+        "title": "精准搜索",
+        "description": "支持行业关键词搜索，覆盖全球主要城市和地区，精确定位目标客户群体"
+      },
+      "contact_retrieval": {
+        "title": "联系信息获取",
+        "description": "获取企业电话、地址等关键联系方式，智能去重优化，优先展示有效联系信息"
+      },
+      "multi_source": {
+        "title": "多源数据整合",
+        "description": "整合高德地图、百度地图、Google Maps等多个数据源，支持全球商家信息查询"
+      },
+      "data_export": {
+        "title": "数据导出",
+        "description": "国内数据支持一键导出CSV格式，Google Maps数据可在线查看使用"
+      },
+      "geo_location": {
+        "title": "地理定位",
+        "description": "智能识别用户位置，支持精确到区县级别的地理范围搜索"
+      },
+      "quality_rating": {
+        "title": "质量评估",
+        "description": "显示商户评分和分类信息，帮助筛选高质量潜在客户"
+      }
+    },
+    "industries": {
+      "food_beverage": {
+        "title": "🍽️ 餐饮行业",
+        "examples": "餐厅、咖啡店、快餐店、火锅店",
+        "suitable": "适合：食材供应商、餐具厂商、设备供应商"
+      },
+      "beauty": {
+        "title": "💄 美容美发",
+        "examples": "美容院、理发店、美甲店、SPA",
+        "suitable": "适合：化妆品供应商、美容设备商、护肤品牌"
+      },
+      "automotive": {
+        "title": "🚗 汽车服务",
+        "examples": "汽修店、洗车店、4S店、轮胎店",
+        "suitable": "适合：汽车配件商、润滑油供应商、工具厂商"
+      },
+      "healthcare": {
+        "title": "🏥 医疗健康",
+        "examples": "诊所、药店、体检中心、牙科",
+        "suitable": "适合：医疗器械商、药品供应商、健康产品"
+      },
+      "home_decoration": {
+        "title": "🏠 家居装修",
+        "examples": "装修公司、家具店、建材店、设计工作室",
+        "suitable": "适合：建材供应商、家具厂商、装修材料商"
+      },
+      "education": {
+        "title": "🎓 教育培训",
+        "examples": "培训机构、幼儿园、辅导班、艺术培训",
+        "suitable": "适合：教育用品商、设备供应商、图书出版社"
+      }
+    },
+    "industry_tip": "💡 提示：在搜索框中输入这些行业关键词，即可快速找到对应的潜在客户",
+    "faq_items": {
+      "legal_compliance": {
+        "question": "❓ ClientSeeker的数据来源是否合法合规？",
+        "answer": "是的，所有数据均来源于公开可访问的商业目录、地图服务和企业注册信息。我们严格遵守《数据安全法》、《个人信息保护法》等相关法规，不涉及任何隐私数据获取。"
+      },
+      "accuracy_rate": {
+        "question": "❓ 搜索结果的准确率如何？",
+        "answer": "我们整合多个权威数据源，通过智能算法进行去重和验证，联系信息准确率超过85%。系统会优先展示有电话号码的商户，确保获取的联系方式真实有效。"
+      },
+      "batch_export": {
+        "question": "❓ 是否支持批量导出客户数据？",
+        "answer": "支持。您可以一键导出搜索结果为CSV格式文件，包含客户名称、地址、联系电话、评分等信息，方便在Excel中进一步分析和管理。"
+      },
+      "usage_precautions": {
+        "question": "❓ 使用ClientSeeker需要注意什么？",
+        "answer": "请务必遵守反垃圾邮件法律法规，尊重客户的隐私权。获取的联系信息仅用于合法的商业目的，不得用于骚扰、欺诈等违法活动。建议在联系客户时明确说明身份和目的。"
+      },
+      "improve_search": {
+        "question": "❓ 如何提高搜索效果？",
+        "answer": "建议使用具体的行业关键词，如\"川菜餐厅\"而非\"餐厅\"；选择具体的地理区域而非整个省份；可以尝试多个相关关键词组合搜索，获得更全面的结果。"
+      },
+      "data_update": {
+        "question": "❓ 数据多久更新一次？",
+        "answer": "我们的数据每周更新，确保信息的时效性。新开业的商户会在1-2周内出现在搜索结果中，已关闭的商户信息会被及时清理。"
+      }
+    },
+    "region_selector": {
+      "region_selection": "地区选择",
+      "ip_detection": "IP检测",
+      "china": "中国",
+      "international": "国际",
+      "select_region_type": "选择地区类型",
+      "select_province": "选择省份",
+      "select_country": "选择国家",
+      "select_city": "选择城市",
+      "select_district": "选择区县",
+      "select_province_city": "请选择省市区",
+      "select_country_region": "请选择国家地区",
+      "loading_regions": "加载地区数据..."
+    },
+    "login_required": "请先登录后再进行搜索",
+    "search_failed": "搜索失败，请重试",
+    "network_error": "搜索失败，请检查网络连接",
+    "no_phone": "暂无",
+    "no_data": "暂无",
+    "view_plans": "查看套餐",
+    "network_warning_suggestion": "建议：切换到\"中国\"模式使用高德地图获取更多结果",
+    "domestic_data_description": "高德地图、百度地图（智能合并去重，优先显示有电话的商户）",
+    "international_data_description": "Google Maps（全球商家数据，暂不支持导出）",
+    "gaode_maps": "高德地图",
+    "baidu_maps": "百度地图",
+    "export": {
+      "customer_name": "客户名称",
+      "address": "地址",
+      "contact_phone": "联系电话",
+      "rating": "评分",
+      "category": "行业类别",
+      "data_source": "数据来源",
+      "filename_prefix": "客户联系信息"
+    }
+  },
+  "features": {
+    "page_title": "ClientSeeker 功能介绍",
+    "page_description": "全面了解ClientSeeker的强大功能，助力您的客户开发工作更加高效精准",
+    "core_features_overview": "核心功能一览",
+    "feature_details": "功能详细说明",
+    "usage_statistics": "使用数据统计",
+    "faq_title": "常见问题解答",
+    "cta_title": "立即体验ClientSeeker",
+    "cta_description": "开始您的高效客户开发之旅，让潜在客户主动找到您",
+    "start_search": "开始搜索客户",
+    "view_pricing": "查看定价方案",
+    "core_features": {
+      "smart_search": {
+        "title": "智能搜索引擎",
+        "description": "支持自然语言搜索，智能识别行业关键词，精准匹配目标客户群体",
+        "badges": {
+          "keyword_search": "关键词搜索",
+          "industry_classification": "行业分类",
+          "fuzzy_matching": "模糊匹配",
+          "smart_suggestions": "智能推荐"
+        }
+      },
+      "contact_info": {
+        "title": "联系信息获取",
+        "description": "自动获取企业电话、地址、评分等关键信息，提供完整的客户档案",
+        "badges": {
+          "phone_number": "电话号码",
+          "detailed_address": "详细地址",
+          "rating_info": "评分信息",
+          "industry_category": "行业分类"
+        }
+      },
+      "precise_location": {
+        "title": "精准地理定位",
+        "description": "支持全球商家搜索，国内精确到区县级别，海外覆盖主要城市和地区",
+        "badges": {
+          "province_city_district": "省市区选择",
+          "auto_location": "自动定位",
+          "radius_search": "范围搜索",
+          "map_display": "地图展示"
+        }
+      },
+      "data_export": {
+        "title": "一键数据导出",
+        "description": "支持CSV格式导出，兼容Excel打开，便于CRM系统导入和后续客户管理",
+        "badges": {
+          "csv_export": "CSV导出",
+          "excel_compatible": "Excel兼容",
+          "domestic_data": "国内数据",
+          "chinese_encoding": "中文编码"
+        }
+      },
+      "multi_source": {
+        "title": "多源数据整合",
+        "description": "整合高德地图、百度地图、Google Maps等权威数据源，支持全球商家查询",
+        "badges": {
+          "gaode_maps": "高德地图",
+          "baidu_maps": "百度地图",
+          "google_maps": "Google Maps",
+          "global_coverage": "全球覆盖"
+        }
+      },
+      "data_security": {
+        "title": "数据安全保障",
+        "description": "严格遵守数据保护法规，确保用户隐私和数据安全",
+        "badges": {
+          "ssl_encryption": "SSL加密",
+          "privacy_protection": "隐私保护",
+          "compliant_data": "合规数据",
+          "secure_storage": "安全存储"
+        }
+      }
+    },
+    "detailed_features": {
+      "smart_search": {
+        "title": "智能搜索引擎",
+        "description": "采用先进的自然语言处理技术，支持多种搜索方式，让您轻松找到目标客户。",
+        "features": {
+          "keyword_matching": {
+            "title": "关键词智能匹配",
+            "description": "支持模糊搜索，自动识别相关行业词汇"
+          },
+          "industry_search": {
+            "title": "行业分类搜索",
+            "description": "按餐饮、美容、汽修等行业精准分类"
+          },
+          "search_suggestions": {
+            "title": "搜索建议",
+            "description": "智能推荐相关搜索词，提升搜索效率"
+          }
+        },
+        "examples": {
+          "search_example": {
+            "title": "搜索示例",
+            "description": "输入\"川菜餐厅\" → 自动匹配相关餐饮企业"
+          },
+          "industry_categories": {
+            "title": "行业分类",
+            "description": "餐饮、美容、汽修、医疗、教育等"
+          },
+          "smart_tips": {
+            "title": "智能提示",
+            "description": "根据输入自动推荐相关关键词"
+          }
+        }
+      },
+      "comprehensive_info": {
+        "title": "全面信息获取",
+        "description": "获取企业核心联系信息和基础资料，为您的客户开发提供准确的数据支持。",
+        "features": {
+          "core_info": {
+            "title": "核心信息获取",
+            "description": "企业名称、电话、地址、评分等关键联系信息"
+          },
+          "smart_deduplication": {
+            "title": "智能去重",
+            "description": "自动识别重复商户，确保信息的唯一性"
+          },
+          "priority_sorting": {
+            "title": "优先级排序",
+            "description": "优先展示有电话号码的高质量客户"
+          }
+        },
+        "examples": {
+          "contact_info": {
+            "title": "联系信息",
+            "description": "企业名称、电话、详细地址等"
+          },
+          "rating_info": {
+            "title": "评分信息",
+            "description": "来自地图服务的用户评分数据"
+          },
+          "industry_category": {
+            "title": "行业分类",
+            "description": "餐饮、美容、汽修等业务类型标签"
+          }
+        }
+      }
+    },
+    "statistics": {
+      "active_users": "活跃用户",
+      "enterprise_database": "企业数据库",
+      "accuracy_rate": "信息准确率",
+      "service_availability": "全天候服务"
+    },
+    "faq": {
+      "regions_supported": {
+        "question": "支持哪些地区的商家搜索？",
+        "answer": "ClientSeeker支持全球商家搜索：",
+        "details": {
+          "china": {
+            "title": "中国大陆：",
+            "description": "精确到省市区三级，覆盖34个省市自治区"
+          },
+          "global": {
+            "title": "全球其他地区：",
+            "description": "通过Google Maps覆盖主要城市和地区"
+          }
+        }
+      },
+      "export_limitations": {
+        "question": "数据导出有什么限制吗？",
+        "answer": "数据导出功能根据数据源有不同的支持情况：",
+        "china_data": {
+          "title": "中国大陆数据",
+          "status": "支持导出",
+          "description": "来自高德地图和百度地图的商家数据支持CSV格式导出，包含完整的联系信息"
+        },
+        "google_data": {
+          "title": "Google Maps数据",
+          "status": "暂不支持",
+          "description": "来自Google Maps的全球商家数据暂时不支持导出，但可以在线查看和使用"
+        }
+      },
+      "data_accuracy": {
+        "question": "数据准确性如何保证？",
+        "answer": "我们采用多重措施确保数据质量：",
+        "measures": [
+          "多数据源交叉验证，智能去重确保信息唯一性",
+          "优先展示有电话号码的高质量商家信息",
+          "定期更新数据库，确保信息时效性"
+        ]
+      }
+    }
   },
   "dashboard": {
     "page_title": "用户中心",
