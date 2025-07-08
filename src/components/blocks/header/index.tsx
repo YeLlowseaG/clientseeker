@@ -32,11 +32,27 @@ import { Menu } from "lucide-react";
 import SignToggle from "@/components/sign/toggle";
 import ThemeToggle from "@/components/theme/toggle";
 import { cn } from "@/lib/utils";
+import { useAppContext } from "@/contexts/app";
+import { useTranslations } from "next-intl";
 
 export default function Header({ header }: { header: HeaderType }) {
+  const { user } = useAppContext();
+  const t = useTranslations();
+  
   if (header.disabled) {
     return null;
   }
+
+  // 为登录用户动态添加Dashboard链接
+  const navItems = header.nav?.items || [];
+  const enhancedNavItems = user ? [
+    ...navItems,
+    {
+      title: t("user.dashboard") || "用户中心",
+      url: "/dashboard",
+      icon: "RiUserLine"
+    }
+  ] : navItems;
 
   return (
     <section className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b py-3" suppressHydrationWarning>
@@ -63,7 +79,7 @@ export default function Header({ header }: { header: HeaderType }) {
             <div className="flex items-center">
               <NavigationMenu>
                 <NavigationMenuList>
-                  {header.nav?.items?.map((item, i) => {
+                  {enhancedNavItems.map((item, i) => {
                     if (item.children && item.children.length > 0) {
                       return (
                         <NavigationMenuItem
@@ -117,25 +133,46 @@ export default function Header({ header }: { header: HeaderType }) {
 
                     return (
                       <NavigationMenuItem key={i}>
-                        <Link
-                          className={cn(
-                            "text-muted-foreground",
-                            navigationMenuTriggerStyle,
-                            buttonVariants({
-                              variant: "ghost",
-                            })
-                          )}
-                          href={item.url as any}
-                          target={item.target}
-                        >
-                          {item.icon && (
-                            <Icon
-                              name={item.icon}
-                              className="size-4 shrink-0 mr-0"
-                            />
-                          )}
-                          {item.title}
-                        </Link>
+                        {item.url === "/dashboard" ? (
+                          <button
+                            className={cn(
+                              "text-muted-foreground",
+                              navigationMenuTriggerStyle,
+                              buttonVariants({
+                                variant: "ghost",
+                              })
+                            )}
+                            onClick={() => window.location.href = "/dashboard"}
+                          >
+                            {item.icon && (
+                              <Icon
+                                name={item.icon}
+                                className="size-4 shrink-0 mr-0"
+                              />
+                            )}
+                            {item.title}
+                          </button>
+                        ) : (
+                          <Link
+                            className={cn(
+                              "text-muted-foreground",
+                              navigationMenuTriggerStyle,
+                              buttonVariants({
+                                variant: "ghost",
+                              })
+                            )}
+                            href={item.url as any}
+                            target={item.target}
+                          >
+                            {item.icon && (
+                              <Icon
+                                name={item.icon}
+                                className="size-4 shrink-0 mr-0"
+                              />
+                            )}
+                            {item.title}
+                          </Link>
+                        )}
                       </NavigationMenuItem>
                     );
                   })}
@@ -216,7 +253,7 @@ export default function Header({ header }: { header: HeaderType }) {
                 </SheetHeader>
                 <div className="mb-8 mt-8 flex flex-col gap-4">
                   <Accordion type="single" collapsible className="w-full">
-                    {header.nav?.items?.map((item, i) => {
+                    {enhancedNavItems.map((item, i) => {
                       if (item.children && item.children.length > 0) {
                         return (
                           <AccordionItem
@@ -257,7 +294,21 @@ export default function Header({ header }: { header: HeaderType }) {
                           </AccordionItem>
                         );
                       }
-                      return (
+                      return item.url === "/dashboard" ? (
+                        <button
+                          key={i}
+                          onClick={() => window.location.href = "/dashboard"}
+                          className="font-semibold my-4 flex items-center gap-2 px-4 text-left"
+                        >
+                          {item.icon && (
+                            <Icon
+                              name={item.icon}
+                              className="size-4 shrink-0"
+                            />
+                          )}
+                          {item.title}
+                        </button>
+                      ) : (
                         <Link
                           key={i}
                           href={item.url as any}
