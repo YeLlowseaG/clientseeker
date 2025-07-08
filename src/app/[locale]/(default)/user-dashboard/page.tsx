@@ -32,15 +32,45 @@ export default function UserDashboardPage() {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch("/api/user/subscription");
+      console.log("🔍 [UserDashboard] Fetching user data for:", user?.email);
+      
+      // 使用 get-user-info API 获取用户信息和 credits
+      const response = await fetch(`/api/get-user-info?email=${encodeURIComponent(user?.email || '')}`, {
+        method: "POST",
+      });
+      
       if (response.ok) {
-        const data = await response.json();
-        setQuotaInfo({
-          remaining: data.creditsRemaining || 0,
-          total: data.creditsTotal || 100,
-          used: data.creditsUsed || 0,
-          plan: data.productName || "免费版"
-        });
+        const result = await response.json();
+        console.log("🔍 [UserDashboard] API response:", result);
+        
+        if (result.code === 0 && result.data) {
+          const userData = result.data;
+          console.log("🔍 [UserDashboard] User credits:", userData.credits);
+          
+          const credits = userData.credits || {};
+          const leftCredits = credits.left_credits || 0;
+          const totalCredits = credits.total_credits || 100;
+          const usedCredits = (credits.used_credits || 0);
+          
+          // 根据用户是否充值过和剩余积分判断套餐类型
+          let planName = "免费版";
+          if (credits.is_recharged) {
+            if (leftCredits > 1000) {
+              planName = "年套餐";
+            } else if (leftCredits > 100) {
+              planName = "月套餐";
+            } else {
+              planName = "已购买";
+            }
+          }
+          
+          setQuotaInfo({
+            remaining: leftCredits,
+            total: totalCredits,
+            used: usedCredits,
+            plan: planName
+          });
+        }
       }
     } catch (error) {
       console.log("Failed to fetch user data:", error);
