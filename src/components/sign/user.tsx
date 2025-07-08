@@ -91,7 +91,7 @@ export default function SignUser({ user }: { user: User }) {
               disabled={(item as any).disabled}
             >
               {item.url ? (
-                <Link href={item.url as any} target={item.target}>
+                <Link href={item.url as any}>
                   {item.title}
                 </Link>
               ) : (
