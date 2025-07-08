@@ -83,27 +83,24 @@ export default function SignUser({ user }: { user: User }) {
       <DropdownMenuContent className="mx-4 bg-background">
         {dropdownItems.map((item, index) => (
           <React.Fragment key={index}>
-            <DropdownMenuItem
-              key={index}
-              className={`flex justify-center ${
-                (item as any).disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
-              }`}
-              disabled={(item as any).disabled}
-            >
-              {item.url ? (
-                <Link href={item.url as any}>
+            {item.url ? (
+              <DropdownMenuItem key={index} asChild>
+                <Link href={item.url as any} className="flex justify-center cursor-pointer">
                   {item.title}
                 </Link>
-              ) : (
-                <button 
-                  onClick={item.onClick}
-                  disabled={(item as any).disabled}
-                  className={`${(item as any).disabled ? 'cursor-not-allowed opacity-50' : ''}`}
-                >
-                  {item.title}
-                </button>
-              )}
-            </DropdownMenuItem>
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem
+                key={index}
+                className={`flex justify-center ${
+                  (item as any).disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+                }`}
+                disabled={(item as any).disabled}
+                onClick={item.onClick}
+              >
+                {item.title}
+              </DropdownMenuItem>
+            )}
             {index !== dropdownItems.length - 1 && <DropdownMenuSeparator />}
           </React.Fragment>
         ))}
