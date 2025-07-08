@@ -305,6 +305,32 @@
       "category": "Category",
       "data_source": "Data Source",
       "filename_prefix": "Customer Contact Info"
+    },
+    "features": {
+      "accurate_comprehensive": {
+        "title": "Accurate & Comprehensive Customer Information",
+        "description": "Integrate multiple authoritative data sources with intelligent algorithms for deduplication and verification, achieving over 85% accuracy in contact information"
+      },
+      "smart_deduplication": {
+        "title": "Smart Deduplication Optimization",
+        "description": "Automatically identify duplicate merchants to ensure information uniqueness, prioritizing effective contact information"
+      },
+      "wide_coverage": {
+        "title": "Wide Coverage",
+        "description": "Support global business search, accurate to county level in mainland China, covering major cities and regions overseas"
+      },
+      "simple_efficient": {
+        "title": "Simple & Efficient",
+        "description": "Quick search with keyword input, support one-click CSV export to improve customer development efficiency"
+      },
+      "secure_compliant": {
+        "title": "Secure & Compliant",
+        "description": "Strictly comply with data protection regulations, all data sourced from public business directories to ensure legal compliance"
+      },
+      "cost_effective": {
+        "title": "Cost Effective",
+        "description": "Significantly reduce time and labor costs compared to traditional customer development methods, improving customer acquisition efficiency"
+      }
     }
   },
   "features": {

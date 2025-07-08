@@ -34,10 +34,12 @@ import ThemeToggle from "@/components/theme/toggle";
 import { cn } from "@/lib/utils";
 import { useAppContext } from "@/contexts/app";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
 
 export default function Header({ header }: { header: HeaderType }) {
   const { user } = useAppContext();
   const t = useTranslations();
+  const pathname = usePathname();
   
   if (header.disabled) {
     return null;
@@ -45,6 +47,17 @@ export default function Header({ header }: { header: HeaderType }) {
 
   // 使用原始导航项，不添加额外的Dashboard链接
   const navItems = header.nav?.items || [];
+
+  // 检查当前路径是否匹配导航项
+  const isActiveNavItem = (url: string) => {
+    // 处理多语言路径，移除语言前缀
+    const cleanPathname = pathname.replace(/^\/[a-z]{2}(\/|$)/, '/');
+    const cleanUrl = url.replace(/^\/[a-z]{2}(\/|$)/, '/');
+    
+    if (cleanUrl === '/' && cleanPathname === '/') return true;
+    if (cleanUrl !== '/' && cleanPathname.startsWith(cleanUrl)) return true;
+    return false;
+  };
 
   return (
     <section className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b py-3" suppressHydrationWarning>
@@ -123,11 +136,14 @@ export default function Header({ header }: { header: HeaderType }) {
                       );
                     }
 
+                    const isActive = isActiveNavItem(item.url as string);
                     return (
                       <NavigationMenuItem key={i}>
                         <Link
                           className={cn(
-                            "text-muted-foreground",
+                            isActive 
+                              ? "text-primary bg-primary/10 font-medium" 
+                              : "text-muted-foreground",
                             navigationMenuTriggerStyle,
                             buttonVariants({
                               variant: "ghost",
@@ -265,12 +281,18 @@ export default function Header({ header }: { header: HeaderType }) {
                           </AccordionItem>
                         );
                       }
+                      const isActive = isActiveNavItem(item.url as string);
                       return (
                         <Link
                           key={i}
                           href={item.url as any}
                           target={item.target}
-                          className="font-semibold my-4 flex items-center gap-2 px-4"
+                          className={cn(
+                            "font-semibold my-4 flex items-center gap-2 px-4 rounded-md",
+                            isActive
+                              ? "text-primary bg-primary/10"
+                              : "text-foreground"
+                          )}
                         >
                           {item.icon && (
                             <Icon

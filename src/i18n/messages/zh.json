@@ -305,6 +305,32 @@
       "category": "行业类别",
       "data_source": "数据来源",
       "filename_prefix": "客户联系信息"
+    },
+    "features": {
+      "accurate_comprehensive": {
+        "title": "准确全面的客户信息",
+        "description": "整合多个权威数据源，通过智能算法进行去重和验证，联系信息准确率超过85%"
+      },
+      "smart_deduplication": {
+        "title": "智能去重优化",
+        "description": "自动识别重复商户，确保信息的唯一性，优先展示有效联系信息"
+      },
+      "wide_coverage": {
+        "title": "覆盖范围广泛",
+        "description": "支持全球商家搜索，国内精确到区县级别，海外覆盖主要城市和地区"
+      },
+      "simple_efficient": {
+        "title": "简单高效使用",
+        "description": "输入关键词即可快速搜索，支持一键导出CSV文件，提升客户开发效率"
+      },
+      "secure_compliant": {
+        "title": "安全合规保障",
+        "description": "严格遵守数据保护法规，所有数据来源于公开商业目录，确保合法合规"
+      },
+      "cost_effective": {
+        "title": "成本效益显著",
+        "description": "相比传统客户开发方式，大幅降低时间成本和人工成本，提高获客效率"
+      }
     }
   },
   "features": {
