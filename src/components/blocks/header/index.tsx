@@ -142,7 +142,7 @@ export default function Header({ header }: { header: HeaderType }) {
                                 variant: "ghost",
                               })
                             )}
-                            onClick={() => window.location.href = "/dashboard"}
+                            onClick={() => window.location.href = "https://www.clientseeker.pro/dashboard"}
                           >
                             {item.icon && (
                               <Icon
@@ -297,7 +297,7 @@ export default function Header({ header }: { header: HeaderType }) {
                       return item.url === "/dashboard" ? (
                         <button
                           key={i}
-                          onClick={() => window.location.href = "/dashboard"}
+                          onClick={() => window.location.href = "https://www.clientseeker.pro/dashboard"}
                           className="font-semibold my-4 flex items-center gap-2 px-4 text-left"
                         >
                           {item.icon && (
