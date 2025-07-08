@@ -146,7 +146,7 @@ export default function Header({ header }: { header: HeaderType }) {
                               console.log("Dashboard button clicked in header");
                               console.log("Current URL:", window.location.href);
                               console.log("About to navigate to: https://www.clientseeker.pro/dashboard");
-                              window.location.href = "https://www.clientseeker.pro/dashboard";
+                              window.location.replace("https://www.clientseeker.pro/dashboard");
                             }}
                           >
                             {item.icon && (
@@ -306,7 +306,7 @@ export default function Header({ header }: { header: HeaderType }) {
                             console.log("Dashboard button clicked in mobile menu");
                             console.log("Current URL:", window.location.href);
                             console.log("About to navigate to: https://www.clientseeker.pro/dashboard");
-                            window.location.href = "https://www.clientseeker.pro/dashboard";
+                            window.location.replace("https://www.clientseeker.pro/dashboard");
                           }}
                           className="font-semibold my-4 flex items-center gap-2 px-4 text-left"
                         >

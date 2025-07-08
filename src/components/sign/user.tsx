@@ -67,7 +67,7 @@ export default function SignUser({ user }: { user: User }) {
         console.log("Dashboard clicked in user dropdown");
         console.log("Current URL:", window.location.href);
         console.log("About to navigate to: https://www.clientseeker.pro/dashboard");
-        window.location.href = "https://www.clientseeker.pro/dashboard";
+        window.location.replace("https://www.clientseeker.pro/dashboard");
       },
     },
     {
