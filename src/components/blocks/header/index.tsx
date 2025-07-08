@@ -43,16 +43,8 @@ export default function Header({ header }: { header: HeaderType }) {
     return null;
   }
 
-  // 为登录用户动态添加Dashboard链接
+  // 使用原始导航项，不添加额外的Dashboard链接
   const navItems = header.nav?.items || [];
-  const enhancedNavItems = user ? [
-    ...navItems,
-    {
-      title: t("user.dashboard") || "用户中心",
-      url: "/dashboard",
-      icon: "RiUserLine"
-    }
-  ] : navItems;
 
   return (
     <section className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b py-3" suppressHydrationWarning>
@@ -79,7 +71,7 @@ export default function Header({ header }: { header: HeaderType }) {
             <div className="flex items-center">
               <NavigationMenu>
                 <NavigationMenuList>
-                  {enhancedNavItems.map((item, i) => {
+                  {navItems.map((item, i) => {
                     if (item.children && item.children.length > 0) {
                       return (
                         <NavigationMenuItem
@@ -133,49 +125,25 @@ export default function Header({ header }: { header: HeaderType }) {
 
                     return (
                       <NavigationMenuItem key={i}>
-                        {item.url === "/dashboard" ? (
-                          <button
-                            className={cn(
-                              "text-muted-foreground",
-                              navigationMenuTriggerStyle,
-                              buttonVariants({
-                                variant: "ghost",
-                              })
-                            )}
-                            onClick={() => {
-                              console.log("User dashboard button clicked");
-                              window.location.href = "/user-dashboard";
-                            }}
-                          >
-                            {item.icon && (
-                              <Icon
-                                name={item.icon}
-                                className="size-4 shrink-0 mr-0"
-                              />
-                            )}
-                            {item.title}
-                          </button>
-                        ) : (
-                          <Link
-                            className={cn(
-                              "text-muted-foreground",
-                              navigationMenuTriggerStyle,
-                              buttonVariants({
-                                variant: "ghost",
-                              })
-                            )}
-                            href={item.url as any}
-                            target={item.target}
-                          >
-                            {item.icon && (
-                              <Icon
-                                name={item.icon}
-                                className="size-4 shrink-0 mr-0"
-                              />
-                            )}
-                            {item.title}
-                          </Link>
-                        )}
+                        <Link
+                          className={cn(
+                            "text-muted-foreground",
+                            navigationMenuTriggerStyle,
+                            buttonVariants({
+                              variant: "ghost",
+                            })
+                          )}
+                          href={item.url as any}
+                          target={item.target}
+                        >
+                          {item.icon && (
+                            <Icon
+                              name={item.icon}
+                              className="size-4 shrink-0 mr-0"
+                            />
+                          )}
+                          {item.title}
+                        </Link>
                       </NavigationMenuItem>
                     );
                   })}
@@ -256,7 +224,7 @@ export default function Header({ header }: { header: HeaderType }) {
                 </SheetHeader>
                 <div className="mb-8 mt-8 flex flex-col gap-4">
                   <Accordion type="single" collapsible className="w-full">
-                    {enhancedNavItems.map((item, i) => {
+                    {navItems.map((item, i) => {
                       if (item.children && item.children.length > 0) {
                         return (
                           <AccordionItem
@@ -297,24 +265,7 @@ export default function Header({ header }: { header: HeaderType }) {
                           </AccordionItem>
                         );
                       }
-                      return item.url === "/dashboard" ? (
-                        <button
-                          key={i}
-                          onClick={() => {
-                            console.log("User dashboard button clicked in mobile");
-                            window.location.href = "/user-dashboard";
-                          }}
-                          className="font-semibold my-4 flex items-center gap-2 px-4 text-left"
-                        >
-                          {item.icon && (
-                            <Icon
-                              name={item.icon}
-                              className="size-4 shrink-0"
-                            />
-                          )}
-                          {item.title}
-                        </button>
-                      ) : (
+                      return (
                         <Link
                           key={i}
                           href={item.url as any}

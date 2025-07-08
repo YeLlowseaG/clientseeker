@@ -62,13 +62,6 @@ export default function SignUser({ user }: { user: User }) {
       title: user.nickname,
     },
     {
-      title: t("user.dashboard") || "用户中心",
-      onClick: () => {
-        console.log("User dashboard clicked in dropdown");
-        window.location.href = "/user-dashboard";
-      },
-    },
-    {
       title: isLoggingOut ? "正在退出..." : t("user.sign_out"),
       onClick: handleLogout,
       disabled: isLoggingOut,
