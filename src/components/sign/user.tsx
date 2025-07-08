@@ -63,7 +63,7 @@ export default function SignUser({ user }: { user: User }) {
     },
     {
       title: t("user.dashboard") || "用户中心",
-      url: "/dashboard",
+      onClick: () => window.location.href = "/dashboard",
     },
     {
       title: isLoggingOut ? "正在退出..." : t("user.sign_out"),
