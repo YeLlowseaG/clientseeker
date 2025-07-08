@@ -188,5 +188,16 @@
     "login_success": "✅ Login successful!",
     "login_processing": "Login status updating...",
     "login_failed": "❌ Login failed, please try again"
+  },
+  "experience_code": {
+    "title": "Have an experience code?",
+    "placeholder": "Enter experience code",
+    "apply": "Apply",
+    "applying": "Applying...",
+    "success": "🎉 Experience code applied successfully! {credits} credits added.",
+    "invalid": "❌ Invalid or expired experience code",
+    "already_used": "❌ This experience code has already been used",
+    "already_subscribed": "❌ You already have a subscription, no need to use experience code",
+    "error": "❌ Failed to apply experience code, please try again"
   }
 }

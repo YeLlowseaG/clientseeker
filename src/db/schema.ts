@@ -154,6 +154,33 @@ export const subscriptions = pgTable("subscriptions", {
   updated_at: timestamp({ withTimezone: true }),
 });
 
+// Experience codes table
+export const experienceCodes = pgTable("experience_codes", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  code: varchar({ length: 50 }).notNull().unique(),
+  name: varchar({ length: 255 }).notNull(),
+  description: text(),
+  credits: integer().notNull().default(0),
+  valid_days: integer().notNull().default(30),
+  max_uses: integer().notNull().default(1),
+  used_count: integer().notNull().default(0),
+  is_active: boolean().notNull().default(true),
+  created_at: timestamp({ withTimezone: true }),
+  created_by: varchar({ length: 255 }).notNull(),
+  expires_at: timestamp({ withTimezone: true }),
+});
+
+// Experience code usage records
+export const experienceCodeUsages = pgTable("experience_code_usages", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  code_id: integer().notNull(),
+  user_uuid: varchar({ length: 255 }).notNull(),
+  user_email: varchar({ length: 255 }).notNull(),
+  used_at: timestamp({ withTimezone: true }),
+  credits_granted: integer().notNull().default(0),
+  ip_address: varchar({ length: 255 }),
+});
+
 // NextAuth required tables
 export const accounts = pgTable("accounts", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),

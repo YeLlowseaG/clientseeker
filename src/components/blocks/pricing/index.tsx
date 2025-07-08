@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import Icon from "@/components/icon";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -14,7 +15,8 @@ import { useAppContext } from "@/contexts/app";
 import WeChatPayModal from "@/components/wechat-pay-modal";
 import SubscriptionWarning from "@/components/subscription-warning";
 import SubscriptionStatus from "@/components/subscription-status";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { Input } from "@/components/ui/input";
 
 export default function Pricing({ pricing }: { pricing: PricingType }) {
   if (pricing.disabled) {
@@ -23,6 +25,7 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
 
   const { user, setUser, setShowSignModal, isUserLoading } = useAppContext();
   const locale = useLocale();
+  const t = useTranslations();
 
   const [group, setGroup] = useState(pricing.groups?.[0]?.name);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +37,10 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
   
   // 支付方式状态管理
   const [paymentMethods, setPaymentMethods] = useState<{[key: string]: 'wechat' | 'paypal'}>({});
+  
+  // 体验码相关状态
+  const [experienceCode, setExperienceCode] = useState('');
+  const [isApplyingCode, setIsApplyingCode] = useState(false);
   
   // 根据语言环境判断是否优先微信支付
   const isChineseLocale = locale === 'zh';
@@ -295,6 +302,59 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
     await checkSubscriptionConflict(item, selectedMethod === 'wechat');
   };
 
+  // 体验码应用函数
+  const handleApplyExperienceCode = async () => {
+    if (!experienceCode.trim()) {
+      toast.error(t('experience_code.invalid'));
+      return;
+    }
+
+    // 检查用户是否登录
+    if (!user) {
+      setShowSignModal(true);
+      return;
+    }
+
+    setIsApplyingCode(true);
+    
+    try {
+      const response = await fetch('/api/experience-code/apply', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code: experienceCode.trim(),
+          userEmail: user.email,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        toast.success(t('experience_code.success', { credits: result.credits }));
+        setExperienceCode('');
+        // 刷新用户信息以更新积分
+        window.location.reload();
+      } else {
+        if (result.error === 'CODE_ALREADY_USED') {
+          toast.error(t('experience_code.already_used'));
+        } else if (result.error === 'CODE_INVALID') {
+          toast.error(t('experience_code.invalid'));
+        } else if (result.error === 'ALREADY_SUBSCRIBED') {
+          toast.error(t('experience_code.already_subscribed'));
+        } else {
+          toast.error(t('experience_code.error'));
+        }
+      }
+    } catch (error) {
+      console.error('Experience code application error:', error);
+      toast.error(t('experience_code.error'));
+    } finally {
+      setIsApplyingCode(false);
+    }
+  };
+
   return (
     <section id={pricing.name} className="py-16">
       <div className="container">
@@ -529,11 +589,58 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                           {item.tip}
                         </p>
                       )}
+
                     </div>
                   </div>
                 </div>
               );
             })}
+          </div>
+          
+          {/* 体验码输入区域 - 位于四张卡片下方 */}
+          <div className="mt-8 flex justify-center">
+            <Card className="w-full max-w-md">
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <h3 className="text-lg font-medium">
+                      {t('experience_code.title')}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {isChineseLocale ? '输入体验码即可获得与年套餐相同的功能，有效期1天' : 'Enter experience code to get the same features as annual plan, valid for 1 day'}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Input
+                      type="text"
+                      placeholder={t('experience_code.placeholder')}
+                      value={experienceCode}
+                      onChange={(e) => setExperienceCode(e.target.value)}
+                      className="flex-1"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleApplyExperienceCode();
+                        }
+                      }}
+                    />
+                    <Button
+                      onClick={handleApplyExperienceCode}
+                      disabled={isApplyingCode || !experienceCode.trim()}
+                      className="shrink-0"
+                    >
+                      {isApplyingCode ? (
+                        <>
+                          <Loader className="h-3 w-3 animate-spin mr-1" />
+                          {t('experience_code.applying')}
+                        </>
+                      ) : (
+                        t('experience_code.apply')
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
