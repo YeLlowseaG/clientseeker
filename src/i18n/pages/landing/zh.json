@@ -389,26 +389,26 @@
     "copyright": "© 2025 • ClientSeeker 版权所有。",
     "nav": {
       "items": [
-        {
-          "title": "关于",
-          "children": [
-            {
-              "title": "功能介绍",
-              "url": "/#features",
-              "target": "_self"
-            },
-            {
-              "title": "使用案例",
-              "url": "/showcase",
-              "target": "_self"
-            },
-            {
-              "title": "定价",
-              "url": "/#pricing",
-              "target": "_self"
-            }
-          ]
-        }
+        // {
+        //   "title": "关于",
+        //   "children": [
+        //     {
+        //       "title": "功能介绍",
+        //       "url": "/#features",
+        //       "target": "_self"
+        //     },
+        //     {
+        //       "title": "使用案例",
+        //       "url": "/showcase",
+        //       "target": "_self"
+        //     },
+        //     {
+        //       "title": "定价",
+        //       "url": "/#pricing",
+        //       "target": "_self"
+        //     }
+        //   ]
+        // }
       ]
     },
     "social": {
