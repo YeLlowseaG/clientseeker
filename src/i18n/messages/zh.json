@@ -123,5 +123,59 @@
     "contact_tip": "其他联系方式",
     "rating_tip": "您对 ClientSeeker 的看法如何？",
     "placeholder": "在这里留下您的反馈..."
+  },
+  "search": {
+    "page_title": "ClientSeeker - 全球找客户助手",
+    "page_description": "快速查找全球潜在客户联系方式，支持中国大陆及海外市场",
+    "current_location": "当前位置",
+    "domestic_data": "国内数据源",
+    "international_data": "国际数据源",
+    "search_quota": "搜索配额",
+    "remaining_quota": "剩余 {remaining} 次 / 总共 {total} 次",
+    "upgrade_plan": "升级套餐",
+    "search_placeholder": "输入目标客户行业或关键词，如：餐厅、美容院、汽修店...",
+    "searching": "搜索中...",
+    "login_to_search": "登录后搜索",
+    "quota_insufficient": "配额不足",
+    "search": "搜索",
+    "export_all": "导出全部 ({count} 条)",
+    "data_source": "数据源",
+    "no_results_found": "未找到客户",
+    "try_different_keywords": "请尝试其他行业关键词或调整搜索地区"
+  },
+  "dashboard": {
+    "page_title": "用户中心",
+    "page_description": "管理您的 ClientSeeker 账户和订阅",
+    "current_plan": "当前套餐",
+    "remaining_searches": "剩余搜索",
+    "usage_statistics": "使用统计",
+    "quota_details": "配额详情",
+    "search_quota_usage": "搜索配额使用情况",
+    "trial_ending_soon": "免费试用即将用完",
+    "trial_ending_message": "您的免费搜索次数即将用完，升级到付费套餐以获得更多搜索配额。",
+    "upgrade_now": "立即升级",
+    "quota_exhausted": "搜索配额已用完",
+    "quota_exhausted_message": "本月搜索配额已用完，请等待下月自动续费或联系客服。",
+    "account_info": "账户信息",
+    "account_details": "您的 ClientSeeker 账户详情",
+    "email": "邮箱",
+    "username": "用户名",
+    "not_set": "未设置",
+    "upgrade_plan": "升级套餐",
+    "start_search": "开始搜索",
+    "welcome_back": "欢迎回来，{name}",
+    "used": "使用率 {percentage}%"
+  },
+  "products": {
+    "free": "体验版",
+    "monthly": "单月套餐",
+    "annual": "年套餐",
+    "enterprise": "企业套餐"
+  },
+  "auth": {
+    "logging_out": "正在退出...",
+    "login_success": "✅ 登录成功！",
+    "login_processing": "登录状态更新中...",
+    "login_failed": "❌ 登录处理失败，请重试"
   }
 }

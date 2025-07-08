@@ -13,6 +13,7 @@ import Pagination from '@/components/pagination';
 import { BusinessInfo } from '@/lib/maps';
 import { SelectedRegion } from '@/lib/regions/types';
 import { useAppContext } from '@/contexts/app';
+import { useTranslations } from 'next-intl';
 
 interface LocationInfo {
   ip: string;
@@ -45,6 +46,7 @@ interface SearchResult {
 export default function SearchPage() {
   const router = useRouter();
   const { user, setShowSignModal } = useAppContext();
+  const t = useTranslations();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<BusinessInfo[]>([]);
   const [allResults, setAllResults] = useState<BusinessInfo[]>([]); // 缓存所有结果
@@ -341,17 +343,17 @@ export default function SearchPage() {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* 页面标题区域 - 固定高度 */}
         <div className="text-center mb-8 h-[200px] flex flex-col justify-center">
-          <h1 className="text-4xl font-bold mb-4">ClientSeeker - 全球找客户助手</h1>
+          <h1 className="text-4xl font-bold mb-4">{t('search.page_title')}</h1>
           <p className="text-lg text-muted-foreground mb-6">
-            快速查找全球潜在客户联系方式，支持中国大陆及海外市场
+            {t('search.page_description')}
           </p>
           
           {location && (
             <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4" />
-              <span>当前位置：{location.country} {location.city}</span>
+              <span>{t('search.current_location')}: {location.country} {location.city}</span>
               <Badge variant={location.isChina ? "default" : "secondary"}>
-                {location.isChina ? '国内数据源' : '国际数据源'}
+                {location.isChina ? t('search.domestic_data') : t('search.international_data')}
               </Badge>
             </div>
           )}
@@ -365,9 +367,9 @@ export default function SearchPage() {
               <div className="flex items-center gap-4">
                 <CreditCard className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">搜索配额</p>
+                  <p className="text-sm font-medium">{t('search.search_quota')}</p>
                   <p className="text-xs text-muted-foreground">
-                    剩余 {quotaInfo.remaining} 次 / 总计 {quotaInfo.total} 次
+                    {t('search.remaining_quota', { remaining: quotaInfo.remaining, total: quotaInfo.total })}
                   </p>
                 </div>
               </div>
@@ -377,7 +379,7 @@ export default function SearchPage() {
                   onClick={() => router.push('/#pricing')}
                   className="bg-orange-500 hover:bg-orange-600"
                 >
-                  升级套餐
+                  {t('search.upgrade_plan')}
                 </Button>
               )}
             </CardContent>
@@ -391,7 +393,7 @@ export default function SearchPage() {
           <div className="flex-1">
             <Input
               type="text"
-              placeholder="输入目标客户行业或关键词，如：餐厅、美容院、汽修店..."
+              placeholder={t('search.search_placeholder')}
               value={query}
               onChange={(e) => {
                 const newQuery = e.target.value;
@@ -417,9 +419,9 @@ export default function SearchPage() {
             className="h-12 px-8"
           >
             <Search className="h-4 w-4 mr-2" />
-            {loading ? '搜索中...' : 
-             !user ? '登录后搜索' :
-             quotaInfo && quotaInfo.remaining <= 0 ? '配额不足' : '搜索'}
+            {loading ? t('search.searching') : 
+             !user ? t('search.login_to_search') :
+             quotaInfo && quotaInfo.remaining <= 0 ? t('search.quota_insufficient') : t('search.search')}
           </Button>
         </div>
 

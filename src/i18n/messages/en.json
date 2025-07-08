@@ -123,5 +123,59 @@
     "contact_tip": "Other ways to contact us",
     "rating_tip": "How do you feel about ClientSeeker?",
     "placeholder": "Leave your words here..."
+  },
+  "search": {
+    "page_title": "ClientSeeker - Global Customer Development Tool",
+    "page_description": "Quickly find global potential customer contact information, supporting mainland China and overseas markets",
+    "current_location": "Current location",
+    "domestic_data": "Domestic Data Source",
+    "international_data": "International Data Source",
+    "search_quota": "Search Quota",
+    "remaining_quota": "Remaining {remaining} times / Total {total} times",
+    "upgrade_plan": "Upgrade Plan",
+    "search_placeholder": "Enter target customer industry or keywords, such as: restaurant, beauty salon, auto repair shop...",
+    "searching": "Searching...",
+    "login_to_search": "Login to Search",
+    "quota_insufficient": "Quota Insufficient",
+    "search": "Search",
+    "export_all": "Export All ({count} items)",
+    "data_source": "Data Source",
+    "no_results_found": "No customers found",
+    "try_different_keywords": "Please try other industry keywords or adjust search region"
+  },
+  "dashboard": {
+    "page_title": "User Center",
+    "page_description": "Manage your ClientSeeker account and subscription",
+    "current_plan": "Current Plan",
+    "remaining_searches": "Remaining Searches",
+    "usage_statistics": "Usage Statistics",
+    "quota_details": "Quota Details",
+    "search_quota_usage": "Search Quota Usage",
+    "trial_ending_soon": "Free trial ending soon",
+    "trial_ending_message": "Your free search quota is running out, upgrade to a paid plan for more search quota.",
+    "upgrade_now": "Upgrade Now",
+    "quota_exhausted": "Search quota exhausted",
+    "quota_exhausted_message": "This month's search quota has been used up, please wait for next month's automatic renewal or contact customer service.",
+    "account_info": "Account Information",
+    "account_details": "Your ClientSeeker account details",
+    "email": "Email",
+    "username": "Username",
+    "not_set": "Not Set",
+    "upgrade_plan": "Upgrade Plan",
+    "start_search": "Start Search",
+    "welcome_back": "Welcome back, {name}",
+    "used": "Used {percentage}%"
+  },
+  "products": {
+    "free": "Free Trial",
+    "monthly": "Monthly Plan",
+    "annual": "Annual Plan",
+    "enterprise": "Enterprise Plan"
+  },
+  "auth": {
+    "logging_out": "Logging out...",
+    "login_success": "✅ Login successful!",
+    "login_processing": "Login status updating...",
+    "login_failed": "❌ Login failed, please try again"
   }
 }
