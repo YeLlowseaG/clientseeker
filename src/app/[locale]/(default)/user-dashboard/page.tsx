@@ -1,15 +1,15 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { User, Search, CreditCard, Settings } from "lucide-react";
+import { useAppContext } from "@/contexts/app";
 
 export default function UserDashboardPage() {
-  const { data: session, status } = useSession();
+  const { user, isUserLoading } = useAppContext();
   const t = useTranslations();
   const [quotaInfo, setQuotaInfo] = useState({
     remaining: 0,
@@ -19,13 +19,16 @@ export default function UserDashboardPage() {
   });
 
   useEffect(() => {
-    if (status === "loading") return;
+    console.log("🔍 [UserDashboard] useEffect - isUserLoading:", isUserLoading, "user:", !!user);
+    console.log("🔍 [UserDashboard] localStorage user_info:", localStorage.getItem('user_info'));
+    
+    if (isUserLoading) return;
     
     // 简单的数据获取，不做复杂重定向
-    if (session) {
+    if (user) {
       fetchUserData();
     }
-  }, [session, status]);
+  }, [user, isUserLoading]);
 
   const fetchUserData = async () => {
     try {
@@ -46,7 +49,7 @@ export default function UserDashboardPage() {
   };
 
   // 如果还在加载，显示加载状态
-  if (status === "loading") {
+  if (isUserLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="animate-pulse space-y-6">
@@ -62,7 +65,7 @@ export default function UserDashboardPage() {
   }
 
   // 如果未登录，显示提示但不重定向
-  if (!session) {
+  if (!user) {
     return (
       <div className="container mx-auto py-8 px-4 text-center">
         <h1 className="text-2xl font-bold mb-4">请先登录</h1>
@@ -81,7 +84,7 @@ export default function UserDashboardPage() {
       {/* 页面标题 */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold">用户中心</h1>
-        <p className="text-gray-600 mt-2">欢迎回来，{session.user?.name || session.user?.email}</p>
+        <p className="text-gray-600 mt-2">欢迎回来，{user.nickname || user.email}</p>
       </div>
 
       {/* 统计卡片 */}
