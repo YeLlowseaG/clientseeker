@@ -91,10 +91,10 @@ export default function DashboardPage() {
 
   const getProductDisplayName = (productId: string) => {
     const productNames = {
-      free: "体验版",
-      monthly: "单月套餐", 
-      annual: "年套餐",
-      enterprise: "企业套餐"
+      free: t('products.free'),
+      monthly: t('products.monthly'), 
+      annual: t('products.annual'),
+      enterprise: t('products.enterprise')
     };
     return productNames[productId as keyof typeof productNames] || productId;
   };
@@ -112,15 +112,15 @@ export default function DashboardPage() {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">用户中心</h1>
-        <p className="text-gray-600 mt-2">管理您的 ClientSeeker 账户和订阅</p>
+        <h1 className="text-3xl font-bold">{t('dashboard.page_title')}</h1>
+        <p className="text-gray-600 mt-2">{t('dashboard.page_description')}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {/* 当前套餐 */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">当前套餐</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('dashboard.current_plan')}</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -135,7 +135,7 @@ export default function DashboardPage() {
         {/* 剩余搜索次数 */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">剩余搜索</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('dashboard.remaining_searches')}</CardTitle>
             <Search className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -143,7 +143,7 @@ export default function DashboardPage() {
               {quotaInfo?.productId === 'enterprise' ? '无限制' : (quotaInfo?.remaining || 0)}
             </div>
             <p className="text-xs text-muted-foreground">
-              {quotaInfo?.productId === 'enterprise' ? '企业套餐' : `总共 ${quotaInfo?.total || 0} 次`}
+              {quotaInfo?.productId === 'enterprise' ? t('dashboard.enterprise_plan_name') : t('dashboard.total_count', { total: quotaInfo?.total || 0 })}
             </p>
           </CardContent>
         </Card>
@@ -151,13 +151,13 @@ export default function DashboardPage() {
         {/* 使用统计 */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">使用统计</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('dashboard.usage_statistics')}</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{quotaInfo?.used || 0}</div>
             <p className="text-xs text-muted-foreground">
-              已使用 {usagePercentage.toFixed(1)}%
+              {t('dashboard.used', { percentage: usagePercentage.toFixed(1) })}
             </p>
           </CardContent>
         </Card>

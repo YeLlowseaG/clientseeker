@@ -62,7 +62,7 @@ export default function SignUser({ user }: { user: User }) {
       title: user.nickname,
     },
     {
-      title: isLoggingOut ? "正在退出..." : t("user.sign_out"),
+      title: isLoggingOut ? t("auth.logging_out") : t("user.sign_out"),
       onClick: handleLogout,
       disabled: isLoggingOut,
     },

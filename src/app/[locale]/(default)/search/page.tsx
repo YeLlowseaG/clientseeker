@@ -503,12 +503,12 @@ export default function SearchPage() {
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    导出全部 ({totalCount}条)
+                    {t('search.export_all', { count: totalCount })}
                   </Button>
                 ) : (
                   <div className="text-sm text-amber-600 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">
-                    <span className="font-medium">💡 导出提示：</span>
-                    <span className="ml-1">Google Maps数据暂不支持导出，仅支持在线查看</span>
+                    <span className="font-medium">{t('search.export_tip')}</span>
+                    <span className="ml-1">{t('search.google_maps_export_note')}</span>
                   </div>
                 )}
               </div>
@@ -661,9 +661,7 @@ export default function SearchPage() {
               
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 mb-8">
                 <p className="text-lg leading-relaxed">
-                  ClientSeeker基于多源数据整合技术，为销售团队、市场人员和企业主提供精准的全球客户联系信息获取服务。
-                  通过整合高德地图、百度地图、Google Maps等权威数据源，我们能够帮助您快速定位全球目标行业的潜在客户，
-                  获取准确的企业联系方式，显著提升国内外业务拓展成功率。
+                  {t('search.comprehensive_service_description')}
                 </p>
               </div>
             </div>

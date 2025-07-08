@@ -141,7 +141,16 @@
     "export_all": "导出全部 ({count} 条)",
     "data_source": "数据源",
     "no_results_found": "未找到客户",
-    "try_different_keywords": "请尝试其他行业关键词或调整搜索地区"
+    "try_different_keywords": "请尝试其他行业关键词或调整搜索地区",
+    "export_tip": "💡 导出提示：",
+    "google_maps_export_note": "Google Maps数据暂不支持导出，仅支持在线查看",
+    "comprehensive_description": "通过整合高德地图、百度地图、Google Maps等权威数据源，我们能够帮助您快速定位全球目标行业的潜在客户，",
+    "get_complete_contact": "获取完整的企业联系信息，加速您的业务拓展。",
+    "multi_source_integration": "整合多个权威数据源，确保联系信息的准确性和时效性",
+    "global_coverage": "整合高德地图、百度地图、Google Maps等多个数据源，支持全球商家信息查询",
+    "high_accuracy": "我们整合多个权威数据源，通过智能算法进行去重和验证，联系信息准确率超过85%。系统会优先展示有电话号码的商户，确保获取的联系方式真实有效。",
+    "start_search_instruction": "输入目标客户行业或关键词，选择地区，开始获取客户联系方式",
+    "comprehensive_service_description": "ClientSeeker基于多源数据整合技术，为销售团队、市场人员和企业主提供精准的全球客户联系信息获取服务。通过整合高德地图、百度地图、Google Maps等权威数据源，我们能够帮助您快速定位全球目标行业的潜在客户，获取准确的企业联系方式，显著提升国内外业务拓展成功率。"
   },
   "dashboard": {
     "page_title": "用户中心",
@@ -164,7 +173,9 @@
     "upgrade_plan": "升级套餐",
     "start_search": "开始搜索",
     "welcome_back": "欢迎回来，{name}",
-    "used": "使用率 {percentage}%"
+    "used": "使用率 {percentage}%",
+    "total_count": "总共 {total} 次",
+    "enterprise_plan_name": "企业套餐"
   },
   "products": {
     "free": "体验版",

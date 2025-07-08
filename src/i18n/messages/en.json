@@ -141,7 +141,16 @@
     "export_all": "Export All ({count} items)",
     "data_source": "Data Source",
     "no_results_found": "No customers found",
-    "try_different_keywords": "Please try other industry keywords or adjust search region"
+    "try_different_keywords": "Please try other industry keywords or adjust search region",
+    "export_tip": "💡 Export Note:",
+    "google_maps_export_note": "Google Maps data does not support export, only online viewing is supported",
+    "comprehensive_description": "By integrating authoritative data sources such as Gaode Maps, Baidu Maps, Google Maps, etc., we can help you quickly locate potential customers in target industries worldwide,",
+    "get_complete_contact": "obtaining complete enterprise contact information to accelerate your business development.",
+    "multi_source_integration": "Integrate multiple authoritative data sources to ensure the accuracy and timeliness of contact information",
+    "global_coverage": "Integrate Gaode Maps, Baidu Maps, Google Maps and other data sources to support global business information query",
+    "high_accuracy": "We integrate multiple authoritative data sources and use intelligent algorithms for deduplication and verification. The accuracy rate of contact information exceeds 85%. The system will prioritize displaying merchants with phone numbers to ensure that the contact information obtained is authentic and effective.",
+    "start_search_instruction": "Enter target customer industry or keywords, select region, and start getting customer contact information",
+    "comprehensive_service_description": "ClientSeeker is based on multi-source data integration technology to provide precise global customer contact information acquisition services for sales teams, marketing personnel, and business owners. By integrating authoritative data sources such as Gaode Maps, Baidu Maps, Google Maps, etc., we can help you quickly locate potential customers in target industries worldwide, obtain accurate enterprise contact information, and significantly improve the success rate of domestic and international business expansion."
   },
   "dashboard": {
     "page_title": "User Center",
@@ -164,7 +173,9 @@
     "upgrade_plan": "Upgrade Plan",
     "start_search": "Start Search",
     "welcome_back": "Welcome back, {name}",
-    "used": "Used {percentage}%"
+    "used": "Used {percentage}%",
+    "total_count": "Total {total} times",
+    "enterprise_plan_name": "Enterprise Plan"
   },
   "products": {
     "free": "Free Trial",
