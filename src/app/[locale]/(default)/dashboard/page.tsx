@@ -1,6 +1,5 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
+import { useAppContext } from "@/contexts/app";
 import { Search, CreditCard, Calendar, TrendingUp } from "lucide-react";
 
 interface QuotaInfo {
@@ -20,21 +20,21 @@ interface QuotaInfo {
 }
 
 export default function DashboardPage() {
-  const { data: session, status } = useSession();
+  const { user, isUserLoading } = useAppContext();
   const t = useTranslations();
   const router = useRouter();
   const [quotaInfo, setQuotaInfo] = useState<QuotaInfo | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (status === "loading") return;
-    if (!session) {
+    if (isUserLoading) return;
+    if (!user) {
       router.push("/");
       return;
     }
 
     fetchQuotaInfo();
-  }, [session, status, router]);
+  }, [user, isUserLoading, router]);
 
   const fetchQuotaInfo = async () => {
     try {
@@ -68,7 +68,7 @@ export default function DashboardPage() {
     }
   };
 
-  if (status === "loading" || loading) {
+  if (isUserLoading || loading) {
     return (
       <div className="container mx-auto py-8">
         <div className="animate-pulse space-y-6">
@@ -83,7 +83,7 @@ export default function DashboardPage() {
     );
   }
 
-  if (!session) {
+  if (!user) {
     return null;
   }
 
@@ -227,11 +227,11 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium text-gray-700">邮箱</label>
-              <p className="text-sm text-gray-900">{session.user?.email}</p>
+              <p className="text-sm text-gray-900">{user.email}</p>
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700">用户名</label>
-              <p className="text-sm text-gray-900">{session.user?.name || "未设置"}</p>
+              <p className="text-sm text-gray-900">{user.nickname || "未设置"}</p>
             </div>
           </div>
           
