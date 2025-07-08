@@ -143,8 +143,8 @@ export default function Header({ header }: { header: HeaderType }) {
                               })
                             )}
                             onClick={() => {
-                              console.log("User center button clicked - redirecting to user-center page");
-                              window.location.href = "/user-center";
+                              console.log("User dashboard button clicked");
+                              window.location.href = "/user-dashboard";
                             }}
                           >
                             {item.icon && (
@@ -301,8 +301,8 @@ export default function Header({ header }: { header: HeaderType }) {
                         <button
                           key={i}
                           onClick={() => {
-                            console.log("User center button clicked in mobile - redirecting to user-center page");
-                            window.location.href = "/user-center";
+                            console.log("User dashboard button clicked in mobile");
+                            window.location.href = "/user-dashboard";
                           }}
                           className="font-semibold my-4 flex items-center gap-2 px-4 text-left"
                         >

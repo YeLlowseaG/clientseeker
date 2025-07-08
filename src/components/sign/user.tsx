@@ -64,8 +64,8 @@ export default function SignUser({ user }: { user: User }) {
     {
       title: t("user.dashboard") || "用户中心",
       onClick: () => {
-        console.log("User center clicked in dropdown - redirecting to user-center page");
-        window.location.href = "/user-center";
+        console.log("User dashboard clicked in dropdown");
+        window.location.href = "/user-dashboard";
       },
     },
     {
