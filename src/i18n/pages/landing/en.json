@@ -388,28 +388,7 @@
     },
     "copyright": "© 2025 • ClientSeeker All rights reserved.",
     "nav": {
-      "items": [
-        // {
-        //   "title": "About",
-        //   "children": [
-        //     {
-        //       "title": "Features",
-        //       "url": "/#features",
-        //       "target": "_self"
-        //     },
-        //     {
-        //       "title": "Use Cases",
-        //       "url": "/showcase",
-        //       "target": "_self"
-        //     },
-        //     {
-        //       "title": "Pricing",
-        //       "url": "/#pricing",
-        //       "target": "_self"
-        //     }
-        //   ]
-        // }
-      ]
+      "items": []
     },
     "social": {
       "items": [
