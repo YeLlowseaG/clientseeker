@@ -63,7 +63,12 @@ export default function SignUser({ user }: { user: User }) {
     },
     {
       title: t("user.dashboard") || "用户中心",
-      onClick: () => window.location.href = "https://www.clientseeker.pro/dashboard",
+      onClick: () => {
+        console.log("Dashboard clicked in user dropdown");
+        console.log("Current URL:", window.location.href);
+        console.log("About to navigate to: https://www.clientseeker.pro/dashboard");
+        window.location.href = "https://www.clientseeker.pro/dashboard";
+      },
     },
     {
       title: isLoggingOut ? "正在退出..." : t("user.sign_out"),
