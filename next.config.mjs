@@ -30,26 +30,13 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      // Redirect www to non-www
+      // Only redirect www to non-www, remove HTTPS redirect as Vercel handles it
       {
         source: '/:path*',
         has: [
           {
             type: 'host',
             value: 'www.clientseeker.pro',
-          },
-        ],
-        destination: 'https://clientseeker.pro/:path*',
-        permanent: true,
-      },
-      // Redirect HTTP to HTTPS
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'header',
-            key: 'x-forwarded-proto',
-            value: 'http',
           },
         ],
         destination: 'https://clientseeker.pro/:path*',
