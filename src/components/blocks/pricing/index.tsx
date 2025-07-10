@@ -573,8 +573,16 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                               </svg>
                               <span>{item.button.title}</span>
                             </>
+                          ) : item.product_id === 'free' ? (
+                            // 体验版显示配置文字
+                            <>
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                              </svg>
+                              <span>{item.button.title}</span>
+                            </>
                           ) : (
-                            // 其他套餐显示支付方式
+                            // 付费套餐显示支付方式
                             <>
                               {(!isLoading || (isLoading && productId !== item.product_id)) && (
                                 <>
