@@ -625,7 +625,11 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                       )}
 
                       {item.tip && (
-                        <p className="text-muted-foreground text-sm mt-2 text-center">
+                        <p className={`text-sm mt-2 text-center ${
+                          item.product_id === 'annual' 
+                            ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg animate-pulse border border-red-300' 
+                            : 'text-muted-foreground'
+                        }`}>
                           {item.tip}
                         </p>
                       )}
