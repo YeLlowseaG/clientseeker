@@ -29,6 +29,9 @@ export async function generateMetadata({
     description: t("metadata.description") || "",
     keywords: t("metadata.keywords") || "",
     authors: [{ name: "ClientSeeker Team" }],
+    verification: {
+      baidu: "codeva-u5ERv7uKnQ",
+    },
     creator: "ClientSeeker",
     publisher: "ClientSeeker",
     robots: {
