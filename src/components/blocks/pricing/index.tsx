@@ -606,13 +606,15 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                         </Button>
                       )}
                       
-                      {/* 安全提示 */}
-                      <div className="text-xs text-muted-foreground text-center space-y-1">
-                        <p>{isChineseLocale ? '🔒 安全支付，支持退款' : '🔒 Secure payment, refund supported'}</p>
-                        {paymentMethods[item.product_id] === 'wechat' && (
-                          <p>{isChineseLocale ? '支持微信、支付宝扫码支付' : 'Supports WeChat and Alipay QR code payment'}</p>
-                        )}
-                      </div>
+                      {/* 安全提示 - 体验版不显示 */}
+                      {item.product_id !== 'free' && (
+                        <div className="text-xs text-muted-foreground text-center space-y-1">
+                          <p>{isChineseLocale ? '🔒 安全支付，支持退款' : '🔒 Secure payment, refund supported'}</p>
+                          {paymentMethods[item.product_id] === 'wechat' && (
+                            <p>{isChineseLocale ? '支持微信、支付宝扫码支付' : 'Supports WeChat and Alipay QR code payment'}</p>
+                          )}
+                        </div>
+                      )}
 
                       {item.tip && (
                         <p className="text-muted-foreground text-sm mt-2 text-center">
