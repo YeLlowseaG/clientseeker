@@ -5,6 +5,10 @@ Disallow: /terms-of-service
 Disallow: /api/
 Disallow: /_next/
 Disallow: /admin/
+Disallow: /dashboard
+Disallow: /user/
+Disallow: /zh/dashboard
+Disallow: /en/dashboard
 
 Allow: /
 
