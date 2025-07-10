@@ -8,6 +8,7 @@ import { Metadata } from "next";
 import { NextAuthSessionProvider } from "@/auth/session";
 import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "@/providers/theme";
+import Script from "next/script";
 
 export async function generateMetadata({
   params,
@@ -83,14 +84,30 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider messages={messages}>
-      <NextAuthSessionProvider>
-        <AppContextProvider>
-          <ThemeProvider attribute="class" disableTransitionOnChange>
-            {children}
-          </ThemeProvider>
-        </AppContextProvider>
-      </NextAuthSessionProvider>
-    </NextIntlClientProvider>
+    <>
+      {/* Google Analytics */}
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-JYP61MWFXP"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-JYP61MWFXP');
+        `}
+      </Script>
+      
+      <NextIntlClientProvider messages={messages}>
+        <NextAuthSessionProvider>
+          <AppContextProvider>
+            <ThemeProvider attribute="class" disableTransitionOnChange>
+              {children}
+            </ThemeProvider>
+          </AppContextProvider>
+        </NextAuthSessionProvider>
+      </NextIntlClientProvider>
+    </>
   );
 }
