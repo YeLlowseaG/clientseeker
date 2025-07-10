@@ -552,8 +552,8 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                         </div>
                       )}
 
-                      {/* 统一支付按钮 - 企业套餐不显示按钮 */}
-                      {item.button && item.product_id !== 'enterprise' && (
+                      {/* 统一支付按钮 */}
+                      {item.button && (
                         <Button
                           className="w-full flex items-center justify-center gap-2 font-semibold"
                           variant={item.product_id === 'enterprise' ? 'outline' : 'default'}

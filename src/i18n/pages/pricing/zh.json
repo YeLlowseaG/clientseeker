@@ -121,7 +121,7 @@
         "original_price": "",
         "unit": "CNY",
         "is_featured": false,
-        "tip": "联系销售咨询",
+        "tip": "",
         "button": {
           "title": "联系销售",
           "url": "/#pricing",
