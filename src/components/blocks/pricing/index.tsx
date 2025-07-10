@@ -15,6 +15,7 @@ import { useAppContext } from "@/contexts/app";
 import WeChatPayModal from "@/components/wechat-pay-modal";
 import SubscriptionWarning from "@/components/subscription-warning";
 import SubscriptionStatus from "@/components/subscription-status";
+import ContactSalesModal from "@/components/contact-sales-modal";
 import { useLocale, useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 
@@ -34,6 +35,7 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
   const [wechatOrderData, setWechatOrderData] = useState<any>(null);
   const [showSubscriptionWarning, setShowSubscriptionWarning] = useState(false);
   const [pendingPurchase, setPendingPurchase] = useState<{item: PricingItem, isWechat: boolean} | null>(null);
+  const [showContactSalesModal, setShowContactSalesModal] = useState(false);
   
   // 支付方式状态管理
   const [paymentMethods, setPaymentMethods] = useState<{[key: string]: 'wechat' | 'paypal'}>({});
@@ -295,8 +297,19 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
     setPendingPurchase(null);
   };
 
+  // 联系销售处理函数
+  const handleContactSales = () => {
+    setShowContactSalesModal(true);
+  };
+
   // 统一的支付处理函数
   const handlePayment = async (item: PricingItem) => {
+    // 企业套餐特殊处理 - 联系销售而不是支付
+    if (item.product_id === 'enterprise') {
+      handleContactSales();
+      return;
+    }
+    
     const selectedMethod = paymentMethods[item.product_id] || 'paypal';
     
     await checkSubscriptionConflict(item, selectedMethod === 'wechat');
@@ -486,8 +499,8 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                       )}
                     </div>
                     <div className="flex flex-col gap-3">
-                      {/* 支付方式选择器 */}
-                      {item.cn_amount && item.cn_amount > 0 && (
+                      {/* 支付方式选择器 - 企业套餐不显示 */}
+                      {item.cn_amount && item.cn_amount > 0 && item.product_id !== 'enterprise' && (
                         <div className="space-y-3">
                           <div className="flex items-center gap-2 text-sm font-medium">
                             <CreditCard className="h-4 w-4" />
@@ -540,6 +553,7 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                       {item.button && (
                         <Button
                           className="w-full flex items-center justify-center gap-2 font-semibold"
+                          variant={item.product_id === 'enterprise' ? 'outline' : 'default'}
                           disabled={isLoading}
                           onClick={async () => {
                             if (isLoading) {
@@ -548,29 +562,42 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                             await handlePayment(item);
                           }}
                         >
-                          {(!isLoading || (isLoading && productId !== item.product_id)) && (
+                          {item.product_id === 'enterprise' ? (
+                            // 企业套餐显示联系销售
                             <>
-                              {paymentMethods[item.product_id] === 'wechat' ? (
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                              </svg>
+                              <span>{item.button.title}</span>
+                            </>
+                          ) : (
+                            // 其他套餐显示支付方式
+                            <>
+                              {(!isLoading || (isLoading && productId !== item.product_id)) && (
                                 <>
-                                  <img src="/imgs/cnpay.png" alt="WeChat Pay" className="w-5 h-2.5 rounded" />
-                                  <span>{isChineseLocale ? '微信支付' : 'Pay with WeChat'}</span>
-                                </>
-                              ) : (
-                                <>
-                                  <svg className="w-5 h-2.5" viewBox="0 0 24 12" fill="none">
-                                    <path d="M7.076 0C3.698 0 0.96 2.393 0.96 5.339c0 1.672.738 3.026 2.132 3.026.59 0 1.144-.27 1.463-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C9.49.183 8.29 0 7.076 0z" fill="currentColor"/>
-                                    <path d="M15.999 0c-3.378 0-6.115 2.393-6.115 5.339 0 1.672.738 3.026 2.131 3.026.59 0 1.145-.27 1.464-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C18.413.183 17.213 0 15.999 0z" fill="currentColor"/>
-                                  </svg>
-                                  <span>{isChineseLocale ? 'PayPal支付' : 'Pay with PayPal'}</span>
+                                  {paymentMethods[item.product_id] === 'wechat' ? (
+                                    <>
+                                      <img src="/imgs/cnpay.png" alt="WeChat Pay" className="w-5 h-2.5 rounded" />
+                                      <span>{isChineseLocale ? '微信支付' : 'Pay with WeChat'}</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <svg className="w-5 h-2.5" viewBox="0 0 24 12" fill="none">
+                                        <path d="M7.076 0C3.698 0 0.96 2.393 0.96 5.339c0 1.672.738 3.026 2.132 3.026.59 0 1.144-.27 1.463-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C9.49.183 8.29 0 7.076 0z" fill="currentColor"/>
+                                        <path d="M15.999 0c-3.378 0-6.115 2.393-6.115 5.339 0 1.672.738 3.026 2.131 3.026.59 0 1.145-.27 1.464-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C18.413.183 17.213 0 15.999 0z" fill="currentColor"/>
+                                      </svg>
+                                      <span>{isChineseLocale ? 'PayPal支付' : 'Pay with PayPal'}</span>
+                                    </>
+                                  )}
                                 </>
                               )}
-                            </>
-                          )}
 
-                          {isLoading && productId === item.product_id && (
-                            <>
-                              <Loader className="h-4 w-4 animate-spin" />
-                              <span>{isChineseLocale ? '处理中...' : 'Processing...'}</span>
+                              {isLoading && productId === item.product_id && (
+                                <>
+                                  <Loader className="h-4 w-4 animate-spin" />
+                                  <span>{isChineseLocale ? '处理中...' : 'Processing...'}</span>
+                                </>
+                              )}
                             </>
                           )}
                         </Button>
@@ -669,6 +696,12 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
           </div>
         </div>
       )}
+
+      {/* 联系销售弹窗 */}
+      <ContactSalesModal
+        isOpen={showContactSalesModal}
+        onClose={() => setShowContactSalesModal(false)}
+      />
     </section>
   );
 }
