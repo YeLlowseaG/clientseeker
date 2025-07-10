@@ -29,8 +29,8 @@
         "is_featured": false,
         "tip": "体验版无需付费！",
         "button": {
-          "title": "免费开始",
-          "url": "/#pricing",
+          "title": "免费体验",
+          "url": "/",
           "icon": "RiFlashlightFill"
         },
         "product_id": "free",
