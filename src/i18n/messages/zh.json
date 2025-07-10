@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "title": "ClientSeeker - 智能客户开发工具 | 快速获取潜在客户联系方式",
-    "description": "ClientSeeker 是一个专业的客户开发工具，帮助销售人员和企业快速找到目标客户联系方式，提升业务增长效率。",
-    "keywords": "ClientSeeker, 找客户, 客户开发, 潜在客户, 联系方式, 销售工具"
+    "title": "ClientSeeker - 专业客户开发工具 | 快速获取餐厅美容院汽修店客户联系方式",
+    "description": "ClientSeeker是专业的全球客户开发工具，支持餐厅、美容院、汽修店等行业客户搜索。整合高德地图、百度地图、Google Maps数据，精准获取企业联系电话和地址，提升电销外贸获客效率。",
+    "keywords": "客户开发工具, 找客户软件, 潜在客户搜索, 企业联系方式查询, 电销工具, 外贸获客, 餐厅客户开发, 美容院获客, 汽修店客户, B2B客户开发, 销售线索, 客户联系电话, 地图找客户, 精准获客, ClientSeeker"
   },
   "user": {
     "sign_in": "登录",
@@ -125,8 +125,8 @@
     "placeholder": "在这里留下您的反馈..."
   },
   "search": {
-    "page_title": "ClientSeeker - 全球找客户助手",
-    "page_description": "快速查找全球潜在客户联系方式，支持中国大陆及海外市场",
+    "page_title": "ClientSeeker - 专业客户开发工具 | 快速找到餐厅美容院汽修店客户联系方式",
+    "page_description": "ClientSeeker整合高德地图、百度地图、Google Maps，专业提供餐厅、美容院、汽修店等行业客户联系方式查询服务，助力销售团队快速获客。"
     "current_location": "当前位置",
     "domestic_data": "国内数据源",
     "international_data": "国际数据源",
@@ -334,8 +334,8 @@
     }
   },
   "features": {
-    "page_title": "ClientSeeker 功能介绍",
-    "page_description": "全面了解ClientSeeker的强大功能，助力您的客户开发工作更加高效精准",
+    "page_title": "ClientSeeker 功能介绍 | 多地图整合客户开发工具完整功能解析",
+    "page_description": "深入了解ClientSeeker整合高德地图、百度地图、Google Maps的强大功能，包括精准搜索、联系信息获取、数据导出等，助力餐饮、美容、汽修等行业客户开发工作更加高效精准。"
     "core_features_overview": "核心功能一览",
     "feature_details": "功能详细说明",
     "usage_statistics": "使用数据统计",
