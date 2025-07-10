@@ -458,23 +458,26 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                           </Badge>
                         )}
                       </div>
-                      <div className="flex items-end gap-2 mb-4">
-                        {item.original_price && (
-                          <span className="text-xl text-muted-foreground font-semibold line-through">
-                            {item.original_price}
-                          </span>
-                        )}
-                        {item.price && (
-                          <span className="text-5xl font-semibold">
-                            {item.price}
-                          </span>
-                        )}
-                        {item.unit && (
-                          <span className="block font-semibold">
-                            {item.unit}
-                          </span>
-                        )}
-                      </div>
+                      {/* 价格显示区域 - 体验版不显示价格 */}
+                      {item.product_id !== 'free' && (
+                        <div className="flex items-end gap-2 mb-4">
+                          {item.original_price && (
+                            <span className="text-xl text-muted-foreground font-semibold line-through">
+                              {item.original_price}
+                            </span>
+                          )}
+                          {item.price && (
+                            <span className="text-5xl font-semibold">
+                              {item.price}
+                            </span>
+                          )}
+                          {item.unit && (
+                            <span className="block font-semibold">
+                              {item.unit}
+                            </span>
+                          )}
+                        </div>
+                      )}
                       {item.description && (
                         <p className="text-muted-foreground">
                           {item.description}
@@ -549,8 +552,8 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                         </div>
                       )}
 
-                      {/* 统一支付按钮 */}
-                      {item.button && (
+                      {/* 统一支付按钮 - 企业套餐不显示按钮 */}
+                      {item.button && item.product_id !== 'enterprise' && (
                         <Button
                           className="w-full flex items-center justify-center gap-2 font-semibold"
                           variant={item.product_id === 'enterprise' ? 'outline' : 'default'}
