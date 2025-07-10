@@ -538,10 +538,11 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="paypal" id={`paypal-${item.product_id}`} />
                               <Label htmlFor={`paypal-${item.product_id}`} className="flex items-center gap-2 cursor-pointer">
-                                <svg className="w-6 h-3" viewBox="0 0 24 12" fill="none">
-                                  <path d="M7.076 0C3.698 0 0.96 2.393 0.96 5.339c0 1.672.738 3.026 2.132 3.026.59 0 1.144-.27 1.463-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C9.49.183 8.29 0 7.076 0z" fill="#003087"/>
-                                  <path d="M15.999 0c-3.378 0-6.115 2.393-6.115 5.339 0 1.672.738 3.026 2.131 3.026.59 0 1.145-.27 1.464-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C18.413.183 17.213 0 15.999 0z" fill="#009cde"/>
-                                </svg>
+                                <img
+                                  src="/imgs/paypal.png"
+                                  alt="PayPal"
+                                  className="w-6 h-3"
+                                />
                                 <span className="text-sm">PayPal</span>
                                 {!isChineseLocale && (
                                   <Badge variant="secondary" className="text-xs">Recommended</Badge>
@@ -593,10 +594,11 @@ export default function Pricing({ pricing }: { pricing: PricingType }) {
                                     </>
                                   ) : (
                                     <>
-                                      <svg className="w-5 h-2.5" viewBox="0 0 24 12" fill="none">
-                                        <path d="M7.076 0C3.698 0 0.96 2.393 0.96 5.339c0 1.672.738 3.026 2.132 3.026.59 0 1.144-.27 1.463-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C9.49.183 8.29 0 7.076 0z" fill="currentColor"/>
-                                        <path d="M15.999 0c-3.378 0-6.115 2.393-6.115 5.339 0 1.672.738 3.026 2.131 3.026.59 0 1.145-.27 1.464-.696h.018c.088.41.348.696.774.696.688 0 1.232-.633 1.232-1.41 0-.164-.025-.31-.075-.445l.643-4.02h1.375l-.203 1.27c.184-.803.859-1.444 1.728-1.444.184 0 .363.025.531.074l.301-1.879C18.413.183 17.213 0 15.999 0z" fill="currentColor"/>
-                                      </svg>
+                                      <img
+                                        src="/imgs/paypal.png"
+                                        alt="PayPal"
+                                        className="w-5 h-2.5"
+                                      />
                                       <span>{isChineseLocale ? 'PayPal支付' : 'Pay with PayPal'}</span>
                                     </>
                                   )}
