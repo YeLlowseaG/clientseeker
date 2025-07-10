@@ -13,3 +13,4 @@ Disallow: /en/dashboard
 Allow: /
 
 Sitemap: https://clientseeker.pro/sitemap.xml
+# Canonical domain: https://clientseeker.pro (no www)
