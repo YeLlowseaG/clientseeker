@@ -14,3 +14,10 @@ Allow: /
 
 Sitemap: https://clientseeker.pro/sitemap.xml
 # Canonical domain: https://clientseeker.pro (no www)
+
+# Baidu-specific optimization
+User-agent: Baiduspider
+Disallow: /dashboard
+Disallow: /user/
+Disallow: /api/
+Allow: /
