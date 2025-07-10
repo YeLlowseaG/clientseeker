@@ -30,7 +30,9 @@ export async function generateMetadata({
     keywords: t("metadata.keywords") || "",
     authors: [{ name: "ClientSeeker Team" }],
     verification: {
-      baidu: "codeva-u5ERv7uKnQ",
+      other: {
+        "baidu-site-verification": "codeva-u5ERv7uKnQ",
+      },
     },
     creator: "ClientSeeker",
     publisher: "ClientSeeker",
