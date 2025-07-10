@@ -29,8 +29,8 @@
         "is_featured": false,
         "tip": "No payment required for trial!",
         "button": {
-          "title": "Start Free",
-          "url": "/#pricing",
+          "title": "Try Free",
+          "url": "/search",
           "icon": "RiFlashlightFill"
         },
         "product_id": "free",

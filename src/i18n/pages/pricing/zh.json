@@ -30,7 +30,7 @@
         "tip": "体验版无需付费！",
         "button": {
           "title": "免费体验",
-          "url": "/",
+          "url": "/search",
           "icon": "RiFlashlightFill"
         },
         "product_id": "free",
