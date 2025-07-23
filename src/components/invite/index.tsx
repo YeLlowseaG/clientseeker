@@ -31,6 +31,7 @@ export default function Invite({ summary }: { summary: any }) {
       setLoading(true);
       const req = {
         invite_code,
+        email: user?.email,
       };
       const resp = await fetch("/api/update-invite-code", {
         method: "POST",

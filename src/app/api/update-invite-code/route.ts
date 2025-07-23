@@ -1,16 +1,15 @@
 import {
   findUserByInviteCode,
   findUserByUuid,
+  findUserByEmail,
   updateUserInviteCode,
 } from "@/models/user";
 import { respData, respErr } from "@/lib/resp";
 
-import { getUserUuid } from "@/services/user";
-
 export async function POST(req: Request) {
   try {
-    const { invite_code } = await req.json();
-    if (!invite_code) {
+    const { invite_code, email } = await req.json();
+    if (!invite_code || !email) {
       return respErr("invalid params");
     }
 
@@ -18,15 +17,13 @@ export async function POST(req: Request) {
       return respErr("invalid invite code, length must be between 2 and 16");
     }
 
-    const user_uuid = await getUserUuid();
-    if (!user_uuid) {
-      return respErr("no auth");
-    }
-
-    const user_info = await findUserByUuid(user_uuid);
+    // 通过邮箱查找用户
+    const user_info = await findUserByEmail(email);
     if (!user_info || !user_info.email) {
       return respErr("invalid user");
     }
+
+    const user_uuid = user_info.uuid;
 
     if (user_info.invite_code === invite_code) {
       return respData(user_info);
