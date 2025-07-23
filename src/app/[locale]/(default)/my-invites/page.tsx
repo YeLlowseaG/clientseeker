@@ -16,6 +16,7 @@ export default function MyInvitesPage() {
   const [loading, setLoading] = useState(true);
   const [affiliates, setAffiliates] = useState([]);
   const [summary, setSummary] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     if (isUserLoading) return;
@@ -47,12 +48,72 @@ export default function MyInvitesPage() {
         if (result.code === 0 && result.data) {
           setAffiliates(result.data.affiliates || []);
           setSummary(result.data.summary || {});
+          setCurrentUser(result.data.user || null);
+          
+          // 如果用户没有邀请码，自动生成一个，然后重新获取数据
+          if (result.data.user && !result.data.user.invite_code) {
+            await autoGenerateInviteCode();
+            // 重新获取数据以显示新的邀请码
+            await fetchInviteDataAgain();
+          }
         }
       }
     } catch (error) {
       console.error('Failed to fetch invite data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchInviteDataAgain = async () => {
+    try {
+      const response = await fetch('/api/get-invite-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: user?.email
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.code === 0 && result.data) {
+          setCurrentUser(result.data.user || null);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch invite data again:', error);
+    }
+  };
+
+  const autoGenerateInviteCode = async () => {
+    try {
+      // 生成基于用户邮箱的短码（取邮箱@前的部分 + 随机4位数字）
+      const emailPrefix = user?.email?.split('@')[0]?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'user';
+      const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+      const autoCode = `${emailPrefix}${randomSuffix}`.substring(0, 12); // 限制长度
+      
+      const response = await fetch('/api/update-invite-code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          invite_code: autoCode,
+          email: user?.email
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.code === 0) {
+          console.log('Auto-generated invite code:', autoCode);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to auto-generate invite code:', error);
     }
   };
 
@@ -151,7 +212,7 @@ export default function MyInvitesPage() {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="space-y-8">
-        <Invite summary={summary} />
+        <Invite summary={summary} currentUser={currentUser} />
         <TableBlock {...table} />
       </div>
     </div>

@@ -12,12 +12,15 @@ import { toast } from "sonner";
 import { useAppContext } from "@/contexts/app";
 import { useTranslations } from "next-intl";
 
-export default function Invite({ summary }: { summary: any }) {
+export default function Invite({ summary, currentUser }: { summary: any, currentUser?: any }) {
   const t = useTranslations();
 
   const [open, setOpen] = useState(false);
   const { user, setUser } = useAppContext();
   const [loading, setLoading] = useState(false);
+  
+  // 优先使用 currentUser，如果没有则使用 user
+  const displayUser = currentUser || user;
 
   const updateInviteCode = async function (invite_code: string) {
     try {
@@ -31,7 +34,7 @@ export default function Invite({ summary }: { summary: any }) {
       setLoading(true);
       const req = {
         invite_code,
-        email: user?.email,
+        email: displayUser?.email,
       };
       const resp = await fetch("/api/update-invite-code", {
         method: "POST",
@@ -71,19 +74,19 @@ export default function Invite({ summary }: { summary: any }) {
         <h2 className="text-sm text-gray-500 mb-4">
           {t("my_invites.invite_code")}
         </h2>
-        {user && user.uuid && (
+        {displayUser && displayUser.uuid && (
           <div className="flex items-center justify-between mb-4">
             <InviteModal
               open={open}
               setOpen={setOpen}
-              username={user.nickname}
-              initInviteCode={user.invite_code || ""}
+              username={displayUser.nickname}
+              initInviteCode={displayUser.invite_code || ""}
               updateInviteCode={updateInviteCode}
               loading={loading}
             />
             <div className="flex items-center gap-2">
               <span className="text-3xl font-bold">
-                {user.invite_code || "NOT SET"}
+                {displayUser.invite_code || "NOT SET"}
               </span>
               <Icon
                 name="RiEditLine"
@@ -91,9 +94,9 @@ export default function Invite({ summary }: { summary: any }) {
                 onClick={() => setOpen(true)}
               />
             </div>
-            {user.invite_code && (
+            {displayUser.invite_code && (
               <CopyToClipboard
-                text={`${process.env.NEXT_PUBLIC_WEB_URL}/i/${user?.invite_code}`}
+                text={`${process.env.NEXT_PUBLIC_WEB_URL}/i/${displayUser?.invite_code}`}
                 onCopy={() => toast.success("copied")}
               >
                 <Button size="sm">{t("my_invites.copy_invite_link")}</Button>
