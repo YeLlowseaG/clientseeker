@@ -110,7 +110,7 @@ export default function Invite({ summary }: { summary: any }) {
             <h2 className="text-sm text-gray-500 mb-4">
               {t("my_invites.invite_balance")}
             </h2>
-            <p className="text-4xl font-bold">${summary.total_reward / 100}</p>
+            <p className="text-4xl font-bold">{summary.total_reward}次</p>
           </div>
           {/* <Button className="" size="sm">
             奖励提现
@@ -131,7 +131,7 @@ export default function Invite({ summary }: { summary: any }) {
             </p>
           </div>
           <div>
-            <p className="text-2xl font-bold">${summary.total_reward / 100}</p>
+            <p className="text-2xl font-bold">{summary.total_reward}次</p>
             <p className="text-sm text-gray-500">
               {t("my_invites.total_award_amount")}
             </p>

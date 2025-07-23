@@ -95,11 +95,11 @@
     "edit_invite_link": "编辑邀请链接",
     "copy_invite_link": "复制邀请链接",
     "invite_code": "邀请码",
-    "invite_tip": "每邀请 1 位朋友购买 ClientSeeker，奖励 $50。",
-    "invite_balance": "邀请奖励余额",
+    "invite_tip": "邀请朋友注册可获得10次搜索，朋友购买后再获得50次搜索奖励。",
+    "invite_balance": "累计奖励搜索次数",
     "total_invite_count": "总邀请人数",
     "total_paid_count": "已充值人数",
-    "total_award_amount": "总奖励金额",
+    "total_award_amount": "总奖励搜索次数",
     "update_invite_code": "设置邀请码",
     "update_invite_code_tip": "输入你的自定义邀请码",
     "update_invite_button": "保存",
@@ -110,7 +110,7 @@
       "invite_user": "邀请用户",
       "status": "状态",
       "reward_percent": "奖励比例",
-      "reward_amount": "奖励金额",
+      "reward_amount": "奖励搜索次数",
       "pending": "已注册，未支付",
       "completed": "已支付"
     }

@@ -26,6 +26,18 @@ export async function updateAffiliateForOrder(order: Order) {
         reward_percent: AffiliateRewardPercent.Paied,
         reward_amount: AffiliateRewardAmount.Paied,
       });
+
+      // 发放付费奖励搜索次数
+      const { insertCredit } = await import("@/models/credit");
+      await insertCredit({
+        user_uuid: user.invited_by,
+        trans_no: `PAID_REWARD_${Date.now()}_${order.order_no}`,
+        trans_type: "邀请付费奖励",
+        credits: AffiliateRewardAmount.Paied,
+        expired_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1年后过期
+        created_at: new Date(),
+        order_no: order.order_no,
+      });
     }
   } catch (e) {
     console.log("update affiliate for order failed: ", e);

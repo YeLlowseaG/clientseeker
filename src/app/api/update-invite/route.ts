@@ -49,12 +49,37 @@ export async function POST(req: Request) {
       user_uuid: user_uuid,
       invited_by: inviteUser.uuid,
       created_at: new Date(),
-      status: AffiliateStatus.Pending,
+      status: AffiliateStatus.Completed, // 注册即完成，发放搜索次数
       paid_order_no: "",
       paid_amount: 0,
       reward_percent: AffiliateRewardPercent.Invited,
       reward_amount: AffiliateRewardAmount.Invited,
     });
+
+    // 发放注册奖励搜索次数
+    if (AffiliateRewardAmount.Invited > 0) {
+      const { insertCredit } = await import("@/models/credit");
+      
+      // 给邀请人奖励搜索次数
+      await insertCredit({
+        user_uuid: inviteUser.uuid,
+        trans_no: `INVITE_${Date.now()}_${inviteUser.uuid}`,
+        trans_type: "邀请注册奖励",
+        credits: AffiliateRewardAmount.Invited,
+        expired_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1年后过期
+        created_at: new Date(),
+      });
+
+      // 给被邀请人也奖励搜索次数
+      await insertCredit({
+        user_uuid: user_uuid,
+        trans_no: `INVITED_${Date.now()}_${user_uuid}`,
+        trans_type: "注册奖励",
+        credits: AffiliateRewardAmount.Invited,
+        expired_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1年后过期
+        created_at: new Date(),
+      });
+    }
 
     return respData(user);
   } catch (e) {
