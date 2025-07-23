@@ -568,5 +568,15 @@
     "already_used": "❌ 该体验码已被使用过",
     "already_subscribed": "❌ 您已购买套餐，无需使用体验码",
     "error": "❌ 体验码使用失败，请重试"
+  },
+  "invite_page": {
+    "title": "邀请已接收！",
+    "code_saved": "您的邀请码已成功保存！",
+    "what_next": "接下来会怎样？",
+    "benefit_1": "注册即可获得10次免费搜索",
+    "benefit_2": "您的邀请人也将获得10次免费搜索",
+    "benefit_3": "开始体验强大的客户搜索工具",
+    "redirecting": "{countdown} 秒后自动跳转...",
+    "go_now": "立即前往首页"
   }
 }

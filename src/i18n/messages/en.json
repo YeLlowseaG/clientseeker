@@ -568,5 +568,15 @@
     "already_used": "❌ This experience code has already been used",
     "already_subscribed": "❌ You already have a subscription, no need to use experience code",
     "error": "❌ Failed to apply experience code, please try again"
+  },
+  "invite_page": {
+    "title": "Invitation Received!",
+    "code_saved": "Your invitation code has been saved successfully!",
+    "what_next": "What's Next?",
+    "benefit_1": "Sign up to get 10 free searches",
+    "benefit_2": "Your inviter will also get 10 free searches",
+    "benefit_3": "Start exploring powerful customer search tools",
+    "redirecting": "Redirecting in {countdown} seconds...",
+    "go_now": "Go to Homepage Now"
   }
 }
