@@ -18,23 +18,5 @@ export default function () {
     setTheme(_theme);
   };
 
-  return (
-    <div className="flex items-center gap-x-2 px-2">
-      {theme === "dark" ? (
-        <BsSun
-          className="cursor-pointer text-lg text-muted-foreground"
-          onClick={() => handleThemeChange("light")}
-          width={80}
-          height={20}
-        />
-      ) : (
-        <BsMoonStars
-          className="cursor-pointer text-lg text-muted-foreground"
-          onClick={() => handleThemeChange("dark")}
-          width={80}
-          height={20}
-        />
-      )}
-    </div>
-  );
+  return null;
 }
