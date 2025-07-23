@@ -46,7 +46,15 @@ export default function Header({ header }: { header: HeaderType }) {
   }
 
   // 使用原始导航项，不添加额外的Dashboard链接
-  const navItems = header.nav?.items || [];
+  let navItems = header.nav?.items || [];
+  
+  // 添加推广链接到导航
+  navItems = [...navItems, {
+    title: t("nav.invite_friends") || "推广赚积分",
+    url: "/my-invites",
+    icon: "RiGiftLine",
+    target: "_self"
+  }];
 
   // 检查当前路径是否匹配导航项
   const isActiveNavItem = (url: string) => {

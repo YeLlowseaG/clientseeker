@@ -4,6 +4,9 @@
     "description": "ClientSeeker is a professional global customer development tool that integrates Google Maps, Gaode Maps, and Baidu Maps to help sales teams quickly find restaurant, beauty salon, auto repair, and other business contact information to accelerate business growth.",
     "keywords": "client development tool, customer acquisition software, business contact search, lead generation, B2B sales tool, prospect finder, restaurant client finder, beauty salon leads, auto repair customers, healthcare leads, retail business contacts, telemarketing tool, international trade leads, sales prospecting, business directory, contact database, Google Maps integration, Gaode Maps, Baidu Maps, ClientSeeker"
   },
+  "nav": {
+    "invite_friends": "Earn Credits"
+  },
   "user": {
     "sign_in": "Sign In",
     "sign_out": "Sign Out",
