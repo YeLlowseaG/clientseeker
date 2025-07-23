@@ -22,14 +22,22 @@ export default async function () {
   const user_uuid = await getUserUuid();
   const user_email = await getUserEmail();
 
-  const callbackUrl = `${process.env.NEXT_PUBLIC_WEB_URL}/my-invites`;
+  // 如果服务端认证失败，显示加载状态，让客户端认证包装器处理重定向
   if (!user_uuid) {
-    redirect(`/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+    return (
+      <div className="flex justify-center items-center min-h-64">
+        <div className="text-muted-foreground">正在验证登录状态...</div>
+      </div>
+    );
   }
 
   const user = await findUserByUuid(user_uuid);
   if (!user) {
-    redirect(`/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+    return (
+      <div className="flex justify-center items-center min-h-64">
+        <div className="text-muted-foreground">正在加载用户信息...</div>
+      </div>
+    );
   }
 
   let orders = await getOrdersByUserUuid(user_uuid);

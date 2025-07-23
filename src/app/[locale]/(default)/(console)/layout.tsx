@@ -1,16 +1,10 @@
 import ConsoleLayout from "@/components/console/layout";
+import ConsoleAuthWrapper from "@/components/console/auth-wrapper";
 import { ReactNode } from "react";
 import { Sidebar } from "@/types/blocks/sidebar";
 import { getTranslations } from "next-intl/server";
-import { getUserInfo } from "@/services/user";
-import { redirect } from "next/navigation";
 
 export default async function ({ children }: { children: ReactNode }) {
-  const userInfo = await getUserInfo();
-  if (!userInfo || !userInfo.email) {
-    redirect("/auth/signin");
-  }
-
   const t = await getTranslations();
 
   const sidebar: Sidebar = {
@@ -44,5 +38,9 @@ export default async function ({ children }: { children: ReactNode }) {
     },
   };
 
-  return <ConsoleLayout sidebar={sidebar}>{children}</ConsoleLayout>;
+  return (
+    <ConsoleAuthWrapper>
+      <ConsoleLayout sidebar={sidebar}>{children}</ConsoleLayout>
+    </ConsoleAuthWrapper>
+  );
 }
