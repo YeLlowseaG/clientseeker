@@ -108,6 +108,7 @@
     "update_invite_button": "保存",
     "no_orders": "你需要先购买过 ClientSeeker 才能邀请朋友",
     "no_affiliates": "你暂无邀请朋友的权限，请联系我们申请开通。",
+    "search_times": "次",
     "table": {
       "invite_time": "邀请时间",
       "invite_user": "邀请用户",

@@ -108,6 +108,7 @@
     "update_invite_button": "Save",
     "no_orders": "You can't invite others before you bought ClientSeeker",
     "no_affiliates": "You're not allowed to invite others, please contact us to apply for permission.",
+    "search_times": " searches",
     "table": {
       "invite_time": "Invite Time",
       "invite_user": "Invite User",
